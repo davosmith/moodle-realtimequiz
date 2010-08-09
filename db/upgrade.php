@@ -85,6 +85,25 @@ function xmldb_realtimequiz_upgrade($oldversion) {
         $result = $result && add_field($table, $field);
 	}
     
+    if ($result && $oldversion < 2010080901) {
+
+    /// Changing type of field questiontext on table realtimequiz_question to text
+        $table = new XMLDBTable('realtimequiz_question');
+        $field = new XMLDBField('questiontext');
+        $field->setAttributes(XMLDB_TYPE_TEXT, 'medium', null, XMLDB_NOTNULL, null, null, null, null, 'questionnum');
+
+    /// Launch change of type for field questiontext
+        $result = $result && change_field_type($table, $field);
+        
+    /// Changing type of field answertext on table realtimequiz_answer to text
+        $table = new XMLDBTable('realtimequiz_answer');
+        $field = new XMLDBField('answertext');
+        $field->setAttributes(XMLDB_TYPE_TEXT, 'medium', null, XMLDB_NOTNULL, null, null, null, null, 'questionid');
+
+    /// Launch change of type for field questiontext
+        $result = $result && change_field_type($table, $field);
+    }
+
     return $result;
 }
 ?>
