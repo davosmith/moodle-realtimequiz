@@ -38,6 +38,8 @@ function realtimequiz_send_error($msg) {
 }
 
 function realtimequiz_send_question($quizid, $preview=false) {
+    global $CFG;
+
     if (!record_exists('realtimequiz', 'id', $quizid)) {
         realtimequiz_send_error(get_string('badquizid','realtimequiz').$quizid);
     } else {
@@ -53,6 +55,30 @@ function realtimequiz_send_question($quizid, $preview=false) {
             echo "<question><questionnumber>{$question->questionnum}</questionnumber>";
 			echo "<questioncount>{$questioncount}</questioncount>";
             echo "<questiontext><![CDATA[{$question->questiontext}]]></questiontext>";
+            if ($question->image) {
+                $filename = $CFG->dataroot.'/'.$question->image;
+                if (file_exists($filename)) {
+                    $size = getimagesize($filename);
+                    if ($size) {
+                        $imageheight = $size[1];
+                        $imagewidth = $size[0];
+                        if ($imagewidth > 500) {
+                            $scale = 500 / $imagewidth;
+                            $imagewidth = 500;
+                            $imageheight *= $scale;
+                        }
+                        if ($imageheight > 500) {
+                            $scale = 500 / $imageheight;
+                            $imageheight = 500;
+                            $imagewidth *= $scale;
+                        }
+                        $fl = $question->image.'&t='.time();
+                        echo "<imageurl><![CDATA[{$CFG->wwwroot}/file.php?file=/{$fl}]]></imageurl>";
+                        echo "<imageheight>$imageheight</imageheight>";
+                        echo "<imagewidth>$imagewidth</imagewidth>";
+                    }
+                }
+            }
             if ($preview) {
                 $previewtime = $quiz->nextendtime - time();
                 if ($previewtime > 0) {

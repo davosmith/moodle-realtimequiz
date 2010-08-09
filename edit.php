@@ -124,8 +124,26 @@
 		<td align="right"><b>'.get_string('questiontext','realtimequiz').'</b></td>
 		<td>';		
 		if ($question->image) {
-		    $imgsrc = $CFG->wwwroot.'/file.php?file=/'.$question->image;
-		    echo '<image src="'.$imgsrc.'" style="float:right; border: 1px solid black;" />';
+		    $filename = $CFG->dataroot.'/'.$question->image;
+		    if (file_exists($filename)) {
+                $size = getimagesize($filename);
+                if ($size) {
+                    $imagewidth = $size[0];
+                    $imageheight = $size[1];
+                    if ($imagewidth > 500) {
+                        $scale = 500 / $imagewidth;
+                        $imagewidth = 500;
+                        $imageheight *= $scale;
+                    }
+                    if ($imageheight > 500) {
+                        $scale = 500 / $imageheight;
+                        $imageheight = 500;
+                        $imagewidth *= $scale;
+                    }
+		            $imgsrc = $CFG->wwwroot.'/file.php?file=/'.$question->image.'&t='.time();
+		            echo '<image src="'.$imgsrc.'" style="float:right; border: 1px solid black;" width="'.$imagewidth.'px" height="'.$imageheight.'px" />';
+	            }
+	        }
 		}
 		echo '<textarea name="questiontext" rows="5" cols="50">'.$question->questiontext.'</textarea><br style="clear:both;" /></td>
 		</tr><tr>
@@ -304,11 +322,22 @@
                                 else { $fext = false; }
                                 
                                 if ($fext) {
+                                    $q = get_record('realtimequiz_question', 'id', $questionid);
+                                    if ($q && $q->image) {
+                                        if (pathinfo($q->image, PATHINFO_EXTENSION) != $fext) {
+                                            if (file_exists($CFG->dataroot.'/'.$q->image)) {
+                                                unlink($CFG->dataroot.'/'.$q->image);
+                                                // Delete the old file, if it was a different type
+                                                // (it will get overwritten below, if it is the same type)
+                                            }
+                                        }
+                                    }
+                                
                                     $destname = sprintf('%02d',$question->id).$fext;
                                     $dest = $fulldir.'/'.$destname;
                                     rename($fp, $dest);
-                                                  
-                                    $question->image = $dir.'/'.$destname.'&t='.time();
+
+                                    $question->image = $dir.'/'.$destname;
                                     update_record('realtimequiz_question', $question);
                                 }
                             }
