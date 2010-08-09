@@ -103,6 +103,17 @@ function xmldb_realtimequiz_upgrade($oldversion) {
     /// Launch change of type for field questiontext
         $result = $result && change_field_type($table, $field);
     }
+    
+    if ($result && $oldversion < 2010080902) {
+
+    /// Changing type of field questiontext on table realtimequiz_question to text
+        $table = new XMLDBTable('realtimequiz_question');
+        $field = new XMLDBField('image');
+        $field->setAttributes(XMLDB_TYPE_TEXT, 'small', null, null, null, null, null, '', 'questiontime');
+
+    /// Launch change of type for field questiontext
+        $result = $result && add_field($table, $field);
+    }
 
     return $result;
 }

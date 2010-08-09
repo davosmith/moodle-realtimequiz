@@ -83,6 +83,7 @@
 			$question->questionnum = count_records('realtimequiz_question', 'quizid', $quizid) + 1;
 			$question->questiontext = '';
 			$question->questiontime = 0;
+			$question->image = '';
 			echo '<h2>'.get_string('addingquestion','realtimequiz').$question->questionnum.'</h2>';
 			
 			$answers = array();
@@ -116,14 +117,44 @@
 			}
 		}
 		
-		echo "<form method='post' action='$CFG->wwwroot/mod/realtimequiz/edit.php?id=$quizid'>";
+		
+		echo "<form method='post' action='$CFG->wwwroot/mod/realtimequiz/edit.php?id=$quizid' enctype='multipart/formdata'>";
 		echo '<table cellpadding="5">
 		<tr valign="top">
 		<td align="right"><b>'.get_string('questiontext','realtimequiz').'</b></td>
-		<td><textarea name="questiontext" rows="5" cols="50">'.$question->questiontext.'</textarea></td>
+		<td>';		
+		if ($question->image) {
+		    $filename = $CFG->dataroot.'/'.$question->image;
+		    if (file_exists($filename)) {
+                $size = getimagesize($filename);
+                if ($size) {
+                    $imagewidth = $size[0];
+                    $imageheight = $size[1];
+                    if ($imagewidth > 500) {
+                        $scale = 500 / $imagewidth;
+                        $imagewidth = 500;
+                        $imageheight *= $scale;
+                    }
+                    if ($imageheight > 500) {
+                        $scale = 500 / $imageheight;
+                        $imageheight = 500;
+                        $imagewidth *= $scale;
+                    }
+		            $imgsrc = $CFG->wwwroot.'/file.php?file=/'.$question->image.'&t='.time();
+		            echo '<image src="'.$imgsrc.'" style="float:right; border: 1px solid black;" width="'.$imagewidth.'px" height="'.$imageheight.'px" />';
+	            }
+	        }
+		}
+		echo '<textarea name="questiontext" rows="5" cols="50">'.$question->questiontext.'</textarea><br style="clear:both;" /></td>
 		</tr><tr>
 		<td align="right"><b>'.get_string('editquestiontime','realtimequiz').'</b></td>
 		<td><input type="text" name="questiontime" size="30" value="'.$question->questiontime.'" /></td>
+		</tr><tr>
+		<td align="right"><b>'.get_string('questionimage','realtimequiz').'</b></td>
+		<td><input type="file" name="imagefile" /></td>
+		</tr><tr>
+		<td align="right"><b>'.get_string('removeimage','realtimequiz').'</b></td>
+		<td><input type="checkbox" name="removeimage" /></td>		
 		</tr>';
 
 		while (count($answers) < $minanswers) {
@@ -179,6 +210,7 @@
 		echo '<input type="submit" name="yes" value="'.get_string('yes','realtimequiz').'" /> ';
 		echo '<input type="submit" name="no" value="'.get_string('no','realtimequiz').'" />';
 		echo '</form></center>';
+
 	}
 	
 	
@@ -218,6 +250,7 @@
 			$answertexts = required_param('answertext', PARAM_TEXT);
 			$answercorrects = optional_param('answercorrect', FALSE, PARAM_INT);
 			$answerids = required_param('answerid', PARAM_INT);
+			$removeimage = optional_param('removeimage', false, PARAM_BOOL);
 
 			// Copy the answers into a suitable array and count how many (valid) correct answers there are
 			$correctcount = 0;
@@ -251,6 +284,16 @@
 				realtimequiz_edit_question($quizid, $questionid, $minanswers);
 				
 			} else {
+                if ($removeimage && $action == 'doeditquestion') {
+                    $q = get_record('realtimequiz_question', 'id', $questionid);
+                    if ($q && $q->image) {
+                        $fullpath = $CFG->dataroot.'/'.$q->image;
+                        if (file_exists($fullpath)) {
+                            unlink($fullpath);
+                        }
+                        $question->image = '';
+                    }
+                }
 
 				// Update the question
 				if ($action == 'doaddquestion') {
@@ -259,6 +302,48 @@
 					$question->id = $questionid;
 					update_record('realtimequiz_question', $question);
 				}
+								
+			    if (!$removeimage) {
+	                $dir = $course->id.'/'.$CFG->moddata.'/realtimequiz/'.$question->quizid;
+	                $fulldir = $CFG->dataroot.'/'.$dir;
+	
+                    require_once($CFG->dirroot.'/lib/uploadlib.php');
+                    $um = new upload_manager('imagefile',false,true,$course,false,$course->maxbytes,true);
+                    
+                    if ($um->process_file_uploads($fulldir)) {
+                        $fp = $um->get_new_filepath();
+                        $fn = $um->get_new_filename();
+                        if ($fp && $fn) {
+                            $size = getimagesize($fp);
+                            if ($size) {
+                                if ($size[2] == IMAGETYPE_GIF) { $fext = '.gif'; }
+                                else if ($size[2] == IMAGETYPE_PNG) { $fext = '.png'; }
+                                else if ($size[2] == IMAGETYPE_JPEG) { $fext = '.jpg'; }
+                                else { $fext = false; }
+                                
+                                if ($fext) {
+                                    $q = get_record('realtimequiz_question', 'id', $questionid);
+                                    if ($q && $q->image) {
+                                        if (pathinfo($q->image, PATHINFO_EXTENSION) != $fext) {
+                                            if (file_exists($CFG->dataroot.'/'.$q->image)) {
+                                                unlink($CFG->dataroot.'/'.$q->image);
+                                                // Delete the old file, if it was a different type
+                                                // (it will get overwritten below, if it is the same type)
+                                            }
+                                        }
+                                    }
+                                
+                                    $destname = sprintf('%02d',$question->id).$fext;
+                                    $dest = $fulldir.'/'.$destname;
+                                    rename($fp, $dest);
+
+                                    $question->image = $dir.'/'.$destname;
+                                    update_record('realtimequiz_question', $question);
+                                }
+                            }
+                        }
+                    }         
+                 }
 				
 				// Update the answers
 				foreach ($answers as $answer) {
