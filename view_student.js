@@ -109,7 +109,7 @@ function realtimequiz_set_question_number(num, total) {
 }
 
 function realtimequiz_set_question_text(text) {
-    document.getElementById('questiontext').innerHTML = text;
+    document.getElementById('questiontext').innerHTML = text.replace(/\n/g, '<br />');
 }
 
 function realtimequiz_clear_answers() {
