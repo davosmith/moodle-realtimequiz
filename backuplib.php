@@ -1,4 +1,4 @@
-<?php //$Id: backuplib.php,v 1.1 2008/12/20 16:00:38 arborrow Exp $
+<?php 
     //Based on php script for backing up forum mods
 	//This php script contains all the stuff to backup/restore
     //realtimequiz mods
