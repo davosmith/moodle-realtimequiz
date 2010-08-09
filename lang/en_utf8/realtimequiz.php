@@ -18,7 +18,7 @@ $string['realtimequiz:seeresponses'] = 'View the responses to a quiz';
 $string['realtimequiz:editquestions'] = 'Edit the questions for a quiz';
 
 // Editing the realtime quiz settings
-$string['questiontime'] = 'Default to display each question: ';
+$string['questiontime'] = 'Default time to display each question (seconds): ';
 
 // Editting the realtime quiz questions
 $string['addquestion'] = 'Add Question';

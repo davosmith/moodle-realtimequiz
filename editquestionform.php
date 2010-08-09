@@ -2,7 +2,7 @@
 
 require_once ($CFG->dirroot.'/course/moodleform_mod.php');
 
-class realtimequiz_editquestion_form extends moodleform_mod {	
+class realtimequiz_editquestion_form extends moodleform_mod {
 
 	function definition() {
 
@@ -10,12 +10,13 @@ class realtimequiz_editquestion_form extends moodleform_mod {
 	$mform    =& $this->_form;
 
     $mform->addElement('header', 'general', get_string('general', 'form'));
-   
-	$mform->addElement('htmleditor', 'questiontext', get_string('questiontext','realtimequiz')));
+
+	$mform->addElement('htmleditor', 'questiontext', get_string('questiontext','realtimequiz'));
 	$mform->setType('questiontext', PARAM_RAW);
 	$mform->addRule('questiontext', null, 'required', null, 'client');
-	
+
     $this->add_action_buttons();
+	}
 }
 
 /*
@@ -25,7 +26,7 @@ class realtimequiz_editquestion_form extends moodleform_mod {
 		<td align="right"><b>'.get_string('questiontext','realtimequiz').'</b></td>
 		<td><textarea name="questiontext" rows="5" cols="50">'.$question->questiontext.'</textarea></td>
 		</tr>';
-		
+
 		while (count($answers) < $minanswers) {
 			$extraanswer = new stdClass();
 			$extraanswer->id = 0;
@@ -33,7 +34,7 @@ class realtimequiz_editquestion_form extends moodleform_mod {
 			$extraanswer->correct = 0;
 			$answers[] = $extraanswer;
 		}
-		
+
 		$answernum = 1;
 		foreach ($answers as $answer) {
 			echo '<tr><td><b>'.get_string('answer','realtimequiz').$answernum.'</b></td></tr>';
@@ -49,10 +50,10 @@ class realtimequiz_editquestion_form extends moodleform_mod {
 			}
 			echo '/></td></tr>';
 			echo '<input type="hidden" name="answerid['.$answernum.']" value="'.$answer->id.'" />';
-			
+
 			$answernum++;
 		}
-		
+
 		echo '</table>';
 		echo '<input type="hidden" name="action" value="'.$action.'" />';
 		echo '<input type="hidden" name="questionid" value="'.$question->id.'" />';

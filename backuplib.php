@@ -1,4 +1,4 @@
-<?php //$Id: backuplib.php,v 1.21 2006/08/25 02:41:16 vyshane Exp $
+<?php //$Id: backuplib.php,v 1.1 2008/12/20 16:00:38 arborrow Exp $
     //Based on php script for backing up forum mods
 	//This php script contains all the stuff to backup/restore
     //realtimequiz mods
@@ -192,7 +192,7 @@
 		        if ($status) $status = fwrite($bf, full_tag("ANSWERID", 11, false, $submission->answerid));
 		        if ($status) $status = fwrite($bf, end_tag("SUBMISSION", 10, true));
 		    }
-            if ($status) $status = fwrite($bf, end_tag("SUBMISSIONS", 4, true));		    
+            if ($status) $status = fwrite($bf, end_tag("SUBMISSIONS", 9, true));		    
 		}	    
 	    
 	    return $status;

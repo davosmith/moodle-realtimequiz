@@ -47,7 +47,7 @@ function realtimequiz_send_question($quizid, $preview=false) {
             realtimequiz_send_error(get_string('badcurrentquestion','realtimequiz').$questionid);
         } else {
 			$question = get_record('realtimequiz_question', 'id', $questionid);
-            $answers = get_records('realtimequiz_answer', 'questionid', $questionid);
+            $answers = get_records('realtimequiz_answer', 'questionid', $questionid,'id');
 			$questioncount = count_records('realtimequiz_question', 'quizid', $quizid);
             echo '<status>showquestion</status>';
             echo "<question><questionnumber>{$question->questionnum}</questionnumber>";
@@ -96,7 +96,7 @@ function realtimequiz_send_results($quizid, $questionnum) {
             } else { // FIXME: cache the results here
                 $total_answers = 0;
                 $total_correct = 0;
-                $answers = get_records('realtimequiz_answer', 'questionid', $questionid);
+                $answers = get_records('realtimequiz_answer', 'questionid', $questionid,'id');
                 echo '<status>showresults</status>';
                 echo '<results>';
                 foreach ($answers as $answer) {

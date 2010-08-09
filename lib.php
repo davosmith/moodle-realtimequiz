@@ -72,12 +72,16 @@ function realtimequiz_delete_instance($id) {
     $result = true;
 
 	$questions = get_records('realtimequiz_question', 'quizid', "$id");
-	foreach ($questions as $question) { // Get each question
-		$answers = get_records('realtimequiz_answer', 'questionid', "$question->id");
-		foreach ($answers as $answer) { // Get each answer for that question
-			delete_records('realtimequiz_submission', 'answerid', "$answer->id"); // Delete each submission for that answer
+	if (!empty($questions)) {
+		foreach ($questions as $question) { // Get each question
+			$answers = get_records('realtimequiz_answer', 'questionid', "$question->id");
+			if (!empty($answers)) {
+				foreach ($answers as $answer) { // Get each answer for that question
+					delete_records('realtimequiz_submitted', 'answerid', "$answer->id"); // Delete each submission for that answer
+				}
+				delete_records('realtimequiz_answer', 'questionid', "$question->id"); // Delete each answer
+			}
 		}
-		delete_records('realtimequiz_answer', 'questionid', "$question->id"); // Delete each answer
 	}
 	delete_records('realtimequiz_question', 'quizid', "$id"); // Delete each question
 	delete_records('realtimequiz_session', 'quizid', "$id"); // Delete each session

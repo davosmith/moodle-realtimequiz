@@ -27,7 +27,7 @@
 	require_login($course->id);
     $context = get_context_instance(CONTEXT_MODULE, $cm->id);
 	require_capability('mod/realtimequiz:editquestions', $context);
-	add_to_log($course->id, "realtimequiz", "Update", "edit.php?id=$quizid", "$realtimequiz->id");
+	add_to_log($course->id, "realtimequiz", "update: $action", "edit.php?id=$quizid");
 		
 	// Some useful functions:
 	function realtimequiz_list_questions($quizid, $cm) {
@@ -39,33 +39,35 @@
 		$questioncount = count($questions);
 		$expectednumber = 1;
 		echo '<ol>';
-		foreach ($questions as $question) {
-			// A good place to double-check the question numbers and fix any that are broken
-			if ($question->questionnum != $expectednumber) {
+	    if (!empty($questions)) {
+		    foreach ($questions as $question) {
+			    // A good place to double-check the question numbers and fix any that are broken
+			    if ($question->questionnum != $expectednumber) {
 //				echo "Warning: expected questionnum = $expectednumber, found questionnum = $question->questionnum. Fixing...";
-				$question->questionnum = $expectednumber;
-				update_record('realtimequiz_question', $question);
+					$question->questionnum = $expectednumber;
+					update_record('realtimequiz_question', $question);
+				}
+			
+				$qtext = $question->questiontext;
+				if (strlen($qtext) > 60) {
+					$qtext = sprintf("%.60s...", $qtext);
+				}
+				echo "<li>$qtext ";
+				if ($question->questionnum > 1) {
+					echo "<a href='edit.php?id=$quizid&amp;action=moveup&amp;questionid=$question->id'><img src='$CFG->pixpath/t/up.gif' alt='Move Question $question->questionnum Up' /></a> ";	//FIXME - translate alt text
+				}
+				if ($question->questionnum < $questioncount) {
+					echo "<a href='edit.php?id=$quizid&amp;action=movedown&amp;questionid=$question->id'><img src='$CFG->pixpath/t/down.gif' alt='Move Question $question->questionnum Down' /></a> ";	//FIXME - translate alt text
+				}
+				echo "<a href='edit.php?id=$quizid&amp;action=editquestion&amp;questionid=$question->id'><img src='$CFG->pixpath/t/edit.gif' alt='Edit Question $question->questionnum' /></a> ";	//FIXME - translate alt text
+				echo "<a href='edit.php?id=$quizid&amp;action=deletequestion&amp;questionid=$question->id'><img src='$CFG->pixpath/t/delete.gif' alt='Delete Question $question->questionnum' /></a>";	//FIXME - translate alt text
+				echo '</li>';
+				$expectednumber++;
 			}
-		
-			$qtext = $question->questiontext;
-			if (strlen($qtext) > 60) {
-				$qtext = sprintf("%.60s...", $qtext);
-			}
-			echo "<li>$qtext ";
-			if ($question->questionnum > 1) {
-				echo "<a href='edit.php?id=$quizid&action=moveup&questionid=$question->id'><img src='$CFG->pixpath/t/up.gif' alt='Move Question $question->questionnum Up' /></a> ";	//FIXME - translate alt text
-			}
-			if ($question->questionnum < $questioncount) {
-				echo "<a href='edit.php?id=$quizid&action=movedown&questionid=$question->id'><img src='$CFG->pixpath/t/down.gif' alt='Move Question $question->questionnum Down' /></a> ";	//FIXME - translate alt text
-			}
-			echo "<a href='edit.php?id=$quizid&action=editquestion&questionid=$question->id'><img src='$CFG->pixpath/t/edit.gif' alt='Edit Question $question->questionnum' /></a> ";	//FIXME - translate alt text
-			echo "<a href='edit.php?id=$quizid&action=deletequestion&questionid=$question->id'><img src='$CFG->pixpath/t/delete.gif' alt='Delete Question $question->questionnum' /></a>";	//FIXME - translate alt text
-			echo '</li>';
-			$expectednumber++;
 		}
 		echo '</ol>';
-		echo "<form method='post' action='$CFG->wwwroot/mod/realtimequiz/edit.php?id=$quizid&action=addquestion'>";
-		echo '<input type=\'submit\' value=\''.get_string('addquestion','realtimequiz').'\'></form>';
+		echo "<form method='post' action='$CFG->wwwroot/mod/realtimequiz/edit.php?id=$quizid&amp;action=addquestion'>";
+		echo '<input type=\'submit\' value=\''.get_string('addquestion','realtimequiz').'\'></input></form>';
 		echo '<br /><div><a href=\''.$CFG->wwwroot.'/mod/realtimequiz/view.php?id='.$cm->id.'\'>'.get_string('backquiz','realtimequiz').'</a></div></center>';
 	}
 	
@@ -92,7 +94,7 @@
 			}
 			echo '<h2>'.get_string('edittingquestion','realtimequiz').$question->questionnum.'</h2>';
 			
-			$answers = get_records('realtimequiz_answer', 'questionid', $questionid);
+			$answers = get_records('realtimequiz_answer', 'questionid', $questionid, 'id');
 		}
 		
 		// Override the above values with any parameters passed in
@@ -216,7 +218,7 @@
 			$answertexts = required_param('answertext', PARAM_TEXT);
 			$answercorrects = optional_param('answercorrect', FALSE, PARAM_INT);
 			$answerids = required_param('answerid', PARAM_INT);
-		
+
 			// Copy the answers into a suitable array and count how many (valid) correct answers there are
 			$correctcount = 0;
 			if ($answercorrects !== FALSE) {
@@ -226,11 +228,9 @@
 					$answers[$i] = new stdClass();
 					$answers[$i]->id = $answerids[$i];
 					$answers[$i]->answertext = $answertexts[$i];
-					$answers[$i]->correct = $answercorrects[$i];
+					$answers[$i]->correct = isset($answercorrects[$i]) ? 1 : 0; // FIX IN CVS
 					if ($answers[$i]->correct == 1 && $answers[$i]->answertext != '') {
 						$correctcount++;
-					} else {
-						$answers[$i]->correct = 0;
 					}
 				}
 			}
@@ -270,7 +270,7 @@
 						}
 					} else {
 						if ($answer->answertext == '') { // Empty answer = remove it
-						    delete_records('realtimequiz_submission', 'answerid', $answer->id); // Delete any submissions for that answer
+						    delete_records('realtimequiz_submitted', 'answerid', $answer->id); // Delete any submissions for that answer
 							delete_records('realtimequiz_answer', 'id', $answer->id);
 							
 						} else { // Update the answer
@@ -291,9 +291,11 @@
 
 		if (optional_param('yes', false, PARAM_BOOL)) {
 		    $answers = get_records('realtimequiz_answer', 'questionid', $questionid);
-		    foreach ($answers as $answer) { // Get each answer for that question
-			    delete_records('realtimequiz_submission', 'answerid', $answer->id); // Delete any submissions for that answer
-		    }
+			if (!empty($answers)) {
+			    foreach ($answers as $answer) { // Get each answer for that question
+				    delete_records('realtimequiz_submitted', 'answerid', $answer->id); // Delete any submissions for that answer
+			    }
+			}
 		    delete_records('realtimequiz_answer', 'questionid', $questionid); // Delete each answer
 			delete_records('realtimequiz_question', 'id', $questionid);
 			// Questionnumbers sorted out when we display the list of questions

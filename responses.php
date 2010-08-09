@@ -98,30 +98,34 @@
 		$linkurl = "$CFG->wwwroot/mod/realtimequiz/responses.php?id=$cm->id&showsession=$showsession&questionid=";
 		
 		echo '<br /><table border="1">';
-		foreach ($questions as $question) {
-			echo '<tr><td width="30%">'.$question->questionnum.'</td>';
-			$answers = get_records('realtimequiz_answer', 'questionid', $question->id);
-			foreach ($answers as $answer) {
-				if ($answer->correct == 1) {
-					echo '<td width="10%"><b>'.s($answer->answertext).'</b></td>';
-				} else {
-					echo '<td width="10%">'.s($answer->answertext).'</td>';
+		if (!empty($questions)) {
+			foreach ($questions as $question) {
+				echo '<tr><td width="30%">'.$question->questionnum.'</td>';
+				$answers = get_records('realtimequiz_answer', 'questionid', $question->id, 'id');
+				if (!empty($answers)) {
+					foreach ($answers as $answer) {
+						if ($answer->correct == 1) {
+							echo '<td width="10%"><b>'.s($answer->answertext).'</b></td>';
+						} else {
+							echo '<td width="10%">'.s($answer->answertext).'</td>';
+						}
+					}
+					echo '</tr><tr><td><a href="'.$linkurl.$question->id.'">'.s($question->questiontext).'</a></td>';
+					foreach ($answers as $answer) {
+						if ($showsession == 0) {
+							$count = count_records('realtimequiz_submitted', 'answerid', $answer->id);
+						} else {
+							$count = count_records('realtimequiz_submitted', 'answerid', $answer->id, 'sessionid', $showsession);
+						}
+						if ($answer->correct == 1) {
+							echo '<td align="center"><b>'.$count.'</b></td>';
+						} else {
+							echo '<td align="center">'.$count.'</td>';
+						}
+					}
 				}
+				echo '</tr><tr><td colspan="99">&nbsp;</td></tr>';
 			}
-			echo '</tr><tr><td><a href="'.$linkurl.$question->id.'">'.s($question->questiontext).'</a></td>';
-			foreach ($answers as $answer) {
-				if ($showsession == 0) {
-					$count = count_records('realtimequiz_submitted', 'answerid', $answer->id);
-				} else {
-					$count = count_records('realtimequiz_submitted', 'answerid', $answer->id, 'sessionid', $showsession);
-				}
-				if ($answer->correct == 1) {
-					echo '<td align="center"><b>'.$count.'</b></td>';
-				} else {
-					echo '<td align="center">'.$count.'</td>';
-				}
-			}
-			echo '</tr><tr><td colspan="99">&nbsp;</td></tr>';
 		}
 		echo '</table>';
 	} else {
@@ -130,12 +134,14 @@
 		echo '<h2>'.get_string('question','realtimequiz').$question->questionnum.'</h2>';
 		echo '<p>'.s($question->questiontext).'</p><br />';
 		echo '<table border="1"><tr><td width="30%">&nbsp;</td>';
-		$answers = get_records('realtimequiz_answer', 'questionid', $questionid);
-		foreach ($answers as $answer) {
-			if ($answer->correct == 1) {
-				echo '<td width="10%"><b>'.s($answer->answertext).'</b></td>';
-			} else {
-				echo '<td width="10%">'.s($answer->answertext).'</td>';
+		$answers = get_records('realtimequiz_answer', 'questionid', $questionid,'id');
+		if (!empty($answers)) {
+			foreach ($answers as $answer) {
+				if ($answer->correct == 1) {
+					echo '<td width="10%"><b>'.s($answer->answertext).'</b></td>';
+				} else {
+					echo '<td width="10%">'.s($answer->answertext).'</td>';
+				}
 			}
 		}
 		echo '</tr>';
