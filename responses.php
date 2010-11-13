@@ -13,6 +13,9 @@
     $a  = optional_param('a', 0, PARAM_INT);  // realtimequiz ID
 	$showsession = optional_param('showsession', 0, PARAM_INT);
 	$questionid = optional_param('questionid', 0, PARAM_INT);
+    $nextquestion = optional_param('nextquestion', false, PARAM_TEXT);
+    $prevquestion = optional_param('prevquestion', false, PARAM_TEXT);
+    $allquestions = optional_param('allquestions', false, PARAM_TEXT);
 
     if ($id) {
         if (! $cm = get_record("course_modules", "id", $id)) {
@@ -108,6 +111,30 @@
 	
     $tickimg = "<img src='{$CFG->pixpath}/i/tick_green_big.gif' alt='".get_string('tick','realtimequiz')."' />";
     $crossimg = "<img src='{$CFG->pixpath}/i/cross_red_big.gif' alt='".get_string('cross','realtimequiz')."' />";
+
+    if ($questionid != 0) {
+        if ($allquestions) {
+            $questionid = 0;
+        } elseif ($nextquestion) {
+            $question = get_record('realtimequiz_question', 'id', $questionid);
+            $newquestion = get_record('realtimequiz_question', 'quizid', $question->quizid, 'questionnum', $question->questionnum + 1);
+
+            if ($newquestion) {
+                $questionid = $newquestion->id;
+            } else {
+                $questionid = 0;
+            }
+        } elseif ($prevquestion) {
+            $question = get_record('realtimequiz_question', 'id', $questionid);
+            $newquestion = get_record('realtimequiz_question', 'quizid', $question->quizid, 'questionnum', $question->questionnum - 1);
+
+            if ($newquestion) {
+                $questionid = $newquestion->id;
+            } else {
+                $questionid = 0;
+            }
+        }
+    }
         
     if ($questionid == 0) {
 		$questions = get_records('realtimequiz_question', 'quizid', $realtimequiz->id, 'questionnum');
@@ -116,17 +143,17 @@
 		echo '<br /><table border="1" style="border-style: none;">';
 		if (!empty($questions)) {
 			foreach ($questions as $question) {
-				echo '<tr><td width="30%">'.$question->questionnum.'</td>';
+				echo '<tr class="realtimequiz_report_question"><td width="30%">'.$question->questionnum.'</td>';
 				$answers = get_records('realtimequiz_answer', 'questionid', $question->id, 'id');
 				if (!empty($answers)) {
 					foreach ($answers as $answer) {
 						if ($answer->correct == 1) {
-							echo '<td width="10%"><b>'.s($answer->answertext).'</b></td>';
+							echo '<td width="10%" class="realtimequiz_report_question_correct"><b>'.s($answer->answertext).'</b></td>';
 						} else {
 							echo '<td width="10%">'.s($answer->answertext).'</td>';
 						}
 					}
-					echo '</tr><tr><td><a href="'.$linkurl.$question->id.'">'.s($question->questiontext).'</a></td>';
+					echo '</tr><tr class="realtimequiz_report_answer"><td><a href="'.$linkurl.$question->id.'">'.s($question->questiontext).'</a></td>';
 					foreach ($answers as $answer) {
 						if ($showsession == 0) {
 							$count = count_records('realtimequiz_submitted', 'answerid', $answer->id);
@@ -134,7 +161,7 @@
 							$count = count_records('realtimequiz_submitted', 'answerid', $answer->id, 'sessionid', $showsession);
 						}
 						if ($answer->correct == 1) {
-							echo '<td align="center"><b>'.$count.'</b>&nbsp;'.$tickimg.'</td>';
+							echo '<td align="center" class="realtimequiz_report_answer_correct" ><b>'.$count.'</b>&nbsp;'.$tickimg.'</td>';
 						} else {
 							echo '<td align="center">'.$count.'&nbsp;'.$crossimg.'</td>';
 						}
@@ -147,11 +174,13 @@
 		}
 		echo '</table>';
 	} else {
-		$question = get_record('realtimequiz_question', 'id', $questionid);
+        print_box_start('generalbox boxwidthwide boxaligncenter');
+
+        $question = get_record('realtimequiz_question', 'id', $questionid);
 		
 		echo '<h2>'.get_string('question','realtimequiz').$question->questionnum.'</h2>';
 		echo '<p>'.s($question->questiontext).'</p><br />';
-		echo '<table border="1"><tr><td width="30%">&nbsp;</td>';
+		echo '<table border="1" class="realtimequiz_report_answer"><tr class="realtimequiz_report_question"><td width="30%">&nbsp;</td>';
 		$answers = get_records('realtimequiz_answer', 'questionid', $questionid,'id');
 		if (!empty($answers)) {
 			foreach ($answers as $answer) {
@@ -169,30 +198,46 @@
 			$submitted = get_records_select('realtimequiz_submitted', "questionid='$questionid' AND sessionid='$showsession'", 'userid');
 		}
 
-		foreach ($submitted as $submission) {
-			$user = get_record('user', 'id', $submission->userid);
-			$fullname = fullname($user, has_capability('moodle/site:viewfullnames', $context));
-			echo '<tr><td>'.$fullname.'</td>';
+        if (!$submitted) {
+            echo '<tr><td colspan="99">'.get_string('noanswers','realtimequiz').'</td></tr>';
+        } else {
+            foreach ($submitted as $submission) {
+                $user = get_record('user', 'id', $submission->userid);
+                $fullname = fullname($user, has_capability('moodle/site:viewfullnames', $context));
+                echo '<tr><td>'.$fullname.'</td>';
 
-			foreach ($answers as $answer) {
-				echo '<td align="center">';
-				if ($answer->id == $submission->answerid) {
-					if ($answer->correct == 1) {
-						echo $tickimg;
-					} else {
-						echo $crossimg;
-					}
-				} else {
-					echo '&nbsp;';
-				}
-				echo '</td>';
-			}
-			echo '</tr>';
-		}
+                foreach ($answers as $answer) {
+                    echo '<td align="center">';
+
+                    if ($answer->id == $submission->answerid) {
+                        if ($answer->correct == 1) {
+                            echo $tickimg;
+                        } else {
+                            echo $crossimg;
+                        }
+                    } else {
+                        echo '&nbsp;';
+                    }
+                    echo '</td>';
+                }
+                echo '</tr>';
+            }
+        }
 		echo '</table>';
+
+        $thisurl = $CFG->wwwroot.'/mod/realtimequiz/responses.php';
+        echo '<br /><form action="'.$thisurl.'" method="get">';
+        echo '<input type="hidden" name="id" value="'.$cm->id.'" />';
+        echo '<input type="hidden" name="showsession" value="'.$showsession.'" />';
+        echo '<input type="hidden" name="questionid" value="'.$questionid.'" />';
+
+        echo '<input type="submit" name="prevquestion" value="'.get_string('prevquestion','realtimequiz').'" />&nbsp;';
+        echo '<input type="submit" name="allquestions" value="'.get_string('allquestions','realtimequiz').'" />&nbsp;';
+        echo '<input type="submit" name="nextquestion" value="'.get_string('nextquestion','realtimequiz').'" />';
+
+        echo '</form>';
 		
-		echo '<br /><div><a href="'.$CFG->wwwroot.'/mod/realtimequiz/responses.php?id='.$cm->id.'&showsession='.$showsession.'">';
-		echo get_string('backresponses','realtimequiz').'</a></div>';
+        print_box_end();
 	}
 	
 

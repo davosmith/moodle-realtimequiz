@@ -48,6 +48,10 @@ $string['choosesession'] = 'Choose a session to display: ';
 $string['showsession'] = 'Show';
 $string['allsessions'] = 'All Sessions';
 $string['backresponses'] = 'Back to the full results';
+$string['prevquestion'] = 'Previous question';
+$string['nextquestion'] = 'Next question';
+$string['allquestions'] = 'Back to full results';
+$string['noanswers'] = 'No answers given';
 
 // Used by quizdata.php
 $string['notallowedattempt'] = 'You are not allowed to attempt this quiz';

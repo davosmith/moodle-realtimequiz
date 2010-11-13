@@ -89,6 +89,7 @@
 
 /// Print the main part of the page
 
+    print_box_start('generalbox boxwidthwide boxaligncenter realtimequizbox');
 ?>
     <div id="questionarea"></div>
 <!--    <div id="debugarea" style="border: 1px dashed black; width: 600px; height: 100px; overflow: scroll; "></div> -->
@@ -157,6 +158,7 @@
         echo '<script type="text/javascript">realtimequiz_init_student_view();</script>';
     }
     
+    print_box_end();
 
 /// Finish the page
     print_footer($course);
