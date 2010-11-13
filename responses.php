@@ -106,11 +106,14 @@
 	}
 	echo '</select> <input type="submit" value="'.get_string('showsession','realtimequiz').'" /></form></center>';
 	
-	if ($questionid == 0) {
+    $tickimg = "<img src='{$CFG->pixpath}/i/tick_green_big.gif' alt='".get_string('tick','realtimequiz')."' />";
+    $crossimg = "<img src='{$CFG->pixpath}/i/cross_red_big.gif' alt='".get_string('cross','realtimequiz')."' />";
+        
+    if ($questionid == 0) {
 		$questions = get_records('realtimequiz_question', 'quizid', $realtimequiz->id, 'questionnum');
 		$linkurl = "$CFG->wwwroot/mod/realtimequiz/responses.php?id=$cm->id&showsession=$showsession&questionid=";
 		
-		echo '<br /><table border="1">';
+		echo '<br /><table border="1" style="border-style: none;">';
 		if (!empty($questions)) {
 			foreach ($questions as $question) {
 				echo '<tr><td width="30%">'.$question->questionnum.'</td>';
@@ -131,18 +134,20 @@
 							$count = count_records('realtimequiz_submitted', 'answerid', $answer->id, 'sessionid', $showsession);
 						}
 						if ($answer->correct == 1) {
-							echo '<td align="center"><b>'.$count.'</b></td>';
+							echo '<td align="center"><b>'.$count.'</b>&nbsp;'.$tickimg.'</td>';
 						} else {
-							echo '<td align="center">'.$count.'</td>';
+							echo '<td align="center">'.$count.'&nbsp;'.$crossimg.'</td>';
 						}
 					}
 				}
-				echo '</tr><tr><td colspan="99">&nbsp;</td></tr>';
+				echo '</tr><tr style="border-style: none;">';
+                echo '<td style="border-style: none;">&nbsp;</td>';
+                echo '</tr>';
 			}
 		}
 		echo '</table>';
 	} else {
-		$question = get_record('realtimequiz_question', 'questionid', $questionid);
+		$question = get_record('realtimequiz_question', 'id', $questionid);
 		
 		echo '<h2>'.get_string('question','realtimequiz').$question->questionnum.'</h2>';
 		echo '<p>'.s($question->questiontext).'</p><br />';
@@ -163,6 +168,7 @@
 		} else {
 			$submitted = get_records_select('realtimequiz_submitted', "questionid='$questionid' AND sessionid='$showsession'", 'userid');
 		}
+
 		foreach ($submitted as $submission) {
 			$user = get_record('user', 'id', $submission->userid);
 			$fullname = fullname($user, has_capability('moodle/site:viewfullnames', $context));
@@ -172,9 +178,9 @@
 				echo '<td align="center">';
 				if ($answer->id == $submission->answerid) {
 					if ($answer->correct == 1) {
-						echo '<b>1</b>';
+						echo $tickimg;
 					} else {
-						echo '1';
+						echo $crossimg;
 					}
 				} else {
 					echo '&nbsp;';
