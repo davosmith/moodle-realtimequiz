@@ -78,14 +78,16 @@
                             update_module_button($cm->id, $course->id, $strrealtimequiz), navmenu($course, $cm));
         
     }
+
+    realtimequiz_view_tabs('view', $cm->id, $context);
                   
-	if (has_capability('mod/realtimequiz:editquestions', $context)) {
+/*	if (has_capability('mod/realtimequiz:editquestions', $context)) {
 		echo "<div class='reportlink'><a href='$CFG->wwwroot/mod/realtimequiz/edit.php?id=$realtimequiz->id'>".get_string('editquestions','realtimequiz').'</a></div>';
 	}
 				  
     if (has_capability('mod/realtimequiz:seeresponses', $context)) {
         echo "<div class='reportlink'><a href='$CFG->wwwroot/mod/realtimequiz/responses.php?id=$cm->id'>".get_string('seeresponses','realtimequiz').'</a></div>';
-    }
+        }*/
 
 /// Print the main part of the page
 

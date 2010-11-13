@@ -206,5 +206,44 @@ function realtimequiz_scale_used ($realtimequizid,$scaleid) {
 /// Any other realtimequiz functions go here.  Each of them must have a name that 
 /// starts with realtimequiz_
 
+function realtimequiz_view_tabs($currenttab, $cmid, $context) {
+    global $CFG;
+        
+    $tabs = array();
+    $row = array();
+    $inactive = array();
+    $activated = array();
+
+    if (has_capability('mod/realtimequiz:attempt', $context)) {
+        $row[] = new tabobject('view', "$CFG->wwwroot/mod/realtimequiz/view.php?id={$cmid}", get_string('view', 'realtimequiz'));
+    }
+    if (has_capability('mod/realtimequiz:editquestions', $context)) {
+        $row[] = new tabobject('edit', "$CFG->wwwroot/mod/realtimequiz/edit.php?id={$cmid}", get_string('edit', 'realtimequiz'));
+    }
+    if (has_capability('mod/realtimequiz:seeresponses', $context)) {
+        $row[] = new tabobject('responses', "$CFG->wwwroot/mod/realtimequiz/responses.php?id={$cmid}", get_string('responses', 'realtimequiz'));
+    }
+
+    if ($currenttab == 'view' && count($row) == 1) {
+        // No tabs for students
+        echo '<br />';
+    } else {
+        $tabs[] = $row;
+    }
+
+    if ($currenttab == 'responses') {
+        $activated[] = 'responses';
+    }
+
+    if ($currenttab == 'edit') {
+        $activated[] = 'edit';
+    }
+
+    if ($currenttab == 'view') {
+        $activated[] = 'view';
+    }
+
+    print_tabs($tabs, $currenttab, $inactive, $activated);
+}
 
 ?>

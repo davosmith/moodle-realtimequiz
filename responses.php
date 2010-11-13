@@ -77,6 +77,8 @@
                             update_module_button($cm->id, $course->id, $strrealtimequiz), navmenu($course, $cm));
         
     }
+
+    realtimequiz_view_tabs('responses', $cm->id, $context);
                   
 	$sessions = get_records('realtimequiz_session', 'quizid', $realtimequiz->id, 'timestamp');
 	if (!$sessions) {
@@ -237,11 +239,9 @@
 
         echo '</form>';
 		
+
         print_box_end();
 	}
 	
-
-	echo '<br /><div><a href=\''.$CFG->wwwroot.'/mod/realtimequiz/view.php?id='.$cm->id.'\'>'.get_string('backquiz','realtimequiz').'</a></div></center>';
-              
     print_footer($course);
 ?>

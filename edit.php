@@ -9,25 +9,43 @@
 
 	require_once('../../config.php');
 	require_once('lib.php');
-	
-	$quizid = required_param('id', PARAM_INT);
+
+    $id = optional_param('id', false, PARAM_INT);
+    $quizid = optional_param('quizid', false, PARAM_INT);
 	$action = optional_param('action', 'listquestions', PARAM_ALPHA);
 	$questionid = optional_param('questionid', 0, PARAM_INT);
-	
-	if (! $quiz = get_record('realtimequiz', 'id', $quizid)) {
-		error("Quiz id ($quizid) is incorrect");
-	}
-	if (! $course = get_record('course', 'id', $quiz->course)) {
-		error("Course is misconfigured");
-	}
-	if (! $cm = get_coursemodule_from_instance('realtimequiz', $quiz->id, $course->id)) {
-		error("Course Module ID was incorrect");
-	}
+
+    if ($id) {
+        if (! $cm = get_record("course_modules", "id", $id)) {
+            error("Course Module ID was incorrect");
+        }
+    
+        if (! $course = get_record("course", "id", $cm->course)) {
+            error("Course is misconfigured");
+        }
+    
+        if (! $quiz = get_record("realtimequiz", "id", $cm->instance)) {
+            error("Course module is incorrect");
+        }
+
+        $quizid = $quiz->id;
+        
+    } else {
+        if (! $quiz = get_record('realtimequiz', 'id', $quizid)) {
+            error("Quiz id ($quizid) is incorrect");
+        }
+        if (! $course = get_record('course', 'id', $quiz->course)) {
+            error("Course is misconfigured");
+        }
+        if (! $cm = get_coursemodule_from_instance('realtimequiz', $quiz->id, $course->id)) {
+            error("Course Module ID was incorrect");
+        }
+    }
 	
 	require_login($course->id);
     $context = get_context_instance(CONTEXT_MODULE, $cm->id);
 	require_capability('mod/realtimequiz:editquestions', $context);
-	add_to_log($course->id, "realtimequiz", "update: $action", "edit.php?id=$quizid");
+	add_to_log($course->id, "realtimequiz", "update: $action", "edit.php?quizid=$quizid");
 		
 	// Some useful functions:
 	function realtimequiz_list_questions($quizid, $cm) {
@@ -54,19 +72,19 @@
 				}
 				echo "<li>$qtext ";
 				if ($question->questionnum > 1) {
-					echo "<a href='edit.php?id=$quizid&amp;action=moveup&amp;questionid=$question->id'><img src='$CFG->pixpath/t/up.gif' alt='Move Question $question->questionnum Up' /></a> ";	//FIXME - translate alt text
+					echo "<a href='edit.php?quizid=$quizid&amp;action=moveup&amp;questionid=$question->id'><img src='$CFG->pixpath/t/up.gif' alt='Move Question $question->questionnum Up' /></a> ";	//FIXME - translate alt text
 				}
 				if ($question->questionnum < $questioncount) {
-					echo "<a href='edit.php?id=$quizid&amp;action=movedown&amp;questionid=$question->id'><img src='$CFG->pixpath/t/down.gif' alt='Move Question $question->questionnum Down' /></a> ";	//FIXME - translate alt text
+					echo "<a href='edit.php?quizid=$quizid&amp;action=movedown&amp;questionid=$question->id'><img src='$CFG->pixpath/t/down.gif' alt='Move Question $question->questionnum Down' /></a> ";	//FIXME - translate alt text
 				}
-				echo "<a href='edit.php?id=$quizid&amp;action=editquestion&amp;questionid=$question->id'><img src='$CFG->pixpath/t/edit.gif' alt='Edit Question $question->questionnum' /></a> ";	//FIXME - translate alt text
-				echo "<a href='edit.php?id=$quizid&amp;action=deletequestion&amp;questionid=$question->id'><img src='$CFG->pixpath/t/delete.gif' alt='Delete Question $question->questionnum' /></a>";	//FIXME - translate alt text
+				echo "<a href='edit.php?quizid=$quizid&amp;action=editquestion&amp;questionid=$question->id'><img src='$CFG->pixpath/t/edit.gif' alt='Edit Question $question->questionnum' /></a> ";	//FIXME - translate alt text
+				echo "<a href='edit.php?quizid=$quizid&amp;action=deletequestion&amp;questionid=$question->id'><img src='$CFG->pixpath/t/delete.gif' alt='Delete Question $question->questionnum' /></a>";	//FIXME - translate alt text
 				echo '</li>';
 				$expectednumber++;
 			}
 		}
 		echo '</ol>';
-		echo "<form method='post' action='$CFG->wwwroot/mod/realtimequiz/edit.php?id=$quizid&amp;action=addquestion'>";
+		echo "<form method='post' action='$CFG->wwwroot/mod/realtimequiz/edit.php?quizid=$quizid&amp;action=addquestion'>";
 		echo '<input type=\'submit\' value=\''.get_string('addquestion','realtimequiz').'\'></input></form>';
 		echo '<br /><div><a href=\''.$CFG->wwwroot.'/mod/realtimequiz/view.php?id='.$cm->id.'\'>'.get_string('backquiz','realtimequiz').'</a></div></center>';
 	}
@@ -118,7 +136,7 @@
 		}
 		
 		
-		echo "<form method='post' action='$CFG->wwwroot/mod/realtimequiz/edit.php?id=$quizid' enctype='multipart/formdata'>";
+		echo "<form method='post' action='$CFG->wwwroot/mod/realtimequiz/edit.php?quizid=$quizid' enctype='multipart/formdata'>";
 		echo '<table cellpadding="5">
 		<tr valign="top">
 		<td align="right"><b>'.get_string('questiontext','realtimequiz').'</b></td>
@@ -203,7 +221,7 @@
 		echo $question->questiontext;
 		echo '"</p>';
 		
-		echo '<form method="post" action="'.$CFG->wwwroot.'/mod/realtimequiz/edit.php?id='.$quizid.'">';
+		echo '<form method="post" action="'.$CFG->wwwroot.'/mod/realtimequiz/edit.php?quizid='.$quizid.'">';
 		echo '<input type="hidden" name="action" value="dodeletequestion" />';
 		echo '<input type="hidden" name="questionid" value="'.$questionid.'" />';
 		echo '<input type="hidden" name="sesskey" value="'.sesskey().'" />';
@@ -242,6 +260,8 @@
                             update_module_button($cm->id, $course->id, $strrealtimequiz), navmenu($course, $cm));
         
     }
+
+    realtimequiz_view_tabs('edit', $cm->id, $context);
 				  
 	if (($action == 'doaddquestion') || ($action == 'doeditquestion')) {
 	

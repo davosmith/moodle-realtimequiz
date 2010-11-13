@@ -22,7 +22,7 @@ $string['questiontime'] = 'Default time to display each question (seconds): ';
 $string['questionimage'] = '(Optional) image: ';
 $string['removeimage'] = 'Remove image: ';
 
-// Editting the realtime quiz questions
+// Editing the realtime quiz questions
 $string['addquestion'] = 'Add Question';
 $string['backquiz'] = 'Back to the Realtime Quiz';
 $string['questiontext'] = 'Question Text:';
@@ -41,6 +41,9 @@ $string['no'] = 'No';
 $string['addingquestion'] = 'Adding Question ';
 $string['edittingquestion'] = 'Editting Question ';
 $string['answer'] = 'Answer ';
+$string['view'] = 'View quiz';
+$string['responses'] = 'View responses';
+$string['edit'] = 'Edit quiz';
 
 // Viewing the responses from different students
 $string['nosessions'] = 'This Realtime Quiz has not yet been attempted';
