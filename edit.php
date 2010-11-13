@@ -15,6 +15,10 @@
 	$action = optional_param('action', 'listquestions', PARAM_ALPHA);
 	$questionid = optional_param('questionid', 0, PARAM_INT);
 
+    $addanswers = optional_param('addanswers', false, PARAM_BOOL);
+    $saveadd = optional_param('saveadd', false, PARAM_BOOL);
+    $canceledit = optional_param('cancel', false, PARAM_BOOL);
+
     if ($id) {
         if (! $cm = get_record("course_modules", "id", $id)) {
             error("Course Module ID was incorrect");
@@ -119,13 +123,21 @@
 			$answers = get_records('realtimequiz_answer', 'questionid', $questionid, 'id');
 		}
 		
-		// Override the above values with any parameters passed in
-		$question->id = optional_param('questionid',$question->id, PARAM_INT);
-		$question->questiontext = optional_param('questiontext', $question->questiontext, PARAM_TEXT);
-		$answertexts = optional_param('answertext', false, PARAM_TEXT);
-		$answercorrects = optional_param('answercorrect', false, PARAM_INT);
-		$answerids = optional_param('answerid', false, PARAM_INT);
-		$question->questiontime = optional_param('questiontime', $question->questiontime, PARAM_INT);
+        if (optional_param('saveadd', false, PARAM_BOOL)) {
+            // When clicking 'save and add another' we want to ignore any parameters hanging around
+            $answertexts = false;
+            $answercorrects = false;
+            $answerids = false;
+
+        } else {
+            // Override the above values with any parameters passed in
+            $question->id = optional_param('questionid',$question->id, PARAM_INT);
+            $question->questiontext = optional_param('questiontext', $question->questiontext, PARAM_TEXT);
+            $answertexts = optional_param('answertext', false, PARAM_TEXT);
+            $answercorrects = optional_param('answercorrect', false, PARAM_INT);
+            $answerids = optional_param('answerid', false, PARAM_INT);
+            $question->questiontime = optional_param('questiontime', $question->questiontime, PARAM_INT);
+        }
 		
 		if ($answertexts !== false && $answercorrects !== false && $answerids !== false) {
 			$answers = array();
@@ -211,8 +223,13 @@
 		echo '<input type="hidden" name="questionnum" value="'.$question->questionnum.'" />';
 		echo '<input type="hidden" name="minanswers" value="'.$minanswers.'" />';
 		echo '<input type="hidden" name="sesskey" value="'.sesskey().'" />';
-		echo '<p><input type="submit" name="updatequestion" value="'.get_string('updatequestion', 'realtimequiz').'" /></p>';
-		echo '<input type="submit" name="addanswers" value="'.get_string('addanswers', 'realtimequiz').'" /></form></center>';
+		echo '<input type="submit" name="addanswers" value="'.get_string('addanswers', 'realtimequiz').'" />';
+		echo '<p>';
+        echo '<input type="submit" name="updatequestion" value="'.get_string('updatequestion', 'realtimequiz').'" />&nbsp;';
+        echo '<input type="submit" name="saveadd" value="'.get_string('saveadd', 'realtimequiz').'" />&nbsp;';
+        echo '<input type="submit" name="cancel" value="'.get_string('cancel').'" />';
+        echo '</p>';
+        echo '</form></center>';
 	}
 	
 	function realtimequiz_confirm_deletequestion($quizid, $questionid) {
@@ -272,11 +289,14 @@
 	
 		if (!confirm_sesskey()) {
 			error(get_string('badsesskey', 'realtimequiz'));
-		}  
+		}
 	
-		if (optional_param('addanswers', false, PARAM_BOOL)) {
+		if ($addanswers) {
 			$minanswers = optional_param('minanswers', 4, PARAM_INT);
 			realtimequiz_edit_question($quizid, $questionid, $minanswers + 3);
+
+        } elseif ($canceledit) {
+            $action = 'listquestions';
 			
 		} else {
 				
@@ -402,7 +422,11 @@
 					}
 				}
 
-				$action = 'listquestions';
+                if ($saveadd) {
+                    $action = 'addquestion';
+                } else {
+                    $action = 'listquestions';
+                }
 			}		
 		}
 	
