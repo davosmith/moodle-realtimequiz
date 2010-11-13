@@ -65,7 +65,7 @@
                      "$navigation <a href=index.php?id=$course->id>$strrealtimequizzes</a> -> $realtimequiz->name", 
                      "", "", true, update_module_button($cm->id, $course->id, $strrealtimequiz), 
                      navmenu($course, $cm));
-    } else {
+    } else { // Moodle 1.9
         $navlinks = array();
         $navlinks[] = array('name' => $strrealtimequizzes, 'link' => "index.php?id={$course->id}", 'type' => 'activity');
         $navlinks[] = array('name' => format_string($realtimequiz->name), 'link' => '', 'type' => 'activityinstance');
@@ -100,6 +100,9 @@
         realtimequiz_set_sesskey('<?php echo sesskey(); ?>');
         realtimequiz_set_coursepage('<?php echo "$CFG->wwwroot/course/view.php?id=$course->id"; ?>');
         realtimequiz_set_siteroot('<?php echo "$CFG->wwwroot"; ?>');
+
+        realtimequiz_set_image('tick',"<?php echo $CFG->pixpath.'/i/tick_green_big.gif'; ?>");
+        realtimequiz_set_image('cross',"<?php echo $CFG->pixpath.'/i/cross_red_big.gif'; ?>");
         
         //Pass all the text strings into the javascript (to allow for translation)
         // Used by view_student.js
@@ -130,6 +133,9 @@
         realtimequiz_set_text('timeleft',"<?php print_string('timeleft', 'realtimequiz') ?>");
         realtimequiz_set_text('displaynext', "<?php print_string('displaynext', 'realtimequiz') ?>");
         realtimequiz_set_text('sendinganswer', "<?php print_string('sendinganswer', 'realtimequiz') ?>");
+        realtimequiz_set_text('tick', "<?php print_string('tick', 'realtimequiz') ?>");
+        realtimequiz_set_text('cross', "<?php print_string('cross', 'realtimequiz') ?>");
+
 
         // Used by view_teacher.js
         realtimequiz_set_text('next',"<?php print_string('next', 'realtimequiz') ?>");

@@ -22,6 +22,7 @@ realtimequiz.myscore=0;
 realtimequiz.myanswer=-1;
 realtimequiz.resendtimer = null;
 
+realtimequiz.image = new Array();
 realtimequiz.text = new Array();
 
 /**************************************************
@@ -57,6 +58,10 @@ function realtimequiz_set_userid(id) {
 
 function realtimequiz_set_sesskey(key) {
     realtimequiz.sesskey = key;
+}
+
+function realtimequiz_set_image(name, value) {
+    realtimequiz.image[name] = value;
 }
 
 function realtimequiz_set_text(name, value) {
@@ -137,7 +142,7 @@ function realtimequiz_set_answer(id, text) {
     }
     newanswer += 'type="button" OnClick="realtimequiz_select_choice('+id+');"';
     newanswer += ' value="&nbsp;&nbsp;'+letter+'&nbsp;&nbsp;" />&nbsp;&nbsp;';
-    newanswer += text + '<span class="result"><img src="blank.gif" height="19" /></span><br /></li>';
+    newanswer += text + '<span class="result"><img src="blank.gif" height="16" /></span><br /></li>';
 
     document.getElementById('answers').innerHTML += newanswer;
     realtimequiz.answernumber += 1;
@@ -184,11 +189,11 @@ function realtimequiz_set_result(answerid, correct, count) {
             if (ansimage[i].className == 'result') {
                 var result = "&nbsp;&nbsp;<img src='";
                 if (correct) {
-                    result += "tick.gif' alt='tick'";
+                    result += realtimequiz.image['tick'] + "' alt='"+realtimequiz.text['tick']+"'";
                 } else {
-                    result += "cross.gif' alt='cross'";
+                    result += realtimequiz.image['cross'] + "' cross.gif' alt='"+realtimequiz.text['cross']+"'";
                 }
-                result += " height='19' />&nbsp;&nbsp; " + count;
+                result += " height='16' />&nbsp;&nbsp; " + count;
                 ansimage[i].innerHTML = result;
                 break;
             }

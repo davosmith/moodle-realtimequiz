@@ -88,6 +88,8 @@ $string['yourresult'] = 'Your result: ';
 $string['displaynext'] = 'About to display next question:';
 $string['sendinganswer'] = 'Sending answer';
 $string['timeleft'] = 'Time left to answer:';
+$string['tick'] = 'Correct answer';
+$string['cross'] = 'Wrong answer';
 
 // Used by view_teacher.js
 // Important - do not use any double-quotes (") in this text as it will cause problems when passing
