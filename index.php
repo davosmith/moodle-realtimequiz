@@ -22,19 +22,29 @@
 
 /// Get all required strings
 
-    $strrealtimequizs = get_string("modulenameplural", "realtimequiz");
+    $strrealtimequizzes = get_string("modulenameplural", "realtimequiz");
     $strrealtimequiz  = get_string("modulename", "realtimequiz");
 
+    if ($CFG->version < 2007101500) { // < Moodle 1.9
+        if ($course->category) {
+            $navigation = "<a href=\"../../course/view.php?id=$course->id\">$course->shortname</a> ->";
+        } else {
+            $navigation = '';
+        }
 
-/// Print the header
+        print_header("$course->shortname: $strrealtimequizzes", "$course->fullname", "$navigation $strrealtimequizzes", "", "", true, "", navmenu($course));
 
-    if ($course->category) {
-        $navigation = "<a href=\"../../course/view.php?id=$course->id\">$course->shortname</a> ->";
-    } else {
-        $navigation = '';
+    } else { // Moodle 1.9
+        $navlinks = array();
+        $navlinks[] = array('name' => $strrealtimequizzes, 'link' => '');
+
+        $navigation = build_navigation($navlinks);
+        
+        $pagetitle = strip_tags($course->shortname.': '.$strrealtimequizzes);
+
+        print_header_simple($pagetitle, '', $navigation, '', '', true, '', navmenu($course));
+        
     }
-
-    print_header("$course->shortname: $strrealtimequizs", "$course->fullname", "$navigation $strrealtimequizs", "", "", true, "", navmenu($course));
 
 /// Get all the appropriate data
 

@@ -47,21 +47,34 @@
 
 /// Print the page header
 
-    if ($course->category) {
-        $navigation = "<a href=\"../../course/view.php?id=$course->id\">$course->shortname</a> ->";
-    } else {
-        $navigation = '';
-    }
-
-    $strrealtimequizs = get_string("modulenameplural", "realtimequiz");
+    $strrealtimequizzes = get_string("modulenameplural", "realtimequiz");
     $strrealtimequiz  = get_string("modulename", "realtimequiz");
 
-    print_header("$course->shortname: $realtimequiz->name", "$course->fullname",
-                 "$navigation <a href=index.php?id=$course->id>$strrealtimequizs</a> -> $realtimequiz->name", 
-                  "", "", true, update_module_button($cm->id, $course->id, $strrealtimequiz), 
-                  navmenu($course, $cm));
-				  
-	
+    if ($CFG->version < 2007101500) { // < Moodle 1.9
+        if ($course->category) {
+            $navigation = "<a href=\"../../course/view.php?id=$course->id\">$course->shortname</a> ->";
+        } else {
+            $navigation = '';
+        }
+
+        print_header("$course->shortname: $realtimequiz->name", "$course->fullname",
+                     "$navigation <a href=index.php?id=$course->id>$strrealtimequizzes</a> -> $realtimequiz->name", 
+                     "", "", true, update_module_button($cm->id, $course->id, $strrealtimequiz), 
+                     navmenu($course, $cm));
+    } else { // Moodle 1.9
+        $navlinks = array();
+        $navlinks[] = array('name' => $strrealtimequizzes, 'link' => "index.php?id={$course->id}", 'type' => 'activity');
+        $navlinks[] = array('name' => format_string($realtimequiz->name), 'link' => '', 'type' => 'activityinstance');
+
+        $navigation = build_navigation($navlinks);
+        
+        $pagetitle = strip_tags($course->shortname.': '.$strrealtimequiz.': '.format_string($realtimequiz->name,true));
+
+        print_header_simple($pagetitle, '', $navigation, '', '', true,
+                            update_module_button($cm->id, $course->id, $strrealtimequiz), navmenu($course, $cm));
+        
+    }
+                  
 	$sessions = get_records('realtimequiz_session', 'quizid', $realtimequiz->id, 'timestamp');
 	if (!$sessions) {
 		error(get_string('nosessions','realtimequiz'));

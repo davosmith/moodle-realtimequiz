@@ -51,19 +51,33 @@
 
 /// Print the page header
 
-    if ($course->category) {
-        $navigation = "<a href=\"../../course/view.php?id=$course->id\">$course->shortname</a> ->";
-    } else {
-        $navigation = '';
-    }
-
-    $strrealtimequizs = get_string("modulenameplural", "realtimequiz");
+    $strrealtimequizzes = get_string("modulenameplural", "realtimequiz");
     $strrealtimequiz  = get_string("modulename", "realtimequiz");
 
-    print_header("$course->shortname: $realtimequiz->name", "$course->fullname",
-                 "$navigation <a href=index.php?id=$course->id>$strrealtimequizs</a> -> $realtimequiz->name", 
-                  "", "", true, update_module_button($cm->id, $course->id, $strrealtimequiz), 
-                  navmenu($course, $cm));
+    if ($CFG->version < 2007101500) { // < Moodle 1.9
+        if ($course->category) {
+            $navigation = "<a href=\"../../course/view.php?id=$course->id\">$course->shortname</a> ->";
+        } else {
+            $navigation = '';
+        }
+
+        print_header("$course->shortname: $realtimequiz->name", "$course->fullname",
+                     "$navigation <a href=index.php?id=$course->id>$strrealtimequizzes</a> -> $realtimequiz->name", 
+                     "", "", true, update_module_button($cm->id, $course->id, $strrealtimequiz), 
+                     navmenu($course, $cm));
+    } else {
+        $navlinks = array();
+        $navlinks[] = array('name' => $strrealtimequizzes, 'link' => "index.php?id={$course->id}", 'type' => 'activity');
+        $navlinks[] = array('name' => format_string($realtimequiz->name), 'link' => '', 'type' => 'activityinstance');
+
+        $navigation = build_navigation($navlinks);
+        
+        $pagetitle = strip_tags($course->shortname.': '.$strrealtimequiz.': '.format_string($realtimequiz->name,true));
+
+        print_header_simple($pagetitle, '', $navigation, '', '', true,
+                            update_module_button($cm->id, $course->id, $strrealtimequiz), navmenu($course, $cm));
+        
+    }
                   
 	if (has_capability('mod/realtimequiz:editquestions', $context)) {
 		echo "<div class='reportlink'><a href='$CFG->wwwroot/mod/realtimequiz/edit.php?id=$realtimequiz->id'>".get_string('editquestions','realtimequiz').'</a></div>';
