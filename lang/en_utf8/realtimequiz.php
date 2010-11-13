@@ -85,9 +85,9 @@ $string['servererror'] = 'Server returned error: ';
 $string['badresponse'] = 'Unexpected response from server - ';
 $string['httperror'] = 'There was a problem with the request - status: ';
 $string['yourresult'] = 'Your result: ';
-$string['displaynext'] = 'About to display next question: ';
+$string['displaynext'] = 'About to display next question:';
 $string['sendinganswer'] = 'Sending answer';
-$string['timeleft'] = 'Time left to answer: ';
+$string['timeleft'] = 'Time left to answer:';
 
 // Used by view_teacher.js
 // Important - do not use any double-quotes (") in this text as it will cause problems when passing
