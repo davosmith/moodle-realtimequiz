@@ -113,6 +113,10 @@
         realtimequiz_set_text('httperror',"<?php print_string('httperror', 'realtimequiz') ?>");
 		realtimequiz_set_text('yourresult',"<?php print_string('yourresult', 'realtimequiz') ?>");
 
+        realtimequiz_set_text('timeleft',"<?php print_string('timeleft', 'realtimequiz') ?>");
+        realtimequiz_set_text('displaynext', "<?php print_string('displaynext', 'realtimequiz') ?>");
+        realtimequiz_set_text('sendinganswer', "<?php print_string('sendinganswer', 'realtimequiz') ?>");
+
         // Used by view_teacher.js
         realtimequiz_set_text('next',"<?php print_string('next', 'realtimequiz') ?>");
         realtimequiz_set_text('startquiz',"<?php print_string('startquiz', 'realtimequiz') ?>");

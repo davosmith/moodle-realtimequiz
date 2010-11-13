@@ -86,7 +86,7 @@ function realtimequiz_delete_instance($id) {
 	delete_records('realtimequiz_question', 'quizid', "$id"); // Delete each question
 	delete_records('realtimequiz_session', 'quizid', "$id"); // Delete each session
 		
-	# Delete any dependent records here #
+	//# Delete any dependent records here #
 
     if (! delete_records("realtimequiz", "id", "$realtimequiz->id")) {
         $result = false;

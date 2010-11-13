@@ -213,7 +213,7 @@ function realtimequiz_show_final_results(quizresponse) {
 **************************************************/
 function realtimequiz_select_choice(choice) {
     if (!realtimequiz.givenanswer) {
-        realtimequiz_set_status('Sending answer:');
+        realtimequiz_set_status(realtimequiz.text['sendinganswer']);
         realtimequiz.givenanswer=true;
 		realtimequiz.myanswer = choice;
         var answers = document.getElementById('answers').getElementsByTagName('li');
@@ -233,9 +233,9 @@ function realtimequiz_select_choice(choice) {
 function realtimequiz_start_timer(counttime, preview) {
     realtimequiz_stop_timer();
     if (preview) {
-        realtimequiz_set_status('About to display next question:');
+        realtimequiz_set_status(realtimequiz.text['displaynext']);
     } else {
-        realtimequiz_set_status('Time left to answer:');
+        realtimequiz_set_status(realtimequiz.text['timeleft']); 
     }
     realtimequiz.timeleft=counttime+1;
     realtimequiz.timer=setInterval("realtimequiz_timer_tick("+preview+")", 1000);
