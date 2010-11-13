@@ -39,3 +39,17 @@
     background: -webkit-gradient(linear, left top, left bottom, from(#81dca3), to(#fbfdfd));
     background: -moz-linear-gradient(top, #81dca3, #fbfdfd);
 }
+
+.realtimequiz_editquestion {
+    display: inline-block;
+    width: 70%;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    margin-right: 5px;
+}
+
+.realtimequiz_editicons {
+    display: inline-block;
+    width: 20%;
+}

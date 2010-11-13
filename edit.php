@@ -51,7 +51,7 @@
 	function realtimequiz_list_questions($quizid, $cm) {
 		global $CFG;
 	
-		echo '<center><h2>'.get_string('questionslist','realtimequiz').'</h2>';	
+		echo '<h2>'.get_string('questionslist','realtimequiz').'</h2>';	
 		
 		$questions = get_records('realtimequiz_question', 'quizid', $quizid, 'questionnum');
 		$questioncount = count($questions);
@@ -61,32 +61,35 @@
 		    foreach ($questions as $question) {
 			    // A good place to double-check the question numbers and fix any that are broken
 			    if ($question->questionnum != $expectednumber) {
-//				echo "Warning: expected questionnum = $expectednumber, found questionnum = $question->questionnum. Fixing...";
 					$question->questionnum = $expectednumber;
 					update_record('realtimequiz_question', $question);
 				}
 			
 				$qtext = $question->questiontext;
-				if (strlen($qtext) > 60) {
-					$qtext = sprintf("%.60s...", $qtext);
-				}
-				echo "<li>$qtext ";
+				/*if (strlen($qtext) > 90) {
+					$qtext = sprintf("%.90s...", $qtext);
+                    }*/
+				echo "<li><span class='realtimequiz_editquestion'>$qtext </span><span class='realtimequiz_editicons'>";
+				echo "<a href='edit.php?quizid=$quizid&amp;action=editquestion&amp;questionid=$question->id'><img src='$CFG->pixpath/t/edit.gif' alt='Edit Question $question->questionnum' /></a> ";	//FIXME - translate alt text
 				if ($question->questionnum > 1) {
 					echo "<a href='edit.php?quizid=$quizid&amp;action=moveup&amp;questionid=$question->id'><img src='$CFG->pixpath/t/up.gif' alt='Move Question $question->questionnum Up' /></a> ";	//FIXME - translate alt text
-				}
+				} else {
+                    echo "<img src='$CFG->pixpath/spacer.gif' width='15px' />";
+                }
 				if ($question->questionnum < $questioncount) {
 					echo "<a href='edit.php?quizid=$quizid&amp;action=movedown&amp;questionid=$question->id'><img src='$CFG->pixpath/t/down.gif' alt='Move Question $question->questionnum Down' /></a> ";	//FIXME - translate alt text
-				}
-				echo "<a href='edit.php?quizid=$quizid&amp;action=editquestion&amp;questionid=$question->id'><img src='$CFG->pixpath/t/edit.gif' alt='Edit Question $question->questionnum' /></a> ";	//FIXME - translate alt text
+				} else {
+                    echo "<img src='$CFG->pixpath/spacer.gif' width='15px' />";
+                }
+                echo '&nbsp;';
 				echo "<a href='edit.php?quizid=$quizid&amp;action=deletequestion&amp;questionid=$question->id'><img src='$CFG->pixpath/t/delete.gif' alt='Delete Question $question->questionnum' /></a>";	//FIXME - translate alt text
-				echo '</li>';
+				echo '</span></li>';
 				$expectednumber++;
 			}
 		}
 		echo '</ol>';
 		echo "<form method='post' action='$CFG->wwwroot/mod/realtimequiz/edit.php?quizid=$quizid&amp;action=addquestion'>";
 		echo '<input type=\'submit\' value=\''.get_string('addquestion','realtimequiz').'\'></input></form>';
-		echo '<br /><div><a href=\''.$CFG->wwwroot.'/mod/realtimequiz/view.php?id='.$cm->id.'\'>'.get_string('backquiz','realtimequiz').'</a></div></center>';
 	}
 	
 	function realtimequiz_edit_question($quizid, $questionid='', $minanswers=4) {
@@ -262,6 +265,8 @@
     }
 
     realtimequiz_view_tabs('edit', $cm->id, $context);
+
+    print_box_start('generalbox boxwidthwide boxaligncenter realtimequizbox');
 				  
 	if (($action == 'doaddquestion') || ($action == 'doeditquestion')) {
 	
@@ -484,6 +489,8 @@
 		break;
 		
 	}
+
+    print_box_end();
 	
 /// Finish the page
     print_footer($course);
