@@ -10,6 +10,8 @@
 
 .realtimequiz_report_question {
     background: #b8e5ef;
+    border-style: solid;
+    border-width: 1px;
     
     filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#b8e5ef', endColorstr='#e1e8ea'); /* ie */
     background: -webkit-gradient(linear, left top, left bottom, from(#b8e5ef), to(#e1e8ea));
@@ -18,6 +20,8 @@
 
 .realtimequiz_report_question_correct {
     background: #81dca3;
+    border-style: solid;
+    border-width: 1px;
     
     filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#72e07f', endColorstr='#81dca3'); /* ie */
     background: -webkit-gradient(linear, left top, left bottom, from(#72e07f), to(#81dca3));
@@ -26,14 +30,18 @@
 
 .realtimequiz_report_answer {
     background: #e1e8ea;
+    border-style: solid;
+    border-width: 1px;
     
     filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#e1e8ea', endColorstr='#fbfdfd'); /* ie */
     background: -webkit-gradient(linear, left top, left bottom, from(#e1e8ea), to(#fbfdfd));
-    background: -moz-linear-gradient(top, #e1e8ea, #ebeded);
+    background: -moz-linear-gradient(top, #e1e8ea, #fbfdfd);
 }
 
 .realtimequiz_report_answer_correct {
     background: #81dca3;
+    border-style: solid;
+    border-width: 1px;
     
     filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#81dca3', endColorstr='#fbfdfd'); /* ie */
     background: -webkit-gradient(linear, left top, left bottom, from(#81dca3), to(#fbfdfd));

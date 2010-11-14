@@ -138,7 +138,14 @@
         }
     }
         
-    if ($questionid == 0) {
+    if ($questionid == 0) { // Show all of the questions
+
+        if (check_browser_version('Gecko')) {
+            $blankcolspan = 'colspan="999" ';
+        } else {
+            $blankcolspan = '';
+        }
+        
 		$questions = get_records('realtimequiz_question', 'quizid', $realtimequiz->id, 'questionnum');
 		$linkurl = "$CFG->wwwroot/mod/realtimequiz/responses.php?id=$cm->id&showsession=$showsession&questionid=";
 		
@@ -169,13 +176,12 @@
 						}
 					}
 				}
-				echo '</tr><tr style="border-style: none;">';
-                echo '<td style="border-style: none;">&nbsp;</td>';
-                echo '</tr>';
+				echo '</tr>';
+                echo '<tr style="border-style: none;"><td style="border-style: none;" '.$blankcolspan.' >&nbsp;</td></tr>';
 			}
 		}
 		echo '</table>';
-	} else {
+	} else { // Show a single question
         print_box_start('generalbox boxwidthwide boxaligncenter');
 
         $question = get_record('realtimequiz_question', 'id', $questionid);
