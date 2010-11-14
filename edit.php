@@ -72,12 +72,10 @@
 				}
 			
 				$qtext = $question->questiontext;
-				/*if (strlen($qtext) > 90) {
-					$qtext = sprintf("%.90s...", $qtext);
-                    }*/
-				echo "<li><span class='realtimequiz_editquestion'>$qtext </span><span class='realtimequiz_editicons'>";
-				echo "<a href='edit.php?quizid=$quizid&amp;action=editquestion&amp;questionid=$question->id'><img src='$CFG->pixpath/t/edit.gif' alt='Edit Question $question->questionnum' /></a> ";	//FIXME - translate alt text
-				if ($question->questionnum > 1) {
+				echo "<li><span class='realtimequiz_editquestion'>";
+                echo "<a href='edit.php?quizid=$quizid&amp;action=editquestion&amp;questionid=$question->id'>";
+                echo "$qtext</a> </span><span class='realtimequiz_editicons'>";
+                if ($question->questionnum > 1) {
 					echo "<a href='edit.php?quizid=$quizid&amp;action=moveup&amp;questionid=$question->id'><img src='$CFG->pixpath/t/up.gif' alt='Move Question $question->questionnum Up' /></a> ";	//FIXME - translate alt text
 				} else {
                     echo "<img src='$CFG->pixpath/spacer.gif' width='15px' />";
