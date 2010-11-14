@@ -53,3 +53,7 @@
     display: inline-block;
     width: 20%;
 }
+
+.realtimequiz_highlight_correct {
+    background: #81dca3;
+}

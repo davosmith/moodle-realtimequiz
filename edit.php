@@ -198,16 +198,16 @@ function realtimequiz_edit_question($quizid, $maxfilesize, $questionid='', $mina
 			$extraanswer = new stdClass();
 			$extraanswer->id = 0;
 			$extraanswer->answertext = '';
-			$extraanswer->correct = 0;
+			$extraanswer->correct = (count($answers) == 0); // Select first item, if it is the only item
 			$answers[] = $extraanswer;
 		}
 			
 		$answernum = 1;
 		foreach ($answers as $answer) {
 			echo '<tr>';
-            echo '<td align="right"><b>'.get_string('answer','realtimequiz').$answernum.': </b></td>';
+            echo '<td align="right"><label for="realtimequiz_answerradio'.$answernum.'" > <b>'.get_string('answer','realtimequiz').$answernum.': </b></label></td>';
             echo '<td align="left">';
-            echo '<input type="radio" name="answercorrect" value="'.$answernum.'" ';
+            echo '<input type="radio" name="answercorrect" value="'.$answernum.'" class="realtimequiz_answerradio" id="realtimequiz_answerradio'.$answernum.'" onclick="highlight_correct();" ';
             echo $answer->correct ? 'checked="checked" ' : '';
             echo '/><input type="text" name="answertext['.$answernum.']" size="30" value="'.$answer->answertext.'" />';
             echo '</td>';
@@ -231,6 +231,7 @@ function realtimequiz_edit_question($quizid, $maxfilesize, $questionid='', $mina
         echo '<input type="submit" name="cancel" value="'.get_string('cancel').'" />';
         echo '</p>';
         echo '</form></center>';
+        echo '<script type="text/javascript">highlight_correct();</script>';
 	}
 	
 	function realtimequiz_confirm_deletequestion($quizid, $questionid) {
@@ -251,7 +252,8 @@ function realtimequiz_edit_question($quizid, $maxfilesize, $questionid='', $mina
 		echo '</form></center>';
 
 	}
-	
+
+    require_js(array('yui_yahoo', 'yui_dom', 'editquestions.js'));
 	
 	// Back to the main code
     $strrealtimequizzes = get_string("modulenameplural", "realtimequiz");
