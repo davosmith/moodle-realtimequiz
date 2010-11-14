@@ -153,8 +153,8 @@ function realtimequiz_edit_question($quizid, $maxfilesize, $questionid='', $mina
 		
 		echo "<form method='post' action='$CFG->wwwroot/mod/realtimequiz/edit.php?quizid=$quizid' enctype='multipart/form-data'>";
 		echo '<table cellpadding="5">';
+        echo '<tr><td colspan="2">';
         if ($question->image) {
-            echo '<tr><td colspan="2">';
 		    $filename = $CFG->dataroot.'/'.$question->image;
 		    if (file_exists($filename)) {
                 $size = getimagesize($filename);
@@ -175,8 +175,8 @@ function realtimequiz_edit_question($quizid, $maxfilesize, $questionid='', $mina
 		            echo '<center><image src="'.$imgsrc.'" style="border: 1px solid black;" width="'.$imagewidth.'px" height="'.$imageheight.'px" /></center>';
 	            }
 	        }
-            echo '</td></tr>';
 		}
+        echo '</td></tr>';
         echo '<tr valign="top">
 		<td align="right"><b>'.get_string('questiontext','realtimequiz').'</b></td>
 		<td align="left">';		
@@ -201,19 +201,26 @@ function realtimequiz_edit_question($quizid, $maxfilesize, $questionid='', $mina
 			$extraanswer->correct = (count($answers) == 0); // Select first item, if it is the only item
 			$answers[] = $extraanswer;
 		}
+
+        if (count($answers) > $minanswers) {
+            $minanswers = count($answers);
+        }
 			
 		$answernum = 1;
 		foreach ($answers as $answer) {
-			echo '<tr>';
+            if ($answernum == 1) {
+                echo '<tr id="realtimequiz_first_answer">';
+            } else {
+                echo '<tr>';
+            }
             echo '<td align="right"><label for="realtimequiz_answerradio'.$answernum.'" > <b>'.get_string('answer','realtimequiz').$answernum.': </b></label></td>';
             echo '<td align="left">';
             echo '<input type="radio" name="answercorrect" value="'.$answernum.'" class="realtimequiz_answerradio" id="realtimequiz_answerradio'.$answernum.'" onclick="highlight_correct();" ';
             echo $answer->correct ? 'checked="checked" ' : '';
             echo '/><input type="text" name="answertext['.$answernum.']" size="30" value="'.$answer->answertext.'" />';
+			echo '<input type="hidden" name="answerid['.$answernum.']" value="'.$answer->id.'" />';
             echo '</td>';
             echo '</tr>';
-
-			echo '<input type="hidden" name="answerid['.$answernum.']" value="'.$answer->id.'" />';
 
 			$answernum++;
 		}
@@ -224,7 +231,7 @@ function realtimequiz_edit_question($quizid, $maxfilesize, $questionid='', $mina
 		echo '<input type="hidden" name="questionnum" value="'.$question->questionnum.'" />';
 		echo '<input type="hidden" name="minanswers" value="'.$minanswers.'" />';
 		echo '<input type="hidden" name="sesskey" value="'.sesskey().'" />';
-		echo '<input type="submit" name="addanswers" value="'.get_string('addanswers', 'realtimequiz').'" />';
+		echo '<input type="submit" name="addanswers" value="'.get_string('addanswers', 'realtimequiz').'" onclick="add_answers(3); return false;" />';
 		echo '<p>';
         echo '<input type="submit" name="updatequestion" value="'.get_string('updatequestion', 'realtimequiz').'" />&nbsp;';
         echo '<input type="submit" name="saveadd" value="'.get_string('saveadd', 'realtimequiz').'" />&nbsp;';
