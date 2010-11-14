@@ -42,6 +42,9 @@ $string['no'] = 'Nein';
 $string['addingquestion'] = 'Fragen hinzufügen ';
 $string['edittingquestion'] = 'Frage bearbeiten ';
 $string['answer'] = 'Antwort ';
+$string['view'] = 'Test sehen';
+$string['responses'] = 'Antworten sehen';
+$string['edit'] = 'Test bearbeiten';
 
 // Viewing the responses from different students
 $string['nosessions'] = 'Dieser Echtzeitest wurde noch nicht versucht';
@@ -64,10 +67,10 @@ $string['incorrectstatus'] = 'Test hat den falschen Status: \'';
 // Important - do not use any double-quotes (") in this text as it will cause problems when passing
 // the text into javascript (edit 'view.php' if this is a major problem)
 $string['joinquiz'] = 'Test Teilnahme';
-$string['joininstruct'] = 'Warten Sie solange bis Ihr Tutor Ihnen Bescheid gibt mit dem Klicken';
-$string['waitstudent'] = 'Warten auf Teilnehmerverbindung';
-$string['clicknext'] = 'Klicken Sie \'Nächste\' wenn alle fertig sind';
-$string['waitfirst'] = 'Warten bis die erste Frage übermittelt wird.';
+$string['joininstruct'] = 'Warten Sie mit dem Klicken solange bis Ihr Tutor Ihnen Bescheid gibt!';
+$string['waitstudent'] = 'Warten auf Teilnehmerverbindung...';
+$string['clicknext'] = 'Klicken Sie \'Weiter\' wenn alle fertig sind!';
+$string['waitfirst'] = 'Warten Sie bitte bis die erste Frage übermittelt wird...';
 $string['question'] = 'Frage ';
 $string['invalidanswer'] = 'Ungültige Antwortnummer ';
 $string['finalresults'] = 'Endresultate';
@@ -87,13 +90,13 @@ $string['badresponse'] = 'Unerwartete Antwort vom Server - ';
 $string['httperror'] = 'Es gab ein Problem bei der Anfrage - Status: ';
 $string['yourresult'] = 'Ihr Ergebnis: ';
 $string['displaynext'] = 'Zeit bis zur nächsten Anzeige:';
-$string['sendinganswer'] = 'Sending answer';
+$string['sendinganswer'] = 'Antwort senden';
 $string['timeleft'] = 'Verbleibende Zeit für die Antwort:';
 
 // Used by view_teacher.js
 // Important - do not use any double-quotes (") in this text as it will cause problems when passing
 // the text into javascript (edit 'view.php' if this is a major problem)
-$string['next'] = 'Nächste >>';
+$string['next'] = 'Weiter >>';
 $string['startquiz'] = 'Test starten';
 $string['teacherstartinstruct'] = 'Hier können Sie einen Test für die Teilnehmer beginnen.<br />Benutzen Sie das Eingabefeld um einen Namen für diese Sitzung festzulegen (das kann helfen um zu einem späteren Zeitpunkt die Ergebnisse besser zu finden).';
 $string['teacherjoinquizinstruct'] = 'Benutzen Sie dies um selbst einen Test auszuprobieren<br />(Sie müssen ebenfalls den Test in einem separaten Fenster starten)';
