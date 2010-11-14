@@ -215,7 +215,7 @@ function realtimequiz_edit_question($quizid, $maxfilesize, $questionid='', $mina
             }
             echo '<td align="right"><label for="realtimequiz_answerradio'.$answernum.'" > <b>'.get_string('answer','realtimequiz').$answernum.': </b></label></td>';
             echo '<td align="left">';
-            echo '<input type="radio" name="answercorrect" value="'.$answernum.'" class="realtimequiz_answerradio" id="realtimequiz_answerradio'.$answernum.'" onclick="highlight_correct();" ';
+            echo '<input type="radio" name="answercorrect" alt="'.get_string('choosecorrect','realtimequiz').'" value="'.$answernum.'" class="realtimequiz_answerradio" id="realtimequiz_answerradio'.$answernum.'" onclick="highlight_correct();" ';
             echo $answer->correct ? 'checked="checked" ' : '';
             echo '/><input type="text" name="answertext['.$answernum.']" size="30" value="'.$answer->answertext.'" />';
 			echo '<input type="hidden" name="answerid['.$answernum.']" value="'.$answer->id.'" />';

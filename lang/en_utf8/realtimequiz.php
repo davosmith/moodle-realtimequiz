@@ -45,6 +45,7 @@ $string['answer'] = 'Answer ';
 $string['view'] = 'View quiz';
 $string['responses'] = 'View responses';
 $string['edit'] = 'Edit quiz';
+$string['choosecorrect'] = 'Set this as the correct answer';
 
 // Viewing the responses from different students
 $string['nosessions'] = 'This Realtime Quiz has not yet been attempted';

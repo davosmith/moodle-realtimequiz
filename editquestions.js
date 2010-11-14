@@ -1,8 +1,17 @@
+var lastradio = null;
+
 function highlight_correct() {
     var radiobtns = YAHOO.util.Dom.getElementsByClassName('realtimequiz_answerradio');
     for (var i in radiobtns) {
 	if (radiobtns[i].checked) {
-	    YAHOO.util.Dom.addClass(radiobtns[i].parentNode, 'realtimequiz_highlight_correct');
+	    var textbox = radiobtns[i].nextSibling;
+	    if (textbox.value == '' && lastradio != null) {
+		lastradio.checked = true;
+		YAHOO.util.Dom.addClass(lastradio.parentNode, 'realtimequiz_highlight_correct');
+	    } else {
+		YAHOO.util.Dom.addClass(radiobtns[i].parentNode, 'realtimequiz_highlight_correct');
+		lastradio = radiobtns[i];
+	    }
 	} else {
 	    YAHOO.util.Dom.removeClass(radiobtns[i].parentNode, 'realtimequiz_highlight_correct');
 	}
