@@ -62,14 +62,14 @@ function realtimequiz_send_question($quizid, $preview=false) {
                     if ($size) {
                         $imageheight = $size[1];
                         $imagewidth = $size[0];
-                        if ($imagewidth > 500) {
-                            $scale = 500 / $imagewidth;
-                            $imagewidth = 500;
+                        if ($imagewidth > 400) {
+                            $scale = 400 / $imagewidth;
+                            $imagewidth = 400;
                             $imageheight *= $scale;
                         }
-                        if ($imageheight > 500) {
-                            $scale = 500 / $imageheight;
-                            $imageheight = 500;
+                        if ($imageheight > 400) {
+                            $scale = 400 / $imageheight;
+                            $imageheight = 400;
                             $imagewidth *= $scale;
                         }
                         $fl = $question->image.'&t='.time();

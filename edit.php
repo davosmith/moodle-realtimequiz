@@ -19,6 +19,8 @@
     $saveadd = optional_param('saveadd', false, PARAM_BOOL);
     $canceledit = optional_param('cancel', false, PARAM_BOOL);
 
+    $removeimage = optional_param('removeimage', false, PARAM_BOOL);
+
     if ($id) {
         if (! $cm = get_record("course_modules", "id", $id)) {
             error("Course Module ID was incorrect");
@@ -96,7 +98,7 @@
 		echo '<input type=\'submit\' value=\''.get_string('addquestion','realtimequiz').'\'></input></form>';
 	}
 	
-	function realtimequiz_edit_question($quizid, $questionid='', $minanswers=4) {
+function realtimequiz_edit_question($quizid, $maxfilesize, $questionid='', $minanswers=4) {
 		global $CFG;
 			
 		echo '<center>';
@@ -134,61 +136,65 @@
             $question->id = optional_param('questionid',$question->id, PARAM_INT);
             $question->questiontext = optional_param('questiontext', $question->questiontext, PARAM_TEXT);
             $answertexts = optional_param('answertext', false, PARAM_TEXT);
-            $answercorrects = optional_param('answercorrect', false, PARAM_INT);
+            $answercorrect = optional_param('answercorrect', false, PARAM_INT);
             $answerids = optional_param('answerid', false, PARAM_INT);
             $question->questiontime = optional_param('questiontime', $question->questiontime, PARAM_INT);
         }
 		
-		if ($answertexts !== false && $answercorrects !== false && $answerids !== false) {
+		if ($answertexts !== false && $answercorrect !== false && $answerids !== false) {
 			$answers = array();
 			$answercount = count($answertexts);
 			for ($i=1; $i<=$answercount; $i++) {
 				$answers[$i] = new stdClass();
 				$answers[$i]->id = $answerids[$i];
 				$answers[$i]->answertext = $answertexts[$i];
-				$answers[$i]->correct = $answercorrects[$i];
+				$answers[$i]->correct = ($answercorrect == $i);
 			}
 		}
 		
 		
-		echo "<form method='post' action='$CFG->wwwroot/mod/realtimequiz/edit.php?quizid=$quizid' enctype='multipart/formdata'>";
-		echo '<table cellpadding="5">
-		<tr valign="top">
-		<td align="right"><b>'.get_string('questiontext','realtimequiz').'</b></td>
-		<td>';		
-		if ($question->image) {
+		echo "<form method='post' action='$CFG->wwwroot/mod/realtimequiz/edit.php?quizid=$quizid' enctype='multipart/form-data'>";
+		echo '<table cellpadding="5">';
+        if ($question->image) {
+            echo '<tr><td colspan="2">';
 		    $filename = $CFG->dataroot.'/'.$question->image;
 		    if (file_exists($filename)) {
                 $size = getimagesize($filename);
                 if ($size) {
                     $imagewidth = $size[0];
                     $imageheight = $size[1];
-                    if ($imagewidth > 500) {
-                        $scale = 500 / $imagewidth;
-                        $imagewidth = 500;
+                    if ($imagewidth > 400) {
+                        $scale = 400 / $imagewidth;
+                        $imagewidth = 400;
                         $imageheight *= $scale;
                     }
-                    if ($imageheight > 500) {
-                        $scale = 500 / $imageheight;
-                        $imageheight = 500;
+                    if ($imageheight > 400) {
+                        $scale = 400 / $imageheight;
+                        $imageheight = 400;
                         $imagewidth *= $scale;
                     }
 		            $imgsrc = $CFG->wwwroot.'/file.php?file=/'.$question->image.'&t='.time();
-		            echo '<image src="'.$imgsrc.'" style="float:right; border: 1px solid black;" width="'.$imagewidth.'px" height="'.$imageheight.'px" />';
+		            echo '<center><image src="'.$imgsrc.'" style="border: 1px solid black;" width="'.$imagewidth.'px" height="'.$imageheight.'px" /></center>';
 	            }
 	        }
+            echo '</td></tr>';
 		}
+        echo '<tr valign="top">
+		<td align="right"><b>'.get_string('questiontext','realtimequiz').'</b></td>
+		<td align="left">';		
 		echo '<textarea name="questiontext" rows="5" cols="50">'.$question->questiontext.'</textarea><br style="clear:both;" /></td>
 		</tr><tr>
-		<td align="right"><b>'.get_string('editquestiontime','realtimequiz').'</b></td>
-		<td><input type="text" name="questiontime" size="30" value="'.$question->questiontime.'" /></td>
+		<td align="right"><b>'.get_string('editquestiontime','realtimequiz').': </b></td>
+		<td align="left"><input type="text" name="questiontime" size="30" value="'.$question->questiontime.'" /></td>
 		</tr><tr>
 		<td align="right"><b>'.get_string('questionimage','realtimequiz').'</b></td>
-		<td><input type="file" name="imagefile" /></td>
-		</tr><tr>
-		<td align="right"><b>'.get_string('removeimage','realtimequiz').'</b></td>
-		<td><input type="checkbox" name="removeimage" /></td>		
-		</tr>';
+		<td align="left">
+        <input type="hidden" value="'.$maxfilesize.'" name="MAX_FILE_SIZE" />
+        <input type="file" name="imagefile" />';
+        if ($question->image) {
+            echo '<br/><input type="submit" name="removeimage" value="'.get_string('removeimage','realtimequiz').'" />';
+        }
+        echo '</td></tr>';
 
 		while (count($answers) < $minanswers) {
 			$extraanswer = new stdClass();
@@ -200,20 +206,17 @@
 			
 		$answernum = 1;
 		foreach ($answers as $answer) {
-			echo '<tr><td><b>'.get_string('answer','realtimequiz').$answernum.'</b></td></tr>';
-			echo '<tr valign="top">
-			<td>'.get_string('answertext','realtimequiz').'</td>
-			<td><input type="text" name="answertext['.$answernum.']" size="30" value="'.$answer->answertext.'" /></td>
-			</tr>';
-			echo '<tr valign="top">
-			<td>'.get_string('correct','realtimequiz').'</td>
-			<td><input name="answercorrect['.$answernum.']" type="checkbox" value="1" ';
-			if ($answer->correct == 1) {
-				echo 'checked="checked" ';
-			}
-			echo '/></td></tr>';
+			echo '<tr>';
+            echo '<td align="right"><b>'.get_string('answer','realtimequiz').$answernum.': </b></td>';
+            echo '<td align="left">';
+            echo '<input type="radio" name="answercorrect" value="'.$answernum.'" ';
+            echo $answer->correct ? 'checked="checked" ' : '';
+            echo '/><input type="text" name="answertext['.$answernum.']" size="30" value="'.$answer->answertext.'" />';
+            echo '</td>';
+            echo '</tr>';
+
 			echo '<input type="hidden" name="answerid['.$answernum.']" value="'.$answer->id.'" />';
-			
+
 			$answernum++;
 		}
 		
@@ -293,7 +296,23 @@
 	
 		if ($addanswers) {
 			$minanswers = optional_param('minanswers', 4, PARAM_INT);
-			realtimequiz_edit_question($quizid, $questionid, $minanswers + 3);
+			realtimequiz_edit_question($quizid, $course->maxbytes, $questionid, $minanswers + 3);
+        } elseif ($removeimage) {
+            if ($action == 'doeditquestion') {
+                $q = get_record('realtimequiz_question', 'id', $questionid);
+                if ($q && $q->image) {
+                    $fullpath = $CFG->dataroot.'/'.$q->image;
+                    if (file_exists($fullpath)) {
+                        unlink($fullpath);
+                    }
+                    $question = new stdClass;
+                    $question->id = $questionid;
+                    $question->image = ''; 
+                    update_record('realtimequiz_question', $question);
+                }
+            }
+			$minanswers = optional_param('minanswers', 4, PARAM_INT);
+            realtimequiz_edit_question($quizid, $course->maxbytes, $questionid, $minanswers);
 
         } elseif ($canceledit) {
             $action = 'listquestions';
@@ -306,53 +325,42 @@
 			$question->questiontext = required_param('questiontext', PARAM_TEXT);
 			$question->questiontime = required_param('questiontime', PARAM_INT);
 			$answertexts = required_param('answertext', PARAM_TEXT);
-			$answercorrects = optional_param('answercorrect', FALSE, PARAM_INT);
+			$answercorrect = optional_param('answercorrect', false, PARAM_INT);
 			$answerids = required_param('answerid', PARAM_INT);
-			$removeimage = optional_param('removeimage', false, PARAM_BOOL);
 
 			// Copy the answers into a suitable array and count how many (valid) correct answers there are
 			$correctcount = 0;
-			if ($answercorrects !== FALSE) {
+			if ($answercorrect !== false) {
 				$answers = array();
 				$answercount = count($answertexts);
 				for ($i=1; $i<=$answercount; $i++) {
 					$answers[$i] = new stdClass();
 					$answers[$i]->id = $answerids[$i];
 					$answers[$i]->answertext = $answertexts[$i];
-					$answers[$i]->correct = isset($answercorrects[$i]) ? 1 : 0; // FIX IN CVS
+					$answers[$i]->correct = ($answercorrect == $i) ? 1 : 0; // FIX IN CVS
 					if ($answers[$i]->correct == 1 && $answers[$i]->answertext != '') {
 						$correctcount++;
 					}
 				}
 			}
-			
+            
+
 			// Check there is exactly 1 correct answer
 			if ($question->questiontext == '') {
 				echo '<div class="errorbox">';
 				print_string('errorquestiontext','realtimequiz');
 				echo '</div>';
 				$minanswers = optional_param('minanswers', 4, PARAM_INT);
-				realtimequiz_edit_question($quizid, $questionid, $minanswers);
+				realtimequiz_edit_question($quizid, $course->maxbytes, $questionid, $minanswers);
 				
 			} else if ($correctcount != 1) {
 				echo '<div class="errorbox">';
 				print_string('onecorrect','realtimequiz');
 				echo '</div>';
 				$minanswers = optional_param('minanswers', 4, PARAM_INT);
-				realtimequiz_edit_question($quizid, $questionid, $minanswers);
+				realtimequiz_edit_question($quizid, $course->maxbytes, $questionid, $minanswers);
 				
 			} else {
-                if ($removeimage && $action == 'doeditquestion') {
-                    $q = get_record('realtimequiz_question', 'id', $questionid);
-                    if ($q && $q->image) {
-                        $fullpath = $CFG->dataroot.'/'.$q->image;
-                        if (file_exists($fullpath)) {
-                            unlink($fullpath);
-                        }
-                        $question->image = '';
-                    }
-                }
-
 				// Update the question
 				if ($action == 'doaddquestion') {
 					$question->id = insert_record('realtimequiz_question', $question);
@@ -361,47 +369,47 @@
 					update_record('realtimequiz_question', $question);
 				}
 								
-			    if (!$removeimage) {
-	                $dir = $course->id.'/'.$CFG->moddata.'/realtimequiz/'.$question->quizid;
-	                $fulldir = $CFG->dataroot.'/'.$dir;
-	
-                    require_once($CFG->dirroot.'/lib/uploadlib.php');
-                    $um = new upload_manager('imagefile',false,true,$course,false,$course->maxbytes,true);
-                    
-                    if ($um->process_file_uploads($fulldir)) {
-                        $fp = $um->get_new_filepath();
-                        $fn = $um->get_new_filename();
-                        if ($fp && $fn) {
-                            $size = getimagesize($fp);
-                            if ($size) {
-                                if ($size[2] == IMAGETYPE_GIF) { $fext = '.gif'; }
-                                else if ($size[2] == IMAGETYPE_PNG) { $fext = '.png'; }
-                                else if ($size[2] == IMAGETYPE_JPEG) { $fext = '.jpg'; }
-                                else { $fext = false; }
+                // Upload the image
+                $dir = $course->id.'/'.$CFG->moddata.'/realtimequiz/'.$question->quizid;
+                $fulldir = $CFG->dataroot.'/'.$dir;
+
+                require_once($CFG->dirroot.'/lib/uploadlib.php');
+                $um = new upload_manager('imagefile',false,true,$course,false,$course->maxbytes,true);
+
+                if ($um->process_file_uploads($fulldir)) {
+                    $fp = $um->get_new_filepath();
+                    $fn = $um->get_new_filename();
+
+                    if ($fp && $fn) {
+                        $size = getimagesize($fp);
+                        if ($size) {
+                            if ($size[2] == IMAGETYPE_GIF) { $fext = '.gif'; }
+                            else if ($size[2] == IMAGETYPE_PNG) { $fext = '.png'; }
+                            else if ($size[2] == IMAGETYPE_JPEG) { $fext = '.jpg'; }
+                            else { $fext = false; }
                                 
-                                if ($fext) {
-                                    $q = get_record('realtimequiz_question', 'id', $questionid);
-                                    if ($q && $q->image) {
-                                        if (pathinfo($q->image, PATHINFO_EXTENSION) != $fext) {
-                                            if (file_exists($CFG->dataroot.'/'.$q->image)) {
-                                                unlink($CFG->dataroot.'/'.$q->image);
-                                                // Delete the old file, if it was a different type
-                                                // (it will get overwritten below, if it is the same type)
-                                            }
+                            if ($fext) {
+                                $q = get_record('realtimequiz_question', 'id', $questionid);
+                                if ($q && $q->image) {
+                                    if (pathinfo($q->image, PATHINFO_EXTENSION) != $fext) {
+                                        if (file_exists($CFG->dataroot.'/'.$q->image)) {
+                                            unlink($CFG->dataroot.'/'.$q->image);
+                                            // Delete the old file, if it was a different type
+                                            // (it will get overwritten below, if it is the same type)
                                         }
                                     }
-                                
-                                    $destname = sprintf('%02d',$question->id).$fext;
-                                    $dest = $fulldir.'/'.$destname;
-                                    rename($fp, $dest);
-
-                                    $question->image = $dir.'/'.$destname;
-                                    update_record('realtimequiz_question', $question);
                                 }
+                                
+                                $destname = sprintf('%02d',$question->id).$fext;
+                                $dest = $fulldir.'/'.$destname;
+                                rename($fp, $dest);
+
+                                $question->image = $dir.'/'.$destname;
+                                update_record('realtimequiz_question', $question);
                             }
                         }
-                    }         
-                 }
+                    }
+                }         
 				
 				// Update the answers
 				foreach ($answers as $answer) {
@@ -501,11 +509,11 @@
 		break;
 	
 	case 'addquestion':	// Adding a new question
-		realtimequiz_edit_question($quizid);
+		realtimequiz_edit_question($quizid, $course->maxbytes);
 		break;
 	
 	case 'editquestion': // Editing the question
-		realtimequiz_edit_question($quizid, $questionid);
+		realtimequiz_edit_question($quizid, $course->maxbytes, $questionid);
 		break;
 		
 	case 'deletequestion': // Deleting a question - ask 'Are you sure?'

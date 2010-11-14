@@ -20,7 +20,7 @@ $string['realtimequiz:editquestions'] = 'Edit the questions for a quiz';
 // Editing the realtime quiz settings
 $string['questiontime'] = 'Default time to display each question (seconds): ';
 $string['questionimage'] = '(Optional) image: ';
-$string['removeimage'] = 'Remove image: ';
+$string['removeimage'] = 'Remove image';
 
 // Editing the realtime quiz questions
 $string['addquestion'] = 'Add Question';
