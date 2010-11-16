@@ -94,7 +94,8 @@
     print_box_start('generalbox boxwidthwide boxaligncenter realtimequizbox');
 ?>
     <div id="questionarea"></div>
-<!--    <div id="debugarea" style="border: 1px dashed black; width: 600px; height: 100px; overflow: scroll; "></div> -->
+<!--    <div id="debugarea" style="border: 1px dashed black; width: 600px; height: 100px; overflow: scroll; "></div>
+    <button onclick="realtimequiz_debug_stopall();">Stop</button> -->
     <script type="text/javascript" src="<?php echo $CFG->wwwroot; ?>/mod/realtimequiz/view_student.js"></script>
     <script type="text/javascript">
         realtimequiz_set_maxanswers(10);

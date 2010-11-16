@@ -5,6 +5,8 @@
  * @package realtimequiz
  **/
 
+realtimequiz.clickednext = 0; // The question number of the last time the teacher clicked 'next'
+
 function realtimequiz_first_question() {
     var sessionname = document.getElementById('sessionname').value;
     if (sessionname.length > 0) {
@@ -16,13 +18,19 @@ function realtimequiz_first_question() {
 
 function realtimequiz_next_question() {
     realtimequiz_update_next_button(false);
-    realtimequiz_create_request('requesttype=nextquestion&quizid='+realtimequiz.quizid+'&userid='+realtimequiz.userid);
+    realtimequiz_create_request('requesttype=nextquestion&quizid='+realtimequiz.quizid+'&userid='+realtimequiz.userid+'&currentquestion='+realtimequiz.questionnumber);
+    realtimequiz.clickednext = realtimequiz.questionnumber;
         //Userid needed to authenticate request
 }
 
 function realtimequiz_update_next_button(enabled) {
     if (enabled) {
-        document.getElementById('questioncontrols').innerHTML = '<input type="button" onclick="realtimequiz_next_question()" value="'+realtimequiz.text['next']+'" />';
+	if (realtimequiz.clickednext == realtimequiz.questionnumber) { // Teacher already clicked 'next' for this question, so resend that request
+	    realtimequiz_next_question();
+	} else {
+	    document.getElementById('questioncontrols').innerHTML = '<input type="button" onclick="realtimequiz_next_question()" value="'+realtimequiz.text['next']+'" />';
+	}
+
     } else {
         document.getElementById('questioncontrols').innerHTML = '<input type="button" onclick="realtimequiz_next_question()" value="'+realtimequiz.text['next']+'" disabled="disabled" />';
     }    

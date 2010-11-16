@@ -116,38 +116,37 @@ function realtimequiz_send_results($quizid, $questionnum) {
             realtimequiz_send_error(get_string('badcurrentquestion','realtimequiz').$questionid);
         } else {
             $question = get_record('realtimequiz_question', 'id', $questionid);
-            if ($question->questionnum != $questionnum) {  // Request for results for the question we aren't displaying
-                realtimequiz_send_wait_question();  // Shouldn't happen, ask them to wait for the next question
-    
-            } else { // FIXME: cache the results here
-                $total_answers = 0;
-                $total_correct = 0;
-                $answers = get_records('realtimequiz_answer', 'questionid', $questionid,'id');
-                echo '<status>showresults</status>';
-                echo '<results>';
-                foreach ($answers as $answer) {
-                    $result = count_records('realtimequiz_submitted', 'questionid', $questionid, 'answerid', $answer->id, 'sessionid', $quiz->currentsessionid );
-                    $total_answers += $result;
-                    $correct = 'false';
-                    if ($answer->correct == 1) {
-                        $correct = 'true';
-                        $total_correct += $result;
-                    }
-                    echo "<result id='{$answer->id}' correct='{$correct}'>{$result}</result>";
+            // Do not worry about question number not matching request
+            // client should sort out correct state, if they do not match
+            // just get on with sending current results
+            $total_answers = 0;
+            $total_correct = 0;
+            $answers = get_records('realtimequiz_answer', 'questionid', $questionid,'id');
+            echo '<status>showresults</status>';
+            echo '<questionnum>'.$question->questionnum.'</questionnum>';
+            echo '<results>';
+            foreach ($answers as $answer) {
+                $result = count_records('realtimequiz_submitted', 'questionid', $questionid, 'answerid', $answer->id, 'sessionid', $quiz->currentsessionid );
+                $total_answers += $result;
+                $correct = 'false';
+                if ($answer->correct == 1) {
+                    $correct = 'true';
+                    $total_correct += $result;
                 }
-                if ($total_answers > 0) {
-                    $quiz->questionresult = intval((100 * $total_correct)/$total_answers);
-                } else {
-                    $quiz->questionresult = 0;
-                }
-                update_record('realtimequiz', $quiz);
-                $classresult = intval(($quiz->classresult + $quiz->questionresult) / $questionnum);
-                echo '</results>';
-                echo '<statistics>';
-                echo '<questionresult>'.$quiz->questionresult.'</questionresult>';
-                echo '<classresult>'.$classresult.'</classresult>';
-                echo '</statistics>';
+                echo "<result id='{$answer->id}' correct='{$correct}'>{$result}</result>";
             }
+            if ($total_answers > 0) {
+                $quiz->questionresult = intval((100 * $total_correct)/$total_answers);
+            } else {
+                $quiz->questionresult = 0;
+            }
+            update_record('realtimequiz', $quiz);
+            $classresult = intval(($quiz->classresult + $quiz->questionresult) / $questionnum);
+            echo '</results>';
+            echo '<statistics>';
+            echo '<questionresult>'.$quiz->questionresult.'</questionresult>';
+            echo '<classresult>'.$classresult.'</classresult>';
+            echo '</statistics>';
         }
     }
 }
@@ -161,7 +160,8 @@ function realtimequiz_record_answer($quizid, $questionnum, $userid, $answerid) {
         && ($question->questionnum == $questionnum)) {
         if (0 < count_records('realtimequiz_submitted','questionid', $question->id, 'sessionid', $quiz->currentsessionid, 'userid', $userid)) {
             // Already got an answer from them - send an error so we know something is amiss
-            realtimequiz_send_error(get_string('alreadyanswered','realtimequiz'));
+            //realtimequiz_send_error(get_string('alreadyanswered','realtimequiz'));
+            // Do not send error, as this is likely to be the result of lost network packets & resends, just ignore silently
         } else {
             $submitted = new Object();
             $submitted->questionid = $question->id;
@@ -170,9 +170,9 @@ function realtimequiz_record_answer($quizid, $questionnum, $userid, $answerid) {
             $submitted->answerid = $answerid;
             insert_record('realtimequiz_submitted', $submitted);
             
-            echo '<status>answerreceived</status>';
         }
-        
+        echo '<status>answerreceived</status>';
+            
     } else {
     
         // Answer is not for the current question - so send the current question
@@ -396,10 +396,15 @@ if ($status === false) {
                 realtimequiz_send_results($quizid, $questionnum);
 
             } else if ($requesttype == 'nextquestion') {
+                $clientquestionnum = required_param('currentquestion', PARAM_INT);
                 $questionid = get_field('realtimequiz', 'currentquestion', 'id', $quizid);
 				$questionnum = get_field('realtimequiz_question', 'questionnum', 'id', $questionid);
-                $questionnum++;
-                realtimequiz_goto_question($context, $quizid, $questionnum);
+                if ($clientquestionnum != $questionnum) {
+                    realtimequiz_send_results($quizid, $questionnum);
+                } else {
+                    $questionnum++;
+                    realtimequiz_goto_question($context, $quizid, $questionnum);
+                }
             
             } else {
                 realtimequiz_send_error(get_string('unknownrequest','realtimequiz').$requesttype.'\'');
