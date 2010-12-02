@@ -82,7 +82,12 @@
                   
 	$sessions = get_records('realtimequiz_session', 'quizid', $realtimequiz->id, 'timestamp');
 	if (!$sessions) {
-		error(get_string('nosessions','realtimequiz'));
+		//error(get_string('nosessions','realtimequiz'));
+        print_box_start('generalbox boxwidthwide boxaligncenter realtimequizbox');
+        print_string('nosessions','realtimequiz');
+        print_box_end();
+        print_footer($course);
+        die();
 	}
 	$sessions = array_reverse($sessions);
 		

@@ -42,7 +42,7 @@
 	
 	$questioncount = count_records('realtimequiz_question', 'quizid', $realtimequiz->id);
     if ($questioncount == 0 && has_capability('mod/realtimequiz:editquestions', $context)) {
-        redirect('edit.php?id='.$realtimequiz->id);
+        redirect('edit.php?id='.$id);
     }
 
     require_capability('mod/realtimequiz:attempt', $context);
