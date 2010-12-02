@@ -31,6 +31,7 @@ $string['editquestiontime'] = 'Fragezeit (0 für Standard)';
 $string['answertext'] = 'Antwort Text:';
 $string['correct'] = 'Korrekte Antwort?';
 $string['updatequestion'] = 'Frage aktualisieren';
+$string['saveadd'] = 'Frage speichern und weitere hinzufügen';
 $string['addanswers'] = '3 Antworten hinzufügen';
 $string['errorquestiontext'] = 'Fehler: Sie haben keine Frage eingegeben';
 $string['onecorrect'] = 'Fehler: Es muss exakt eine korrekte Anwort existieren';
@@ -52,6 +53,11 @@ $string['choosesession'] = 'Wählen Sie ein Frage zum Anzeigen: ';
 $string['showsession'] = 'Anzeigen';
 $string['allsessions'] = 'Alle Sitzungen';
 $string['backresponses'] = 'Zurück zu den kompletten Antworten';
+$string['prevquestion'] = 'Vorherige Frage';
+$string['nextquestion'] = 'Nächste Frage';
+$string['allquestions'] = 'Zurück zu allen Ergebnissen';
+$string['noanswers'] = 'Keine Beantwortungen';
+
 
 // Used by quizdata.php
 $string['notallowedattempt'] = 'Sie dürfen diesen Echtzeitest nicht versuchen';
@@ -60,7 +66,7 @@ $string['badquizid'] = 'Falsche quizid: '; // Do not translate 'quizid'
 $string['badcurrentquestion'] = 'Falsche currentquestion: '; // Do not translate 'currentquestion'
 $string['alreadyanswered'] = 'Sie haben diese Frage schon beantwortet';
 $string['notauthorised'] = 'Sie sind nicht autorisiert diesen Echtzeittest zu kontrollieren';
-$string['unknownrequest'] = 'Unbekannt Anfrage: \'';
+$string['unknownrequest'] = 'Unbekannte Anfrage: \'';
 $string['incorrectstatus'] = 'Test hat den falschen Status: \'';
 
 // Used by view_student.js
@@ -83,7 +89,7 @@ $string['tryagain'] = 'Möchten Sie es wieder versuchen?';
 $string['resultthisquestion'] = 'Diese Frage: ';
 $string['resultoverall'] = ' Insgesamt korrekt: ';
 $string['resultcorrect'] = ' korrekt.';
-$string['answersent'] = 'Antwort wurde verschickt - zum beenden auf Frage warten';
+$string['answersent'] = 'Antwort wurde verschickt - zum Beenden auf Frage warten';
 $string['quiznotrunning'] = 'Test läuft im Augenblick nicht - warten Sie bis Ihr Tutor ihn startet';
 $string['servererror'] = 'Server meldet Fehler: ';
 $string['badresponse'] = 'Unerwartete Antwort vom Server - ';
@@ -92,6 +98,8 @@ $string['yourresult'] = 'Ihr Ergebnis: ';
 $string['displaynext'] = 'Zeit bis zur nächsten Anzeige:';
 $string['sendinganswer'] = 'Antwort senden';
 $string['timeleft'] = 'Verbleibende Zeit für die Antwort:';
+$string['tick'] = 'Richtige Antwort';
+$string['cross'] = 'Falsche Antwort';
 
 // Used by view_teacher.js
 // Important - do not use any double-quotes (") in this text as it will cause problems when passing
