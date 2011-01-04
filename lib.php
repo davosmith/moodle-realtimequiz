@@ -7,8 +7,6 @@
  **/
 
 
-$realtimequiz_CONSTANT = 7;     /// for example
-
 /**
  * Given an object containing all the necessary data, 
  * (defined by the form in mod.html) this function 
@@ -19,6 +17,7 @@ $realtimequiz_CONSTANT = 7;     /// for example
  * @return int The id of the newly inserted realtimequiz record
  **/
 function realtimequiz_add_instance($realtimequiz) {
+    global $DB;
     
     $realtimequiz->timemodified = time();
 
@@ -29,7 +28,7 @@ function realtimequiz_add_instance($realtimequiz) {
     $realtimequiz->classresult = 0;
     $realtimequiz->questionresult = 0;
 	    
-    return insert_record("realtimequiz", $realtimequiz);
+    return $DB->insert_record('realtimequiz', $realtimequiz);
 }
 
 /**

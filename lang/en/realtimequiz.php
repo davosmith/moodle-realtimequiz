@@ -1,7 +1,7 @@
 <?php 
 
-$string['modulename'] = 'Realtime Quiz';
-$string['modulenameplural'] = 'Realtime Quizzes';
+$string['modulename'] = 'Realtime quiz';
+$string['modulenameplural'] = 'Realtime quizzes';
 $string['editquestions'] = 'Edit the questions';
 $string['seeresponses'] = 'View the responses';
 
@@ -12,7 +12,7 @@ $string['sessions'] = 'Sessions';
 $string['submissions'] = 'Submissions';
 
 // Capabilities
-$string['realtimequiz:control'] = 'Start / Control a quiz'; 
+$string['realtimequiz:control'] = 'Start / control a quiz'; 
 $string['realtimequiz:attempt'] = 'Attempt a quiz';
 $string['realtimequiz:seeresponses'] = 'View the responses to a quiz';
 $string['realtimequiz:editquestions'] = 'Edit the questions for a quiz';
@@ -20,23 +20,24 @@ $string['realtimequiz:editquestions'] = 'Edit the questions for a quiz';
 // Editing the realtime quiz settings
 $string['questiontime'] = 'Default time to display each question (seconds): ';
 $string['questionimage'] = '(Optional) image: ';
+$string['realtimequizsettings'] = 'Realtime quiz settings';
 $string['removeimage'] = 'Remove image';
 
 // Editing the realtime quiz questions
-$string['addquestion'] = 'Add Question';
-$string['backquiz'] = 'Back to the Realtime Quiz';
-$string['questiontext'] = 'Question Text:';
+$string['addquestion'] = 'Add question';
+$string['backquiz'] = 'Back to the Realtime quiz';
+$string['questiontext'] = 'Question text:';
 $string['editquestiontime'] = 'Question time (0 for default)';
-$string['answertext'] = 'Answer Text:';
+$string['answertext'] = 'Answer text:';
 $string['correct'] = 'Correct answer?';
 $string['updatequestion'] = 'Save question';
 $string['saveadd'] = 'Save question and add another';
 $string['addanswers'] = 'Add space for 3 more answers';
 $string['errorquestiontext'] = 'Error: You have not filled in the question';
 $string['onecorrect'] = 'Error: There must be exactly one correct answer';
-$string['deletequestion'] = 'Delete Question';
+$string['deletequestion'] = 'Delete question';
 $string['checkdelete'] = 'Are you sure you want to delete this question?';
-$string['questionslist'] = 'Questions in this Realtime Quiz: ';
+$string['questionslist'] = 'Questions in this Realtime quiz: ';
 $string['yes'] = 'Yes';
 $string['no'] = 'No';
 $string['addingquestion'] = 'Adding question ';
@@ -48,7 +49,7 @@ $string['edit'] = 'Edit quiz';
 $string['choosecorrect'] = 'Set this as the correct answer';
 
 // Viewing the responses from different students
-$string['nosessions'] = 'This Realtime Quiz has not yet been attempted';
+$string['nosessions'] = 'This Realtime quiz has not yet been attempted';
 $string['choosesession'] = 'Choose a session to display: ';
 $string['showsession'] = 'Show';
 $string['allsessions'] = 'All Sessions';
@@ -60,7 +61,7 @@ $string['noanswers'] = 'No answers given';
 
 // Used by quizdata.php
 $string['notallowedattempt'] = 'You are not allowed to attempt this quiz';
-$string['badsesskey'] = 'Bad Session Key';
+$string['badsesskey'] = 'Bad session key';
 $string['badquizid'] = 'Bad quizid: '; // Do not translate 'quizid'
 $string['badcurrentquestion'] = 'Bad currentquestion: '; // Do not translate 'currentquestion'
 $string['alreadyanswered'] = 'You have already answered this question';
@@ -78,7 +79,7 @@ $string['clicknext'] = 'Click \'Next\' when everyone is ready';
 $string['waitfirst'] = 'Waiting for the first question to be sent';
 $string['question'] = 'Question ';
 $string['invalidanswer'] = 'Invalid answer number ';
-$string['finalresults'] = 'Final Results';
+$string['finalresults'] = 'Final results';
 $string['classresult'] = 'Class result: ';
 $string['classresultcorrect'] = ' correct';
 $string['questionfinished'] = 'Question finished, waiting for results';
@@ -104,7 +105,7 @@ $string['cross'] = 'Wrong answer';
 // Important - do not use any double-quotes (") in this text as it will cause problems when passing
 // the text into javascript (edit 'view.php' if this is a major problem)
 $string['next'] = 'Next >>';
-$string['startquiz'] = 'Start Quiz';
+$string['startquiz'] = 'Start quiz';
 $string['teacherstartinstruct'] = 'Use this to start a quiz for the students to take<br />Use the textbox to define a name for this session (to help when looking through the results at a later date).';
 $string['teacherjoinquizinstruct'] = 'Use this if you want to try out a quiz yourself<br />(you will also need to start the quiz in a separate window)';
 
