@@ -6,16 +6,16 @@
   <TABLES>
     <TABLE NAME="realtimequiz" COMMENT="Defines realtime quizzes" NEXT="realtimequiz_question">
       <FIELDS>
-        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="true" ENUM="false" COMMENT="id of the table, please edit me" NEXT="course"/>
-        <FIELD NAME="course" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" ENUM="false" PREVIOUS="id" NEXT="name"/>
-        <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" ENUM="false" PREVIOUS="course" NEXT="status"/>
-        <FIELD NAME="status" TYPE="int" LENGTH="3" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" ENUM="false" PREVIOUS="name" NEXT="currentquestion"/>
-        <FIELD NAME="currentquestion" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" ENUM="false" PREVIOUS="status" NEXT="nextendtime"/>
-        <FIELD NAME="nextendtime" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" ENUM="false" PREVIOUS="currentquestion" NEXT="currentsessionid"/>
-        <FIELD NAME="currentsessionid" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" ENUM="false" PREVIOUS="nextendtime" NEXT="questiontime"/>
-        <FIELD NAME="questiontime" TYPE="int" LENGTH="3" NOTNULL="true" UNSIGNED="true" DEFAULT="30" SEQUENCE="false" ENUM="false" COMMENT="How long do they get for each question?" PREVIOUS="currentsessionid" NEXT="classresult"/>
-        <FIELD NAME="classresult" TYPE="int" LENGTH="3" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" ENUM="false" COMMENT="Cumulative result for the class (total - divide by current question number)" PREVIOUS="questiontime" NEXT="questionresult"/>
-        <FIELD NAME="questionresult" TYPE="int" LENGTH="3" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" ENUM="false" COMMENT="% of correct responses to current question" PREVIOUS="classresult"/>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="true" COMMENT="id of the table, please edit me" NEXT="course"/>
+        <FIELD NAME="course" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="id" NEXT="name"/>
+        <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" PREVIOUS="course" NEXT="status"/>
+        <FIELD NAME="status" TYPE="int" LENGTH="3" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="name" NEXT="currentquestion"/>
+        <FIELD NAME="currentquestion" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="status" NEXT="nextendtime"/>
+        <FIELD NAME="nextendtime" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="currentquestion" NEXT="currentsessionid"/>
+        <FIELD NAME="currentsessionid" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="nextendtime" NEXT="questiontime"/>
+        <FIELD NAME="questiontime" TYPE="int" LENGTH="3" NOTNULL="true" UNSIGNED="true" DEFAULT="30" SEQUENCE="false" COMMENT="How long do they get for each question?" PREVIOUS="currentsessionid" NEXT="classresult"/>
+        <FIELD NAME="classresult" TYPE="int" LENGTH="3" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" COMMENT="Cumulative result for the class (total - divide by current question number)" PREVIOUS="questiontime" NEXT="questionresult"/>
+        <FIELD NAME="questionresult" TYPE="int" LENGTH="3" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" COMMENT="% of correct responses to current question" PREVIOUS="classresult"/>
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id" COMMENT="Primary key for realtimequiz"/>
@@ -23,12 +23,12 @@
     </TABLE>
     <TABLE NAME="realtimequiz_question" COMMENT="Defines questions for the realtime quizzes" PREVIOUS="realtimequiz" NEXT="realtimequiz_answer">
       <FIELDS>
-        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="false" SEQUENCE="true" ENUM="false" COMMENT="id of the table, please edit me" NEXT="quizid"/>
-        <FIELD NAME="quizid" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" ENUM="false" COMMENT="The Realtime Quiz this question is for" PREVIOUS="id" NEXT="questionnum"/>
-        <FIELD NAME="questionnum" TYPE="int" LENGTH="3" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" ENUM="false" COMMENT="Which number question is this?" PREVIOUS="quizid" NEXT="questiontext"/>
-        <FIELD NAME="questiontext" TYPE="text" LENGTH="medium" NOTNULL="true" SEQUENCE="false" ENUM="false" COMMENT="The actual question" PREVIOUS="questionnum" NEXT="questiontime"/>
-	    <FIELD NAME="questiontime" TYPE="int" LENGTH="5" NOTNULL="true" SEQUENCE="false" ENUM="false" COMMENT="The actual question" PREVIOUS="questiontext" NEXT="image"/>
-	    <FIELD NAME="image" TYPE="text" LENGTH="small" NOTNULL="false" SEQUENCE="false" ENUM="false" COMMENT="Optional image to go with the question" DEFAULT="" PREVIOUS="questiontime"/>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="false" SEQUENCE="true" COMMENT="id of the table, please edit me" NEXT="quizid"/>
+        <FIELD NAME="quizid" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" COMMENT="The Realtime Quiz this question is for" PREVIOUS="id" NEXT="questionnum"/>
+        <FIELD NAME="questionnum" TYPE="int" LENGTH="3" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" COMMENT="Which number question is this?" PREVIOUS="quizid" NEXT="questiontext"/>
+        <FIELD NAME="questiontext" TYPE="text" LENGTH="medium" NOTNULL="true" SEQUENCE="false" COMMENT="The actual question" PREVIOUS="questionnum" NEXT="questiontime"/>
+	    <FIELD NAME="questiontime" TYPE="int" LENGTH="5" NOTNULL="true" SEQUENCE="false" COMMENT="The actual question" PREVIOUS="questiontext" NEXT="image"/>
+	    <FIELD NAME="image" TYPE="text" LENGTH="small" NOTNULL="false" SEQUENCE="false" COMMENT="Optional image to go with the question" PREVIOUS="questiontime"/>
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id" COMMENT="primary key of the table, please edit me"/>
@@ -39,10 +39,10 @@
     </TABLE>
     <TABLE NAME="realtimequiz_answer" COMMENT="The available answers for each question in the realtime quiz" PREVIOUS="realtimequiz_question" NEXT="realtimequiz_submitted">
       <FIELDS>
-        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="false" SEQUENCE="true" ENUM="false" COMMENT="id of the table, please edit me" NEXT="questionid"/>
-        <FIELD NAME="questionid" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" ENUM="false" COMMENT="Which question is this an answer for?" PREVIOUS="id" NEXT="answertext"/>
-        <FIELD NAME="answertext" TYPE="text" LENGTH="medium" NOTNULL="true" SEQUENCE="false" ENUM="false" COMMENT="The actual text for the answer" PREVIOUS="questionid" NEXT="correct"/>
-        <FIELD NAME="correct" TYPE="int" LENGTH="2" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" ENUM="false" COMMENT="Is this the correct answer?" PREVIOUS="answertext"/>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="false" SEQUENCE="true" COMMENT="id of the table, please edit me" NEXT="questionid"/>
+        <FIELD NAME="questionid" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" COMMENT="Which question is this an answer for?" PREVIOUS="id" NEXT="answertext"/>
+        <FIELD NAME="answertext" TYPE="text" LENGTH="medium" NOTNULL="true" SEQUENCE="false" COMMENT="The actual text for the answer" PREVIOUS="questionid" NEXT="correct"/>
+        <FIELD NAME="correct" TYPE="int" LENGTH="2" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" COMMENT="Is this the correct answer?" PREVIOUS="answertext"/>
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id" COMMENT="primary key of the table, please edit me"/>
@@ -53,11 +53,11 @@
     </TABLE>
     <TABLE NAME="realtimequiz_submitted" COMMENT="The answers that have been submitted by students" PREVIOUS="realtimequiz_answer" NEXT="realtimequiz_session">
       <FIELDS>
-        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="false" SEQUENCE="true" ENUM="false" COMMENT="id of the table, please edit me" NEXT="questionid"/>
-        <FIELD NAME="questionid" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" ENUM="false" COMMENT="The question that they were answering" PREVIOUS="id" NEXT="sessionid"/>
-        <FIELD NAME="sessionid" TYPE="int" LENGTH="10" NOTNULL="false" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" ENUM="false" COMMENT="Used to allow the quiz to run multiple times and record the answers each student gives with different ids" PREVIOUS="questionid" NEXT="userid"/>
-        <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" ENUM="false" COMMENT="The student who has submitted this answer" PREVIOUS="sessionid" NEXT="answerid"/>
-        <FIELD NAME="answerid" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" ENUM="false" COMMENT="Which answer did they give" PREVIOUS="userid"/>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="false" SEQUENCE="true" COMMENT="id of the table, please edit me" NEXT="questionid"/>
+        <FIELD NAME="questionid" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" COMMENT="The question that they were answering" PREVIOUS="id" NEXT="sessionid"/>
+        <FIELD NAME="sessionid" TYPE="int" LENGTH="10" NOTNULL="false" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" COMMENT="Used to allow the quiz to run multiple times and record the answers each student gives with different ids" PREVIOUS="questionid" NEXT="userid"/>
+        <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" COMMENT="The student who has submitted this answer" PREVIOUS="sessionid" NEXT="answerid"/>
+        <FIELD NAME="answerid" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" COMMENT="Which answer did they give" PREVIOUS="userid"/>
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id" COMMENT="primary key of the table, please edit me"/>
@@ -69,10 +69,10 @@
     </TABLE>
     <TABLE NAME="realtimequiz_session" COMMENT="Details about each quiz session" PREVIOUS="realtimequiz_submitted">
       <FIELDS>
-        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="false" SEQUENCE="true" ENUM="false" COMMENT="id of the table, please edit me" NEXT="name"/>
-        <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" ENUM="false" COMMENT="Default comment for the field, please edit me" PREVIOUS="id" NEXT="quizid"/>
-        <FIELD NAME="quizid" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" ENUM="false" COMMENT="Default comment for the field, please edit me" PREVIOUS="name" NEXT="timestamp"/>
-        <FIELD NAME="timestamp" TYPE="int" LENGTH="10" NOTNULL="false" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" ENUM="false" COMMENT="Default comment for the field, please edit me" PREVIOUS="quizid"/>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="false" SEQUENCE="true" COMMENT="id of the table, please edit me" NEXT="name"/>
+        <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" COMMENT="Default comment for the field, please edit me" PREVIOUS="id" NEXT="quizid"/>
+        <FIELD NAME="quizid" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" COMMENT="Default comment for the field, please edit me" PREVIOUS="name" NEXT="timestamp"/>
+        <FIELD NAME="timestamp" TYPE="int" LENGTH="10" NOTNULL="false" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" COMMENT="Default comment for the field, please edit me" PREVIOUS="quizid"/>
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id" COMMENT="primary key of the table, please edit me"/>

@@ -31,7 +31,7 @@
 // For the core capabilities, the variable is $moodle_capabilities.
 
 
-$mod_realtimequiz_capabilities = array(
+$capabilities = array(
 
     // Can start a quiz and move on to the next question
     // NB: must have 'attempt' as well to be able to see the questions
@@ -42,7 +42,7 @@ $mod_realtimequiz_capabilities = array(
         'legacy' => array(
             'teacher' => CAP_ALLOW,
             'editingteacher' => CAP_ALLOW,
-            'admin' => CAP_ALLOW
+            'manager' => CAP_ALLOW
         )
     ),
 
@@ -55,7 +55,7 @@ $mod_realtimequiz_capabilities = array(
             'student' => CAP_ALLOW,
             'teacher' => CAP_ALLOW,
             'editingteacher' => CAP_ALLOW,
-            'admin' => CAP_ALLOW
+            'manager' => CAP_ALLOW
         )
     ),
 
@@ -67,7 +67,7 @@ $mod_realtimequiz_capabilities = array(
         'legacy' => array(
             'teacher' => CAP_ALLOW,
             'editingteacher' => CAP_ALLOW,
-            'admin' => CAP_ALLOW
+            'manager' => CAP_ALLOW
         )
     ),
 
@@ -78,7 +78,7 @@ $mod_realtimequiz_capabilities = array(
         'contextlevel' => CONTEXT_MODULE,
         'legacy' => array(
             'editingteacher' => CAP_ALLOW,
-            'admin' => CAP_ALLOW
+            'manager' => CAP_ALLOW
         )
     )
 );
