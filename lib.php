@@ -40,6 +40,7 @@ function realtimequiz_add_instance($realtimequiz) {
  * @return boolean Success/Fail
  **/
 function realtimequiz_update_instance($realtimequiz) {
+    global $DB;
 
     $realtimequiz->timemodified = time();
     $realtimequiz->id = $realtimequiz->instance;
@@ -51,7 +52,7 @@ function realtimequiz_update_instance($realtimequiz) {
     $realtimequiz->classresult = 0;
     $realtimequiz->questionresult = 0;
 
-    return update_record("realtimequiz", $realtimequiz);
+    return $DB->update_record('realtimequiz', $realtimequiz);
 }
 
 /**
@@ -63,33 +64,25 @@ function realtimequiz_update_instance($realtimequiz) {
  * @return boolean Success/Failure
  **/
 function realtimequiz_delete_instance($id) {
+    global $DB;
 
-    if (! $realtimequiz = get_record("realtimequiz", "id", "$id")) {
+    if (! $realtimequiz = $DB->get_record('realtimequiz', array('id' => $id))) {
         return false;
     }
 
     $result = true;
 
-	$questions = get_records('realtimequiz_question', 'quizid', "$id");
-	if (!empty($questions)) {
-		foreach ($questions as $question) { // Get each question
-			$answers = get_records('realtimequiz_answer', 'questionid', "$question->id");
-			if (!empty($answers)) {
-				foreach ($answers as $answer) { // Get each answer for that question
-					delete_records('realtimequiz_submitted', 'answerid', "$answer->id"); // Delete each submission for that answer
-				}
-				delete_records('realtimequiz_answer', 'questionid', "$question->id"); // Delete each answer
-			}
-		}
-	}
-	delete_records('realtimequiz_question', 'quizid', "$id"); // Delete each question
-	delete_records('realtimequiz_session', 'quizid', "$id"); // Delete each session
-		
-	//# Delete any dependent records here #
-
-    if (! delete_records("realtimequiz", "id", "$realtimequiz->id")) {
-        $result = false;
+	$questions = $DB->get_records('realtimequiz_question', array('quizid' => $id));
+    foreach ($questions as $question) { // Get each question
+        $answers = $DB->get_records('realtimequiz_answer', array('questionid' => $question->id));
+        foreach ($answers as $answer) { // Get each answer for that question
+            $DB->delete_records('realtimequiz_submitted', array('answerid' => $answer->id)); // Delete each submission for that answer
+        }
+        $DB->delete_records('realtimequiz_answer', array('questionid' => $question->id)); // Delete each answer
     }
+	$DB->delete_records('realtimequiz_question', array('quizid' => $id)); // Delete each question
+	$DB->delete_records('realtimequiz_session', array('quizid' => $id)); // Delete each session
+    $DB->delete_records('realtimequiz', array('id' => $realtimequiz->id));
 
     return $result;
 }
@@ -105,7 +98,7 @@ function realtimequiz_delete_instance($id) {
  * @todo Finish documenting this function
  **/
 function realtimequiz_user_outline($course, $user, $mod, $realtimequiz) {
-    return $return;
+    return null;
 }
 
 /**
@@ -129,8 +122,6 @@ function realtimequiz_user_complete($course, $user, $mod, $realtimequiz) {
  * @todo Finish documenting this function
  **/
 function realtimequiz_print_recent_activity($course, $isteacher, $timestart) {
-    global $CFG;
-
     return false;  //  True if anything was printed, otherwise false 
 }
 
@@ -144,8 +135,6 @@ function realtimequiz_print_recent_activity($course, $isteacher, $timestart) {
  * @todo Finish documenting this function
  **/
 function realtimequiz_cron () {
-    global $CFG;
-
     return true;
 }
 
@@ -206,21 +195,19 @@ function realtimequiz_scale_used ($realtimequizid,$scaleid) {
 /// starts with realtimequiz_
 
 function realtimequiz_view_tabs($currenttab, $cmid, $context) {
-    global $CFG;
-        
     $tabs = array();
     $row = array();
     $inactive = array();
     $activated = array();
 
     if (has_capability('mod/realtimequiz:attempt', $context)) {
-        $row[] = new tabobject('view', "$CFG->wwwroot/mod/realtimequiz/view.php?id={$cmid}", get_string('view', 'realtimequiz'));
+        $row[] = new tabobject('view', new moodle_url('/mod/realtimequiz/view.php', array('id' => $cmid)), get_string('view', 'realtimequiz'));
     }
     if (has_capability('mod/realtimequiz:editquestions', $context)) {
-        $row[] = new tabobject('edit', "$CFG->wwwroot/mod/realtimequiz/edit.php?id={$cmid}", get_string('edit', 'realtimequiz'));
+        $row[] = new tabobject('edit', new moodle_url('/mod/realtimequiz/edit.php', array('id' => $cmid)), get_string('edit', 'realtimequiz'));
     }
     if (has_capability('mod/realtimequiz:seeresponses', $context)) {
-        $row[] = new tabobject('responses', "$CFG->wwwroot/mod/realtimequiz/responses.php?id={$cmid}", get_string('responses', 'realtimequiz'));
+        $row[] = new tabobject('responses', new moodle_url('/mod/realtimequiz/responses.php', array('id' => $cmid)), get_string('responses', 'realtimequiz'));
     }
 
     if ($currenttab == 'view' && count($row) == 1) {
