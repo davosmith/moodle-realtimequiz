@@ -13,23 +13,23 @@
     $a  = optional_param('a', 0, PARAM_INT);  // realtimequiz ID
 
     if ($id) {
-        if (! $cm = get_record("course_modules", "id", $id)) {
+        if (! $cm = $DB->get_record("course_modules", array('id' => $id))) {
             error("Course Module ID was incorrect");
         }
     
-        if (! $course = get_record("course", "id", $cm->course)) {
+        if (! $course = $DB->get_record("course", array('id' => $cm->course))) {
             error("Course is misconfigured");
         }
     
-        if (! $realtimequiz = get_record("realtimequiz", "id", $cm->instance)) {
+        if (! $realtimequiz = $DB->get_record("realtimequiz", array('id' => $cm->instance))) {
             error("Course module is incorrect");
         }
 
     } else {
-        if (! $realtimequiz = get_record("realtimequiz", "id", $a)) {
+        if (! $realtimequiz = $DB->get_record("realtimequiz", array('id' => $a))) {
             error("Course module is incorrect");
         }
-        if (! $course = get_record("course", "id", $realtimequiz->course)) {
+        if (! $course = $DB->get_record("course", array('id' => $realtimequiz->course))) {
             error("Course is misconfigured");
         }
         if (! $cm = get_coursemodule_from_instance("realtimequiz", $realtimequiz->id, $course->id)) {
@@ -37,10 +37,12 @@
         }
     }
     
+    $PAGE->set_url(new moodle_url('/mod/realtimequiz/view.php', array('id' => $cm->id)));
+
     require_login($course->id);
     $context = get_context_instance(CONTEXT_MODULE, $cm->id);
 	
-	$questioncount = count_records('realtimequiz_question', 'quizid', $realtimequiz->id);
+    $questioncount = $DB->count_records('realtimequiz_question', array('quizid' => $realtimequiz->id));
     if ($questioncount == 0 && has_capability('mod/realtimequiz:editquestions', $context)) {
         redirect('edit.php?id='.$id);
     }
@@ -54,44 +56,16 @@
     $strrealtimequizzes = get_string("modulenameplural", "realtimequiz");
     $strrealtimequiz  = get_string("modulename", "realtimequiz");
 
-    if ($CFG->version < 2007101500) { // < Moodle 1.9
-        if ($course->category) {
-            $navigation = "<a href=\"../../course/view.php?id=$course->id\">$course->shortname</a> ->";
-        } else {
-            $navigation = '';
-        }
-
-        print_header("$course->shortname: $realtimequiz->name", "$course->fullname",
-                     "$navigation <a href=index.php?id=$course->id>$strrealtimequizzes</a> -> $realtimequiz->name", 
-                     "", "", true, update_module_button($cm->id, $course->id, $strrealtimequiz), 
-                     navmenu($course, $cm));
-    } else { // Moodle 1.9
-        $navlinks = array();
-        $navlinks[] = array('name' => $strrealtimequizzes, 'link' => "index.php?id={$course->id}", 'type' => 'activity');
-        $navlinks[] = array('name' => format_string($realtimequiz->name), 'link' => '', 'type' => 'activityinstance');
-
-        $navigation = build_navigation($navlinks);
-        
-        $pagetitle = strip_tags($course->shortname.': '.$strrealtimequiz.': '.format_string($realtimequiz->name,true));
-
-        print_header_simple($pagetitle, '', $navigation, '', '', true,
-                            update_module_button($cm->id, $course->id, $strrealtimequiz), navmenu($course, $cm));
-        
-    }
+    $PAGE->set_title(strip_tags($course->shortname.': '.$strrealtimequiz.': '.format_string($realtimequiz->name,true)));
+    $PAGE->set_heading($course->fullname);
+    echo $OUTPUT->header();
+    echo $OUTPUT->heading(format_string($realtimequiz->name));
 
     realtimequiz_view_tabs('view', $cm->id, $context);
                   
-/*	if (has_capability('mod/realtimequiz:editquestions', $context)) {
-		echo "<div class='reportlink'><a href='$CFG->wwwroot/mod/realtimequiz/edit.php?id=$realtimequiz->id'>".get_string('editquestions','realtimequiz').'</a></div>';
-	}
-				  
-    if (has_capability('mod/realtimequiz:seeresponses', $context)) {
-        echo "<div class='reportlink'><a href='$CFG->wwwroot/mod/realtimequiz/responses.php?id=$cm->id'>".get_string('seeresponses','realtimequiz').'</a></div>';
-        }*/
-
 /// Print the main part of the page
 
-    print_box_start('generalbox boxwidthwide boxaligncenter realtimequizbox');
+    echo $OUTPUT->box_start('generalbox boxwidthwide boxaligncenter realtimequizbox');
 ?>
     <div id="questionarea"></div>
 <!--    <div id="debugarea" style="border: 1px dashed black; width: 600px; height: 100px; overflow: scroll; "></div>
@@ -105,8 +79,8 @@
         realtimequiz_set_coursepage('<?php echo "$CFG->wwwroot/course/view.php?id=$course->id"; ?>');
         realtimequiz_set_siteroot('<?php echo "$CFG->wwwroot"; ?>');
 
-        realtimequiz_set_image('tick',"<?php echo $CFG->pixpath.'/i/tick_green_big.gif'; ?>");
-        realtimequiz_set_image('cross',"<?php echo $CFG->pixpath.'/i/cross_red_big.gif'; ?>");
+        realtimequiz_set_image('tick',"<?php echo $OUTPUT->pix_url('/i/tick_green_big'); ?>");
+        realtimequiz_set_image('cross',"<?php echo $OUTPUT->pix_url('/i/cross_red_big'); ?>");
         
         //Pass all the text strings into the javascript (to allow for translation)
         // Used by view_student.js
@@ -161,9 +135,9 @@
         echo '<script type="text/javascript">realtimequiz_init_student_view();</script>';
     }
     
-    print_box_end();
+    echo $OUTPUT->box_end();
 
 /// Finish the page
-    print_footer($course);
+    echo $OUTPUT->footer();
 
 ?>

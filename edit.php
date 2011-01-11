@@ -22,82 +22,84 @@
     $removeimage = optional_param('removeimage', false, PARAM_BOOL);
 
     if ($id) {
-        if (! $cm = get_record("course_modules", "id", $id)) {
+        if (! $cm = $DB->get_record('course_modules', array('id' => $id))) {
             error("Course Module ID was incorrect");
         }
     
-        if (! $course = get_record("course", "id", $cm->course)) {
+        if (! $course = $DB->get_record('course', array('id' => $cm->course))) {
             error("Course is misconfigured");
         }
     
-        if (! $quiz = get_record("realtimequiz", "id", $cm->instance)) {
+        if (! $quiz = $DB->get_record('realtimequiz', array('id' => $cm->instance))) {
             error("Course module is incorrect");
         }
 
         $quizid = $quiz->id;
         
     } else {
-        if (! $quiz = get_record('realtimequiz', 'id', $quizid)) {
+        if (! $quiz = $DB->get_record('realtimequiz', array('id' => $quizid))) {
             error("Quiz id ($quizid) is incorrect");
         }
-        if (! $course = get_record('course', 'id', $quiz->course)) {
+        if (! $course = $DB->get_record('course', array('id' => $quiz->course))) {
             error("Course is misconfigured");
         }
         if (! $cm = get_coursemodule_from_instance('realtimequiz', $quiz->id, $course->id)) {
             error("Course Module ID was incorrect");
         }
     }
-	
-	require_login($course->id);
+
+    $PAGE->set_url(new moodle_url('/mod/realtimequiz/edit.php', array('id' => $cm->id)));
+
+    require_login($course->id);
     $context = get_context_instance(CONTEXT_MODULE, $cm->id);
 	require_capability('mod/realtimequiz:editquestions', $context);
 	add_to_log($course->id, "realtimequiz", "update: $action", "edit.php?quizid=$quizid");
+
 		
 	// Some useful functions:
 	function realtimequiz_list_questions($quizid, $cm) {
-		global $CFG;
+		global $DB, $OUTPUT;
 	
 		echo '<h2>'.get_string('questionslist','realtimequiz').'</h2>';	
 		
-		$questions = get_records('realtimequiz_question', 'quizid', $quizid, 'questionnum');
+		$questions = $DB->get_records('realtimequiz_question', array('quizid' => $quizid), 'questionnum');
 		$questioncount = count($questions);
 		$expectednumber = 1;
 		echo '<ol>';
-	    if (!empty($questions)) {
-		    foreach ($questions as $question) {
-			    // A good place to double-check the question numbers and fix any that are broken
-			    if ($question->questionnum != $expectednumber) {
-					$question->questionnum = $expectednumber;
-					update_record('realtimequiz_question', $question);
-				}
+        foreach ($questions as $question) {
+            // A good place to double-check the question numbers and fix any that are broken
+            if ($question->questionnum != $expectednumber) {
+                $question->questionnum = $expectednumber;
+                $DB->update_record('realtimequiz_question', $question);
+            }
 			
-				$qtext = $question->questiontext;
-				echo "<li><span class='realtimequiz_editquestion'>";
-                echo "<a href='edit.php?quizid=$quizid&amp;action=editquestion&amp;questionid=$question->id'>";
-                echo "$qtext</a> </span><span class='realtimequiz_editicons'>";
-                if ($question->questionnum > 1) {
-					echo "<a href='edit.php?quizid=$quizid&amp;action=moveup&amp;questionid=$question->id'><img src='$CFG->pixpath/t/up.gif' alt='Move Question $question->questionnum Up' /></a> ";	//FIXME - translate alt text
-				} else {
-                    echo "<img src='$CFG->pixpath/spacer.gif' width='15px' />";
-                }
-				if ($question->questionnum < $questioncount) {
-					echo "<a href='edit.php?quizid=$quizid&amp;action=movedown&amp;questionid=$question->id'><img src='$CFG->pixpath/t/down.gif' alt='Move Question $question->questionnum Down' /></a> ";	//FIXME - translate alt text
-				} else {
-                    echo "<img src='$CFG->pixpath/spacer.gif' width='15px' />";
-                }
-                echo '&nbsp;';
-				echo "<a href='edit.php?quizid=$quizid&amp;action=deletequestion&amp;questionid=$question->id'><img src='$CFG->pixpath/t/delete.gif' alt='Delete Question $question->questionnum' /></a>";	//FIXME - translate alt text
-				echo '</span></li>';
-				$expectednumber++;
-			}
-		}
+            $qtext = $question->questiontext;
+            echo "<li><span class='realtimequiz_editquestion'>";
+            echo "<a href='edit.php?quizid=$quizid&amp;action=editquestion&amp;questionid=$question->id'>";
+            echo "$qtext</a> </span><span class='realtimequiz_editicons'>";
+            if ($question->questionnum > 1) {
+                echo "<a href='edit.php?quizid=$quizid&amp;action=moveup&amp;questionid=$question->id'><img src='".$OUTPUT->pix_url('t/up')."' alt='Move Question $question->questionnum Up' /></a> ";	//FIXME - translate alt text
+            } else {
+                echo '<img src="'.$OUTPUT->pix_url('spacer').'" width="15px" />';
+            }
+            if ($question->questionnum < $questioncount) {
+                echo "<a href='edit.php?quizid=$quizid&amp;action=movedown&amp;questionid=$question->id'><img src='".$OUTPUT->pix_url('t/down')."' alt='Move Question $question->questionnum Down' /></a> ";	//FIXME - translate alt text
+            } else {
+                echo '<img src="'.$OUTPUT->pix_url('spacer').'" width="15px" />';
+            }
+            echo '&nbsp;';
+            echo "<a href='edit.php?quizid=$quizid&amp;action=deletequestion&amp;questionid=$question->id'><img src='".$OUTPUT->pix_url('t/delete')."' alt='Delete Question $question->questionnum' /></a>";	//FIXME - translate alt text
+            echo '</span></li>';
+            $expectednumber++;
+        }
 		echo '</ol>';
-		echo "<form method='post' action='$CFG->wwwroot/mod/realtimequiz/edit.php?quizid=$quizid&amp;action=addquestion'>";
-		echo '<input type=\'submit\' value=\''.get_string('addquestion','realtimequiz').'\'></input></form>';
+        $url = new moodle_url('/mod/realtimequiz/edit.php', array('quizid'=>$quizid, 'action'=>'addquestion'));
+		echo '<form method="post" action="'.$url.'">';
+		echo '<input type="submit" value="'.get_string('addquestion','realtimequiz').'"></input></form>';
 	}
 	
 function realtimequiz_edit_question($quizid, $maxfilesize, $questionid='', $minanswers=4) {
-		global $CFG;
+		global $DB;
 			
 		echo '<center>';
 		if ($questionid=='') {
@@ -105,7 +107,7 @@ function realtimequiz_edit_question($quizid, $maxfilesize, $questionid='', $mina
 			$question = new stdClass();
 			$question->id = 0;
 			$question->quizid = $quizid;
-			$question->questionnum = count_records('realtimequiz_question', 'quizid', $quizid) + 1;
+			$question->questionnum = $DB->count_records('realtimequiz_question', array('quizid' => $quizid)) + 1;
 			$question->questiontext = '';
 			$question->questiontime = 0;
 			$question->image = '';
@@ -114,13 +116,13 @@ function realtimequiz_edit_question($quizid, $maxfilesize, $questionid='', $mina
 			$answers = array();
 		} else {
 			$action = 'doeditquestion';
-			$question = get_record('realtimequiz_question', 'id', $questionid);
+			$question = $DB->get_record('realtimequiz_question', array('id' => $questionid));
 			if (!$question) {
 				error("Question not found");
 			}
 			echo '<h2>'.get_string('edittingquestion','realtimequiz').$question->questionnum.'</h2>';
 			
-			$answers = get_records('realtimequiz_answer', 'questionid', $questionid, 'id');
+			$answers = $DB->get_records('realtimequiz_answer', array('questionid' => $questionid), 'id');
 		}
 		
         if (optional_param('saveadd', false, PARAM_BOOL)) {
@@ -150,9 +152,12 @@ function realtimequiz_edit_question($quizid, $maxfilesize, $questionid='', $mina
 			}
 		}
 		
-		
-		echo "<form method='post' action='$CFG->wwwroot/mod/realtimequiz/edit.php?quizid=$quizid' enctype='multipart/form-data'>";
+        $url = new moodle_url('/mod/realtimequiz/edit.php', array('quizid'=>$quizid));
+		echo '<form method="post" action="'.$url.'" enctype="multipart/form-data">';
 		echo '<table cellpadding="5">';
+        /*
+          // FIXME Need to fix this by adding a proper Moodle form (but leaving out for the time being)
+          
         echo '<tr><td colspan="2">';
         if ($question->image) {
 		    $filename = $CFG->dataroot.'/'.$question->image;
@@ -177,6 +182,7 @@ function realtimequiz_edit_question($quizid, $maxfilesize, $questionid='', $mina
 	        }
 		}
         echo '</td></tr>';
+        */
         echo '<tr valign="top">
 		<td align="right"><b>'.get_string('questiontext','realtimequiz').'</b></td>
 		<td align="left">';		
@@ -242,58 +248,39 @@ function realtimequiz_edit_question($quizid, $maxfilesize, $questionid='', $mina
 	}
 	
 	function realtimequiz_confirm_deletequestion($quizid, $questionid) {
-		global $CFG;
-	
+        global $DB;
+
 		echo '<center><h2>'.get_string('deletequestion', 'realtimequiz').'</h2>';
 		echo '<p>'.get_string('checkdelete','realtimequiz').'</p><p>"';
-		$question = get_record('realtimequiz_question', 'id', $questionid);
+		$question = $DB->get_record('realtimequiz_question', array('id' => $questionid));
 		echo $question->questiontext;
 		echo '"</p>';
 		
-		echo '<form method="post" action="'.$CFG->wwwroot.'/mod/realtimequiz/edit.php?quizid='.$quizid.'">';
+        $url = new moodle_url('/mod/realtimequiz/edit.php',array('quizid'=>$quizid));
+		echo '<form method="post" action="'.$url.'">';
 		echo '<input type="hidden" name="action" value="dodeletequestion" />';
 		echo '<input type="hidden" name="questionid" value="'.$questionid.'" />';
 		echo '<input type="hidden" name="sesskey" value="'.sesskey().'" />';
 		echo '<input type="submit" name="yes" value="'.get_string('yes','realtimequiz').'" /> ';
 		echo '<input type="submit" name="no" value="'.get_string('no','realtimequiz').'" />';
 		echo '</form></center>';
-
 	}
 
-    require_js(array('yui_yahoo', 'yui_dom', 'editquestions.js'));
+    $PAGE->requires->yui2_lib('yahoo');
+    $PAGE->requires->yui2_lib('dom');
+    $PAGE->requires->js('/mod/realtimequiz/editquestions.js');
 	
 	// Back to the main code
     $strrealtimequizzes = get_string("modulenameplural", "realtimequiz");
     $strrealtimequiz  = get_string("modulename", "realtimequiz");
 
-    if ($CFG->version < 2007101500) { // < Moodle 1.9
-        if ($course->category) {
-            $navigation = "<a href=\"../../course/view.php?id=$course->id\">$course->shortname</a> ->";
-        } else {
-            $navigation = '';
-        }
-
-        print_header("$course->shortname: $quiz->name", "$course->fullname",
-                     "$navigation <a href=index.php?id=$course->id>$strrealtimequizzes</a> -> $quiz->name", 
-                     "", "", true, update_module_button($cm->id, $course->id, $strrealtimequiz), 
-                     navmenu($course, $cm));
-    } else { // Moodle 1.9
-        $navlinks = array();
-        $navlinks[] = array('name' => $strrealtimequizzes, 'link' => "index.php?id={$course->id}", 'type' => 'activity');
-        $navlinks[] = array('name' => format_string($quiz->name), 'link' => '', 'type' => 'activityinstance');
-
-        $navigation = build_navigation($navlinks);
-        
-        $pagetitle = strip_tags($course->shortname.': '.$strrealtimequiz.': '.format_string($quiz->name,true));
-
-        print_header_simple($pagetitle, '', $navigation, '', '', true,
-                            update_module_button($cm->id, $course->id, $strrealtimequiz), navmenu($course, $cm));
-        
-    }
-
+    $PAGE->set_title(strip_tags($course->shortname.': '.$strrealtimequiz.': '.format_string($quiz->name,true)));
+    $PAGE->set_heading($course->fullname);
+    echo $OUTPUT->header();
+   
     realtimequiz_view_tabs('edit', $cm->id, $context);
 
-    print_box_start('generalbox boxwidthwide boxaligncenter realtimequizbox');
+    echo $OUTPUT->box_start('generalbox boxwidthwide boxaligncenter realtimequizbox');
 				  
 	if (($action == 'doaddquestion') || ($action == 'doeditquestion')) {
 	
@@ -305,8 +292,9 @@ function realtimequiz_edit_question($quizid, $maxfilesize, $questionid='', $mina
 			$minanswers = optional_param('minanswers', 4, PARAM_INT);
 			realtimequiz_edit_question($quizid, $course->maxbytes, $questionid, $minanswers + 3);
         } elseif ($removeimage) {
+            /* FIXME
             if ($action == 'doeditquestion') {
-                $q = get_record('realtimequiz_question', 'id', $questionid);
+                $q = $DB->get_record('realtimequiz_question', array('id' => $questionid));
                 if ($q && $q->image) {
                     $fullpath = $CFG->dataroot.'/'.$q->image;
                     if (file_exists($fullpath)) {
@@ -317,7 +305,7 @@ function realtimequiz_edit_question($quizid, $maxfilesize, $questionid='', $mina
                     $question->image = ''; 
                     update_record('realtimequiz_question', $question);
                 }
-            }
+                }*/
 			$minanswers = optional_param('minanswers', 4, PARAM_INT);
             realtimequiz_edit_question($quizid, $course->maxbytes, $questionid, $minanswers);
 
@@ -350,7 +338,6 @@ function realtimequiz_edit_question($quizid, $maxfilesize, $questionid='', $mina
 					}
 				}
 			}
-            
 
 			// Check there is exactly 1 correct answer
 			if ($question->questiontext == '') {
@@ -370,12 +357,13 @@ function realtimequiz_edit_question($quizid, $maxfilesize, $questionid='', $mina
 			} else {
 				// Update the question
 				if ($action == 'doaddquestion') {
-					$question->id = insert_record('realtimequiz_question', $question);
+					$question->id = $DB->insert_record('realtimequiz_question', $question);
 				} else {
 					$question->id = $questionid;
-					update_record('realtimequiz_question', $question);
+					$DB->update_record('realtimequiz_question', $question);
 				}
-								
+						
+                /* FIXME
                 // Upload the image
                 $dir = $course->id.'/'.$CFG->moddata.'/realtimequiz/'.$question->quizid;
                 $fulldir = $CFG->dataroot.'/'.$dir;
@@ -416,7 +404,8 @@ function realtimequiz_edit_question($quizid, $maxfilesize, $questionid='', $mina
                             }
                         }
                     }
-                }         
+                }    
+                */     
 				
 				// Update the answers
 				foreach ($answers as $answer) {
@@ -424,15 +413,15 @@ function realtimequiz_edit_question($quizid, $maxfilesize, $questionid='', $mina
 				
 					if ($answer->id == 0) {	// A new answer to add to the database
 						if ($answer->answertext != '') { // Only add it if there is some text there
-							insert_record('realtimequiz_answer', $answer, false);
+							$DB->insert_record('realtimequiz_answer', $answer, false);
 						}
 					} else {
 						if ($answer->answertext == '') { // Empty answer = remove it
-						    delete_records('realtimequiz_submitted', 'answerid', $answer->id); // Delete any submissions for that answer
-							delete_records('realtimequiz_answer', 'id', $answer->id);
+						    $DB->delete_records('realtimequiz_submitted', array('answerid' => $answer->id)); // Delete any submissions for that answer
+							$DB->delete_records('realtimequiz_answer', array('id' => $answer->id));
 							
 						} else { // Update the answer
-							update_record('realtimequiz_answer', $answer);
+							$DB->update_record('realtimequiz_answer', $answer);
 						}
 					}
 				}
@@ -452,14 +441,14 @@ function realtimequiz_edit_question($quizid, $maxfilesize, $questionid='', $mina
 		}  
 
 		if (optional_param('yes', false, PARAM_BOOL)) {
-		    $answers = get_records('realtimequiz_answer', 'questionid', $questionid);
+		    $answers = $DB->get_records('realtimequiz_answer', array('questionid' => $questionid));
 			if (!empty($answers)) {
 			    foreach ($answers as $answer) { // Get each answer for that question
-				    delete_records('realtimequiz_submitted', 'answerid', $answer->id); // Delete any submissions for that answer
+				    $DB->delete_records('realtimequiz_submitted', array('answerid' => $answer->id)); // Delete any submissions for that answer
 			    }
 			}
-		    delete_records('realtimequiz_answer', 'questionid', $questionid); // Delete each answer
-			delete_records('realtimequiz_question', 'id', $questionid);
+		    $DB->delete_records('realtimequiz_answer', array('questionid' => $questionid)); // Delete each answer
+			$DB->delete_records('realtimequiz_question', array('id' => $questionid));
 			// Questionnumbers sorted out when we display the list of questions
 		}
 		
@@ -467,16 +456,21 @@ function realtimequiz_edit_question($quizid, $maxfilesize, $questionid='', $mina
 	
 	} elseif ($action == 'moveup') {
 	
-		$thisquestion = get_record('realtimequiz_question','id', $questionid);
+		$thisquestion = $DB->get_record('realtimequiz_question', array('id' => $questionid));
 		if ($thisquestion) {
 			$questionnum = $thisquestion->questionnum;
 			if ($questionnum > 1) {
-				$swapquestion = get_record('realtimequiz_question','quizid', $quizid, 'questionnum', $questionnum - 1);
+				$swapquestion = $DB->get_record('realtimequiz_question', array('quizid' => $quizid, 'questionnum' => ($questionnum - 1)));
 				if ($swapquestion) {
-					$thisquestion->questionnum = $questionnum - 1;
-					$swapquestion->questionnum = $questionnum;
-					update_record('realtimequiz_question', $thisquestion);
-					update_record('realtimequiz_question', $swapquestion);
+                    $upd = new stdClass;
+                    $upd->id = $thisquestion->id;
+                    $upd->questionnum = $questionnum - 1;
+					$DB->update_record('realtimequiz_question', $upd);
+
+                    $upd = new stdClass;
+                    $upd->id = $swapquestion->id;
+                    $upd->questionnum = $questionnum;
+					$DB->update_record('realtimequiz_question', $upd);
 				//} else {
 					// FIXME? Is it safe just to ignore this?
 				}
@@ -488,15 +482,20 @@ function realtimequiz_edit_question($quizid, $maxfilesize, $questionid='', $mina
 		$action = 'listquestions';
 	
 	} elseif ($action == 'movedown') {
-		$thisquestion = get_record('realtimequiz_question','id', $questionid);
+		$thisquestion = $DB->get_record('realtimequiz_question', array('id' => $questionid));
 		if ($thisquestion) {
 			$questionnum = $thisquestion->questionnum;
-			$swapquestion = get_record('realtimequiz_question','quizid', $quizid, 'questionnum', $questionnum + 1);
+			$swapquestion = $DB->get_record('realtimequiz_question', array('quizid' => $quizid, 'questionnum' => ($questionnum + 1)));
 			if ($swapquestion) {
-				$thisquestion->questionnum = $questionnum + 1;
-				$swapquestion->questionnum = $questionnum;
-				update_record('realtimequiz_question', $thisquestion);
-				update_record('realtimequiz_question', $swapquestion);
+                $upd = new stdClass;
+                $upd->id = $thisquestion->id;
+                $upd->questionnum = $questionnum + 1;
+				$DB->update_record('realtimequiz_question', $upd);
+                
+                $upd = new stdClass;
+                $upd->id = $swapquestion->id;
+                $upd->questionnum = $questionnum;
+				$DB->update_record('realtimequiz_question', $upd);
 			//} else {
 				// FIXME? Is it safe just to ignore this?
 			}
@@ -529,9 +528,9 @@ function realtimequiz_edit_question($quizid, $maxfilesize, $questionid='', $mina
 		
 	}
 
-    print_box_end();
+    echo $OUTPUT->box_end();
 	
 /// Finish the page
-    print_footer($course);
+    echo $OUTPUT->footer();
 
 ?>

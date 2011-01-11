@@ -11,13 +11,15 @@
 
     $id = required_param('id', PARAM_INT);   // course
 
-    if (! $course = get_record("course", "id", $id)) {
+    if (! $course = $DB->get_record('course', array('id' => $id))) {
         error("Course ID is incorrect");
     }
 
-    require_login($course->id);
+    $PAGE->set_url(new moodle_url('/mod/realtimequiz/index.php',array('id'=>$course->id)));
+    require_course_login($course);
+    $PAGE->set_pagelayout('incourse');
 
-    add_to_log($course->id, "realtimequiz", "view all", "index.php?id=$course->id", "");
+    add_to_log($course->id, 'realtimequiz', 'view all', "index.php?id=$course->id", "");
 
 
 /// Get all required strings
@@ -25,31 +27,15 @@
     $strrealtimequizzes = get_string("modulenameplural", "realtimequiz");
     $strrealtimequiz  = get_string("modulename", "realtimequiz");
 
-    if ($CFG->version < 2007101500) { // < Moodle 1.9
-        if ($course->category) {
-            $navigation = "<a href=\"../../course/view.php?id=$course->id\">$course->shortname</a> ->";
-        } else {
-            $navigation = '';
-        }
-
-        print_header("$course->shortname: $strrealtimequizzes", "$course->fullname", "$navigation $strrealtimequizzes", "", "", true, "", navmenu($course));
-
-    } else { // Moodle 1.9
-        $navlinks = array();
-        $navlinks[] = array('name' => $strrealtimequizzes, 'link' => '');
-
-        $navigation = build_navigation($navlinks);
-        
-        $pagetitle = strip_tags($course->shortname.': '.$strrealtimequizzes);
-
-        print_header_simple($pagetitle, '', $navigation, '', '', true, '', navmenu($course));
-        
-    }
+    $PAGE->navbar->add($strrealtimequizzes);
+    $PAGE->set_title(strip_tags($course->shortname.': '.$strrealtimequizzes));
+//$PAGE->set_heading($course->fullname);
+    echo $OUTPUT->header();
 
 /// Get all the appropriate data
 
     if (! $realtimequizs = get_all_instances_in_course("realtimequiz", $course)) {
-        notice("There are no realtimequizs", "../../course/view.php?id=$course->id");
+        notice("There are no realtimequizes", "../../course/view.php?id=$course->id");
         die;
     }
 
@@ -60,41 +46,40 @@
     $strweek  = get_string("week");
     $strtopic  = get_string("topic");
 
+    $table = new html_table();
+
     if ($course->format == "weeks") {
         $table->head  = array ($strweek, $strname);
         $table->align = array ("center", "left");
     } else if ($course->format == "topics") {
         $table->head  = array ($strtopic, $strname);
-        $table->align = array ("center", "left", "left", "left");
+        $table->align = array ("center", "left");
     } else {
         $table->head  = array ($strname);
-        $table->align = array ("left", "left", "left");
+        $table->align = array ("left", "left");
     }
 
     foreach ($realtimequizs as $realtimequiz) {
+        $url = new moodle_url('/mod/realtimequiz/view.php',array('id'=>$realtimequiz->coursemodule));
         if (!$realtimequiz->visible) {
             //Show dimmed if the mod is hidden
-            $link = "<a class=\"dimmed\" href=\"view.php?id=$realtimequiz->coursemodule\">$realtimequiz->name</a>";
+            $link = '<a class="dimmed" href="'.$url.'">'.$realtimequiz->name.'</a>';
         } else {
             //Show normal if the mod is visible
-            $link = "<a href=\"view.php?id=$realtimequiz->coursemodule\">$realtimequiz->name</a>";
+            $link = '<a href="'.$url.'">'.$realtimequiz->name.'</a>';
         }
 
-        if ($course->format == "weeks" or $course->format == "topics") {
+        if ($course->format == 'weeks' or $course->format == 'topics') {
             $table->data[] = array ($realtimequiz->section, $link);
         } else {
             $table->data[] = array ($link);
         }
     }
 
-    echo "<br />";
-    
-    print_table($table);
+    echo html_writer::table($table);
 
 /// Finish the page
 
-    
-    print_footer($course);
-
+    echo $OUTPUT->footer();
 
 ?>

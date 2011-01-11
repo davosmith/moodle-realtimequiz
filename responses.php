@@ -17,6 +17,8 @@
     $prevquestion = optional_param('prevquestion', false, PARAM_TEXT);
     $allquestions = optional_param('allquestions', false, PARAM_TEXT);
 
+// FIXME - all needs updating to Moodle 2.0
+
     if ($id) {
         if (! $cm = get_record("course_modules", "id", $id)) {
             error("Course Module ID was incorrect");
