@@ -1,54 +1,69 @@
-var lastradio = null;
+YUI().use('node','event', function(Y) {
+    M.mod_realtimequiz = {
+	lastradio: null,
+	
+	highlight_correct: function() {
+	    Y.all('.realtimequiz_answerradio').each(function(radiobtn) {
+		if (radiobtn.get('checked')) {
+		    var textbox = radiobtn.next();
+		    if (textbox.get('value') == '' && this.lastradio != null) {
+			this.lastradio.set('checked', true);
+			this.lastradio.get('parentNode').addClass('realtimequiz_highlight_correct');
+		    } else {
+			radiobtn.get('parentNode').addClass('realtimequiz_highlight_correct');
+			this.lastradio = radiobtn;
+		    }
+		} else {
+		    radiobtn.get('parentNode').removeClass('realtimequiz_highlight_correct');
+		}
+	    });
+	},
 
-function highlight_correct() {
-    var radiobtns = YAHOO.util.Dom.getElementsByClassName('realtimequiz_answerradio');
-    for (var i in radiobtns) {
-	if (radiobtns[i].checked) {
-	    var textbox = radiobtns[i].nextSibling;
-	    if (textbox.value == '' && lastradio != null) {
-		lastradio.checked = true;
-		YAHOO.util.Dom.addClass(lastradio.parentNode, 'realtimequiz_highlight_correct');
-	    } else {
-		YAHOO.util.Dom.addClass(radiobtns[i].parentNode, 'realtimequiz_highlight_correct');
-		lastradio = radiobtns[i];
+	add_answer: function () {
+	    var firstanswer = YAHOO.util.Dom.get('realtimequiz_first_answer');
+	    var newanswer = firstanswer.cloneNode(true);
+	    
+	    var answercount = firstanswer.parentNode.getElementsByTagName('tr').length - 4;
+	    var answernum = answercount + 1;
+	    
+	    newanswer.id = '';
+	    var td1 = newanswer.firstChild;
+	    var label = td1.firstChild;
+	    label.setAttribute('for', 'realtimequiz_answerradio'+answernum);
+	    label.innerHTML = label.innerHTML.replace('1',answernum);
+	    var td2 = td1.nextSibling;
+	    var radio = td2.firstChild;
+	    radio.checked = false;
+	    radio.value = answernum;
+	    radio.id = radio.id.replace('1',answernum);
+	    var textbox = radio.nextSibling;
+	    textbox.setAttribute('name', textbox.getAttribute('name').replace('1',answernum));
+	    textbox.value = '';
+	    var answerid = textbox.nextSibling;
+	    answerid.setAttribute('name', answerid.getAttribute('name').replace('1',answernum));
+	    answerid.value = 0;
+	    
+	    firstanswer.parentNode.appendChild(newanswer);
+	},
+
+	add_answers: function (num) {
+	    for (var i = 1; i<=num; i++) {
+		this.add_answer();
 	    }
-	} else {
-	    YAHOO.util.Dom.removeClass(radiobtns[i].parentNode, 'realtimequiz_highlight_correct');
+	    
+	    this.highlight_correct();
+	},
+
+	init_editpage: function() {
+	    Y.all('.realtimequiz_answerradio').on('click', this.highlight_correct, this);
+
+	    this.highlight_correct();
+	    /*
+	var addbtn = YAHOO.util.Element('addanswers');
+	addbtn.addListener('click', function() { 
+	    YAHOO.util.Event.preventDefault();
+	    this.add_answers(3);
+	}, false, this);*/
 	}
     }
-}
-
-function add_answer() {
-    var firstanswer = YAHOO.util.Dom.get('realtimequiz_first_answer');
-    var newanswer = firstanswer.cloneNode(true);
-
-    var answercount = firstanswer.parentNode.getElementsByTagName('tr').length - 4;
-    var answernum = answercount + 1;
-
-    newanswer.id = '';
-    var td1 = newanswer.firstChild;
-    var label = td1.firstChild;
-    label.setAttribute('for', 'realtimequiz_answerradio'+answernum);
-    label.innerHTML = label.innerHTML.replace('1',answernum);
-    var td2 = td1.nextSibling;
-    var radio = td2.firstChild;
-    radio.checked = false;
-    radio.value = answernum;
-    radio.id = radio.id.replace('1',answernum);
-    var textbox = radio.nextSibling;
-    textbox.setAttribute('name', textbox.getAttribute('name').replace('1',answernum));
-    textbox.value = '';
-    var answerid = textbox.nextSibling;
-    answerid.setAttribute('name', answerid.getAttribute('name').replace('1',answernum));
-    answerid.value = 0;
-    
-    firstanswer.parentNode.appendChild(newanswer);
-}
-
-function add_answers(num) {
-    for (var i = 1; i<=num; i++) {
-	add_answer();
-    }
-
-    highlight_correct();
-}
+});

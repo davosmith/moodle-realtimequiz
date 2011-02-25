@@ -51,6 +51,7 @@
     $PAGE->set_url(new moodle_url('/mod/realtimequiz/edit.php', array('id' => $cm->id)));
 
     require_login($course->id);
+    $PAGE->set_pagelayout('incourse');
     $context = get_context_instance(CONTEXT_MODULE, $cm->id);
 	require_capability('mod/realtimequiz:editquestions', $context);
 	add_to_log($course->id, "realtimequiz", "update: $action", "edit.php?quizid=$quizid");
@@ -98,9 +99,16 @@
 		echo '<input type="submit" value="'.get_string('addquestion','realtimequiz').'"></input></form>';
 	}
 	
-function realtimequiz_edit_question($quizid, $maxfilesize, $questionid='', $minanswers=4) {
-		global $DB;
+    function realtimequiz_edit_question($quizid, $maxfilesize, $questionid='', $minanswers=4) {
+        global $DB, $PAGE;
 			
+        $jsmodule = array(
+                          'name' => 'mod_realtimequiz',
+                          'fullpath' => new moodle_url('/mod/realtimequiz/editquestions.js'), 
+                          'requires' => array('core','node', 'event')
+                          );
+        $PAGE->requires->js_init_call('M.mod_realtimequiz.init_editpage', null, false, $jsmodule);
+	
 		echo '<center>';
 		if ($questionid=='') {
 			$action = 'doaddquestion';
@@ -221,7 +229,7 @@ function realtimequiz_edit_question($quizid, $maxfilesize, $questionid='', $mina
             }
             echo '<td align="right"><label for="realtimequiz_answerradio'.$answernum.'" > <b>'.get_string('answer','realtimequiz').$answernum.': </b></label></td>';
             echo '<td align="left">';
-            echo '<input type="radio" name="answercorrect" alt="'.get_string('choosecorrect','realtimequiz').'" value="'.$answernum.'" class="realtimequiz_answerradio" id="realtimequiz_answerradio'.$answernum.'" onclick="highlight_correct();" ';
+            echo '<input type="radio" name="answercorrect" alt="'.get_string('choosecorrect','realtimequiz').'" value="'.$answernum.'" class="realtimequiz_answerradio" id="realtimequiz_answerradio'.$answernum.'" ';
             echo $answer->correct ? 'checked="checked" ' : '';
             echo '/><input type="text" name="answertext['.$answernum.']" size="30" value="'.$answer->answertext.'" />';
 			echo '<input type="hidden" name="answerid['.$answernum.']" value="'.$answer->id.'" />';
@@ -237,14 +245,14 @@ function realtimequiz_edit_question($quizid, $maxfilesize, $questionid='', $mina
 		echo '<input type="hidden" name="questionnum" value="'.$question->questionnum.'" />';
 		echo '<input type="hidden" name="minanswers" value="'.$minanswers.'" />';
 		echo '<input type="hidden" name="sesskey" value="'.sesskey().'" />';
-		echo '<input type="submit" name="addanswers" value="'.get_string('addanswers', 'realtimequiz').'" onclick="add_answers(3); return false;" />';
+		echo '<input type="submit" name="addanswers" value="'.get_string('addanswers', 'realtimequiz').'" id="addanswers" />';
 		echo '<p>';
         echo '<input type="submit" name="updatequestion" value="'.get_string('updatequestion', 'realtimequiz').'" />&nbsp;';
         echo '<input type="submit" name="saveadd" value="'.get_string('saveadd', 'realtimequiz').'" />&nbsp;';
         echo '<input type="submit" name="cancel" value="'.get_string('cancel').'" />';
         echo '</p>';
         echo '</form></center>';
-        echo '<script type="text/javascript">highlight_correct();</script>';
+        /*echo '<script type="text/javascript">highlight_correct();</script>'*/;
 	}
 	
 	function realtimequiz_confirm_deletequestion($quizid, $questionid) {
@@ -266,10 +274,6 @@ function realtimequiz_edit_question($quizid, $maxfilesize, $questionid='', $mina
 		echo '</form></center>';
 	}
 
-    $PAGE->requires->yui2_lib('yahoo');
-    $PAGE->requires->yui2_lib('dom');
-    $PAGE->requires->js('/mod/realtimequiz/editquestions.js');
-	
 	// Back to the main code
     $strrealtimequizzes = get_string("modulenameplural", "realtimequiz");
     $strrealtimequiz  = get_string("modulename", "realtimequiz");
