@@ -149,7 +149,7 @@ function realtimequiz_set_answer(id, text) {
     }
     newanswer += 'type="button" OnClick="realtimequiz_select_choice('+id+');"';
     newanswer += ' value="&nbsp;&nbsp;'+letter+'&nbsp;&nbsp;" />&nbsp;&nbsp;';
-    newanswer += text + '<span class="result"><img src="blank.gif" height="16" /></span><br /></li>';
+    newanswer += text + '<span class="result"><img src="'+realtimequiz.image['blank']+'" height="16" /></span><br /></li>';
 
     document.getElementById('answers').innerHTML += newanswer;
     realtimequiz.answernumber += 1;

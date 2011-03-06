@@ -86,6 +86,7 @@
 
         realtimequiz_set_image('tick',"<?php echo $OUTPUT->pix_url('/i/tick_green_big'); ?>");
         realtimequiz_set_image('cross',"<?php echo $OUTPUT->pix_url('/i/cross_red_big'); ?>");
+        realtimequiz_set_image('blank',"<?php echo $OUTPUT->pix_url('spacer'); ?>");
         
         //Pass all the text strings into the javascript (to allow for translation)
         // Used by view_student.js
