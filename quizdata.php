@@ -112,7 +112,7 @@ function realtimequiz_send_results($quizid, $questionnum) {
         realtimequiz_send_error(get_string('badquizid','realtimequiz').$quizid);
     } else {
         $questionid = $quiz->currentquestion;
-        if (!$question = get_record('realtimequiz_question', array('id' => $questionid))) {
+        if (!$question = $DB->get_record('realtimequiz_question', array('id' => $questionid))) {
             realtimequiz_send_error(get_string('badcurrentquestion','realtimequiz').$questionid);
         } else {
             // Do not worry about question number not matching request
