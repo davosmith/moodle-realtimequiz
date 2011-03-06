@@ -269,8 +269,8 @@
 		echo '<input type="hidden" name="action" value="dodeletequestion" />';
 		echo '<input type="hidden" name="questionid" value="'.$questionid.'" />';
 		echo '<input type="hidden" name="sesskey" value="'.sesskey().'" />';
-		echo '<input type="submit" name="yes" value="'.get_string('yes','realtimequiz').'" /> ';
-		echo '<input type="submit" name="no" value="'.get_string('no','realtimequiz').'" />';
+		echo '<input type="submit" name="yes" value="'.get_string('yes').'" /> ';
+		echo '<input type="submit" name="no" value="'.get_string('no').'" />';
 		echo '</form></center>';
 	}
 
