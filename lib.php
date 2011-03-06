@@ -20,6 +20,7 @@ function realtimequiz_add_instance($realtimequiz) {
     global $DB;
     
     $realtimequiz->timemodified = time();
+    $realtimequiz->timecreated = time();
 
     $realtimequiz->status = 0;
     $realtimequiz->currentquestion = 0;

@@ -42,6 +42,8 @@ class mod_realtimequiz_mod_form extends moodleform_mod {
         $mform->setType('name', PARAM_TEXT);
         $mform->addRule('name', null, 'required', null, 'client');
         $mform->addRule('name', get_string('maximumchars', '', 255), 'maxlength', 255, 'client');
+        
+        $this->add_intro_editor(true, get_string('checklistintro', 'checklist'));
 
 //-------------------------------------------------------------------------------
 
@@ -50,6 +52,7 @@ class mod_realtimequiz_mod_form extends moodleform_mod {
         $mform->addElement('text', 'questiontime', get_string('questiontime', 'realtimequiz'));
         $mform->addRule('questiontime', null, 'numeric', null, 'client');
         $mform->setDefault('questiontime', 30);
+        $mform->addHelpButton('questiontime', 'questiontime', 'realtimequiz');
 
 //-------------------------------------------------------------------------------
         // add standard elements, common to all modules

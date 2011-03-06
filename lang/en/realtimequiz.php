@@ -56,7 +56,9 @@ $string['questionfinished'] = 'Question finished, waiting for results';
 $string['questions'] = 'Questions';
 $string['questionslist'] = 'Questions in this Realtime quiz: ';
 $string['questiontext'] = 'Question text:';
-$string['questiontime'] = 'Default time to display each question (seconds): ';
+$string['questiontime'] = 'Default question time';
+$string['questiontime_help'] = 'The default time (in seconds) to display each question.<br />
+This can be overriden by individual questions.';
 $string['quiznotrunning'] = 'Quiz not running at the moment - wait for your teacher to start it';
 $string['realtimequiz:control'] = 'Start / control a quiz'; 
 $string['realtimequiz:attempt'] = 'Attempt a quiz';
