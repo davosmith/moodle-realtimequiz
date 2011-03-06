@@ -4,6 +4,7 @@ $string['modulename'] = 'Realtime quiz';
 $string['modulenameplural'] = 'Realtime quizzes';
 $string['editquestions'] = 'Edit the questions';
 $string['seeresponses'] = 'View the responses';
+$string['pluginadministration'] = 'Realtime quiz administration';
 
 // Used by backuplib.php
 $string['questions'] = 'Questions';
