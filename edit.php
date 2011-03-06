@@ -50,7 +50,7 @@
 
     $PAGE->set_url(new moodle_url('/mod/realtimequiz/edit.php', array('id' => $cm->id)));
 
-    require_login($course->id);
+    require_login($course->id, false, $cm);
     $PAGE->set_pagelayout('incourse');
     $context = get_context_instance(CONTEXT_MODULE, $cm->id);
 	require_capability('mod/realtimequiz:editquestions', $context);
