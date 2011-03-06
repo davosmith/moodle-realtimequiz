@@ -39,7 +39,7 @@
     
     $PAGE->set_url(new moodle_url('/mod/realtimequiz/view.php', array('id' => $cm->id)));
 
-    require_login($course->id);
+    require_login($course->id, true, $cm);
     $PAGE->set_pagelayout('incourse');
 
     $context = get_context_instance(CONTEXT_MODULE, $cm->id);
