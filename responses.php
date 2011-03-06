@@ -133,7 +133,7 @@
         }
 
 		$questions = $DB->get_records('realtimequiz_question', array('quizid' => $realtimequiz->id), 'questionnum');
-        $linkurl = new moodle_url('/mod/realtimequiz/responses.php', array('id'=>$cm->id, 'showsession'=>$session));
+        $linkurl = new moodle_url('/mod/realtimequiz/responses.php', array('id'=>$cm->id, 'showsession'=>$session->id));
 		
         echo '<br /><table border="1" style="border-style: none;">';
 		if (!empty($questions)) {
@@ -152,14 +152,14 @@
 
 					foreach ($answers as $answer) {
 						if ($showsession == 0) {
-                            //		$count = $DB->count_records('realtimequiz_submitted', array('answerid' => $answer->id) );
+                            $count = $DB->count_records('realtimequiz_submitted', array('answerid' => $answer->id) );
 						} else {
-							//$count = $DB->count_records('realtimequiz_submitted', array('answerid' => $answer->id, 'sessionid' => $showsession) );
+							$count = $DB->count_records('realtimequiz_submitted', array('answerid' => $answer->id, 'sessionid' => $showsession) );
 						}
 						if ($answer->correct == 1) {
-							//echo '<td align="center" class="realtimequiz_report_answer_correct" ><b>'.$count.'</b>&nbsp;'.$tickimg.'</td>';
+							echo '<td align="center" class="realtimequiz_report_answer_correct" ><b>'.$count.'</b>&nbsp;'.$tickimg.'</td>';
 						} else {
-							//echo '<td align="center">'.$count.'&nbsp;'.$crossimg.'</td>';
+							echo '<td align="center">'.$count.'&nbsp;'.$crossimg.'</td>';
 						}
                     }
                 }
@@ -169,7 +169,7 @@
 		}
 		echo '</table>';
 	} else { // Show a single question
-        echo $OUTPUT->box_start('generalbox boxwidthwide boxaligncenter');
+        echo $OUTPUT->box_start('generalbox boxwidthwide boxaligncenter realtimequizplainbox');
 
         $question = $DB->get_record('realtimequiz_question', array('id' => $questionid) );
 		
