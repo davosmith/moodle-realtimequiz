@@ -64,6 +64,9 @@
     echo $OUTPUT->heading(format_string($realtimequiz->name));
 
     realtimequiz_view_tabs('view', $cm->id, $context);
+
+    echo format_text($realtimequiz->intro, $realtimequiz->introformat);
+
                   
 /// Print the main part of the page
 
