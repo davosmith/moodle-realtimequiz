@@ -6,6 +6,9 @@
     filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#b8e5ef', endColorstr='#e1e8ea'); /* ie */
     background: -webkit-gradient(linear, left top, left bottom, from(#b8e5ef), to(#e1e8ea));
     background: -moz-linear-gradient(top, #b8e5ef, #e1e8ea);
+
+    padding: 20px;
+    margin: 10px;
 }
 
 .realtimequiz_report_question {
