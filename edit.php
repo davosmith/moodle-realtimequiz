@@ -198,7 +198,8 @@
 		</tr><tr>
 		<td align="right"><b>'.get_string('editquestiontime','realtimequiz').': </b></td>
 		<td align="left"><input type="text" name="questiontime" size="30" value="'.$question->questiontime.'" /></td>
-		</tr><tr>
+		</tr>';
+        /*echo '<tr>
 		<td align="right"><b>'.get_string('questionimage','realtimequiz').'</b></td>
 		<td align="left">
         <input type="hidden" value="'.$maxfilesize.'" name="MAX_FILE_SIZE" />
@@ -206,7 +207,7 @@
         if ($question->image) {
             echo '<br/><input type="submit" name="removeimage" value="'.get_string('removeimage','realtimequiz').'" />';
         }
-        echo '</td></tr>';
+        echo '</td></tr>';*/
 
 		while (count($answers) < $minanswers) {
 			$extraanswer = new stdClass();
