@@ -6,17 +6,20 @@ YUI().use('node','event', function(Y) {
 	    Y.all('.realtimequiz_answerradio').each(function(radiobtn) {
 		if (radiobtn.get('checked')) {
 		    var textbox = radiobtn.next();
-		    if (textbox.get('value') == '' && this.lastradio != null) {
-			this.lastradio.set('checked', true);
-			this.lastradio.get('parentNode').addClass('realtimequiz_highlight_correct');
+		    if (textbox && textbox.get('value') == '' && this.lastradio) {
+                        var lastradio = Y.one('#'+this.lastradio);
+                        if (lastradio) {
+			    lastradio.set('checked', true);
+			    lastradio.get('parentNode').addClass('realtimequiz_highlight_correct');
+                        }
 		    } else {
 			radiobtn.get('parentNode').addClass('realtimequiz_highlight_correct');
-			this.lastradio = radiobtn;
+			this.lastradio = radiobtn.get('id');
 		    }
 		} else {
 		    radiobtn.get('parentNode').removeClass('realtimequiz_highlight_correct');
 		}
-	    });
+	    }, this);
 	},
 
 	add_answer: function () {

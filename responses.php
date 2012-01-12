@@ -49,6 +49,34 @@
     $context = get_context_instance(CONTEXT_MODULE, $cm->id);
     require_capability('mod/realtimequiz:seeresponses', $context);
 
+    if ($questionid != 0) {
+        if ($allquestions) {
+            $questionid = 0;
+        } elseif ($nextquestion) {
+            $question = $DB->get_record('realtimequiz_question', array('id' => $questionid) );
+            $newquestion = $DB->get_record('realtimequiz_question', array('quizid' => $question->quizid, 'questionnum' => ($question->questionnum + 1)) );
+
+            if ($newquestion) {
+                $questionid = $newquestion->id;
+            } else {
+                $questionid = 0;
+            }
+        } elseif ($prevquestion) {
+            $question = $DB->get_record('realtimequiz_question', array('id' => $questionid) );
+            $newquestion = $DB->get_record('realtimequiz_question', array('quizid' => $question->quizid, 'questionnum' => ($question->questionnum - 1)) );
+
+            if ($newquestion) {
+                $questionid = $newquestion->id;
+            } else {
+                $questionid = 0;
+            }
+        }
+
+        if ($questionid == 0) {
+            redirect(new moodle_url('/mod/realtimequiz/responses.php', array('id' => $cm->id, 'showsession' => $showsession)));
+        }
+    }
+
     add_to_log($course->id, "realtimequiz", "seeresponses", "responses.php?id=$cm->id", "$realtimequiz->id");
 
 /// Print the page header
@@ -101,30 +129,6 @@
     $tickimg = '<img src="'.$OUTPUT->pix_url('i/tick_green_big').'" alt="'.get_string('tick','realtimequiz').'" />';
     $crossimg = '<img src="'.$OUTPUT->pix_url('i/cross_red_big').'" alt="'.get_string('cross','realtimequiz').'" />';
 
-    if ($questionid != 0) {
-        if ($allquestions) {
-            $questionid = 0;
-        } elseif ($nextquestion) {
-            $question = $DB->get_record('realtimequiz_question', array('id' => $questionid) );
-            $newquestion = $DB->get_record('realtimequiz_question', array('quizid' => $question->quizid, 'questionnum' => ($question->questionnum + 1)) );
-
-            if ($newquestion) {
-                $questionid = $newquestion->id;
-            } else {
-                $questionid = 0;
-            }
-        } elseif ($prevquestion) {
-            $question = $DB->get_record('realtimequiz_question', array('id' => $questionid) );
-            $newquestion = $DB->get_record('realtimequiz_question', array('quizid' => $question->quizid, 'questionnum' => ($question->questionnum - 1)) );
-
-            if ($newquestion) {
-                $questionid = $newquestion->id;
-            } else {
-                $questionid = 0;
-            }
-        }
-    }
-
     if ($questionid == 0) { // Show all of the questions
         if (check_browser_version('Gecko')) {
             $blankcolspan = 'colspan="999" ';
@@ -133,7 +137,7 @@
         }
 
 		$questions = $DB->get_records('realtimequiz_question', array('quizid' => $realtimequiz->id), 'questionnum');
-        $linkurl = new moodle_url('/mod/realtimequiz/responses.php', array('id'=>$cm->id, 'showsession'=>$session->id));
+        $linkurl = new moodle_url('/mod/realtimequiz/responses.php', array('id'=>$cm->id, 'showsession'=>$showsession));
 		
         echo '<br /><table border="1" style="border-style: none;">';
 		if (!empty($questions)) {
@@ -141,9 +145,11 @@
 				echo '<tr class="realtimequiz_report_question"><td width="30%">'.$question->questionnum.'</td>';
 				$answers = $DB->get_records('realtimequiz_answer', array('questionid' => $question->id), 'id');
 				if (!empty($answers)) {
+                    $iscorrectanswer = false;
 					foreach ($answers as $answer) {
 						if ($answer->correct == 1) {
 							echo '<td width="10%" class="realtimequiz_report_question_correct"><b>'.s($answer->answertext).'</b></td>';
+                            $iscorrectanswer = true;
 						} else {
 							echo '<td width="10%">'.s($answer->answertext).'</td>';
 						}
@@ -156,11 +162,15 @@
 						} else {
 							$count = $DB->count_records('realtimequiz_submitted', array('answerid' => $answer->id, 'sessionid' => $showsession) );
 						}
-						if ($answer->correct == 1) {
-							echo '<td align="center" class="realtimequiz_report_answer_correct" ><b>'.$count.'</b>&nbsp;'.$tickimg.'</td>';
-						} else {
-							echo '<td align="center">'.$count.'&nbsp;'.$crossimg.'</td>';
-						}
+                        if ($iscorrectanswer) {
+                            if ($answer->correct == 1) {
+                                echo '<td align="center" class="realtimequiz_report_answer_correct" ><b>'.$count.'</b>&nbsp;'.$tickimg.'</td>';
+                            } else {
+                                echo '<td align="center">'.$count.'&nbsp;'.$crossimg.'</td>';
+                            }
+                        } else {
+                            echo '<td align="center">'.$count.'</td>';
+                        }
                     }
                 }
 				echo '</tr>';
@@ -201,11 +211,19 @@
                 $fullname = fullname($user, has_capability('moodle/site:viewfullnames', $context));
                 echo '<tr><td>'.$fullname.'</td>';
 
+                $iscorrectanswer = false;
+                foreach ($answers as $answer) {
+                    if ($answer->correct == 1) {
+                        $iscorrectanswer = true;
+                        break;
+                    }
+                }
+
                 foreach ($answers as $answer) {
                     echo '<td align="center">';
 
                     if ($answer->id == $submission->answerid) {
-                        if ($answer->correct == 1) {
+                        if (!$iscorrectanswer || $answer->correct == 1) {
                             echo $tickimg;
                         } else {
                             echo $crossimg;

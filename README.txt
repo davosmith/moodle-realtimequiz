@@ -30,7 +30,8 @@ Please let me know any bugs or feature requests - the former I will try to fix A
 Changes:
 --------
 
-
+2012-01-12 - Now able to include questions with no correct answers (for 'surveys'). Note: mixing questions with answers and no answers will
+             give incorrect statistics. Also added various minor fixes.
 ... lots of changes that were not recorded here - see https://github.com/davosmith/moodle-realtimequiz for details
 v0.8 (20/12/2008) - Fixed: deleting associated answers/submissions when deleting questions. Now able to restore realtime quizzes from backups.
 v0.7 (15/11/2008) - NOT RELEASED. Now able to backup (but not restore) realtime quizzes.

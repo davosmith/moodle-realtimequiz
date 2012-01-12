@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 $string['addanswers'] = 'Add space for 3 more answers';
 $string['addquestion'] = 'Add question';
@@ -10,6 +10,7 @@ $string['answer'] = 'Answer ';
 $string['answers'] = 'Answers';
 $string['answersent'] = 'Answer sent - waiting for question to finish: ';
 $string['answertext'] = 'Answer text:';
+$string['atleastoneanswer'] = 'You need at least one answer';
 $string['backquiz'] = 'Back to the Realtime quiz';
 $string['backresponses'] = 'Back to the full results';
 $string['badcurrentquestion'] = 'Bad currentquestion: '; // Do not translate 'currentquestion'
@@ -23,6 +24,7 @@ $string['classresult'] = 'Class result: ';
 $string['classresultcorrect'] = ' correct';
 $string['clicknext'] = 'Click \'Next\' when everyone is ready';
 $string['correct'] = 'Correct answer?';
+$string['correctnotblank'] = 'Correct answer cannot be blank';
 $string['cross'] = 'Wrong answer';
 $string['deletequestion'] = 'Delete question';
 $string['displaynext'] = 'About to display next question:';
@@ -43,6 +45,7 @@ $string['modulenameplural'] = 'Realtime quizzes';
 $string['next'] = 'Next >>';
 $string['nextquestion'] = 'Next question';
 $string['noanswers'] = 'No answers given';
+$string['nocorrect'] = 'No \'right\' answer';
 $string['noquestion'] = 'Bad response - no question data: ';
 $string['nosessions'] = 'This Realtime quiz has not yet been attempted';
 $string['notallowedattempt'] = 'You are not allowed to attempt this quiz';
@@ -59,6 +62,7 @@ $string['questiontext'] = 'Question text:';
 $string['questiontime'] = 'Default question time';
 $string['questiontime_help'] = 'The default time (in seconds) to display each question.<br />
 This can be overriden by individual questions.';
+$string['quizfinished'] = 'No more questions';
 $string['quiznotrunning'] = 'Quiz not running at the moment - wait for your teacher to start it';
 $string['realtimequiz:control'] = 'Start / control a quiz'; 
 $string['realtimequiz:attempt'] = 'Attempt a quiz';

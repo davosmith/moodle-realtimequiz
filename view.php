@@ -98,6 +98,7 @@
         realtimequiz_set_text('question',"<?php print_string('question', 'realtimequiz') ?>");
         realtimequiz_set_text('invalidanswer',"<?php print_string('invalidanswer', 'realtimequiz') ?>");
         realtimequiz_set_text('finalresults',"<?php print_string('finalresults', 'realtimequiz') ?>");
+        realtimequiz_set_text('quizfinished',"<?php print_string('quizfinished', 'realtimequiz') ?>");
         realtimequiz_set_text('classresult',"<?php print_string('classresult', 'realtimequiz') ?>");
         realtimequiz_set_text('classresultcorrect',"<?php print_string('classresultcorrect', 'realtimequiz') ?>");
         realtimequiz_set_text('questionfinished',"<?php print_string('questionfinished', 'realtimequiz') ?>");

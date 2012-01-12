@@ -23,6 +23,8 @@ realtimequiz.myanswer=-1;
 realtimequiz.resendtimer = null;
 realtimequiz.resenddelay = 2000; // How long to wait before resending request
 
+realtimequiz.markedquestions = 0;
+
 realtimequiz.image = new Array();
 realtimequiz.text = new Array();
 
@@ -191,19 +193,24 @@ function realtimequiz_disable_answer(answerel) {
     answerel.innerHTML = answerel.innerHTML.replace(/<input /i,'<input disabled=disabled ');
 }
 
-function realtimequiz_set_result(answerid, correct, count) {
+function realtimequiz_set_result(answerid, correct, count, nocorrect) {
     var anscontainer = document.getElementById('answer'+answerid);
     if (anscontainer) {
         var ansimage = anscontainer.getElementsByTagName('span');
         for (var i=0; i<ansimage.length; i++) {
             if (ansimage[i].className == 'result') {
-                var result = "&nbsp;&nbsp;<img src='";
-                if (correct) {
-                    result += realtimequiz.image['tick'] + "' alt='"+realtimequiz.text['tick']+"'";
+                var result;
+                if (nocorrect) {
+                    result = '&nbsp;&nbsp'+count;
                 } else {
-                    result += realtimequiz.image['cross'] + "' cross.gif' alt='"+realtimequiz.text['cross']+"'";
+                    result = "&nbsp;&nbsp;<img src='";
+                    if (correct) {
+                        result += realtimequiz.image['tick'] + "' alt='"+realtimequiz.text['tick']+"'";
+                    } else {
+                        result += realtimequiz.image['cross'] + "' cross.gif' alt='"+realtimequiz.text['cross']+"'";
+                    }
+                    result += " height='16' />&nbsp;&nbsp; " + count;
                 }
-                result += " height='16' />&nbsp;&nbsp; " + count;
                 ansimage[i].innerHTML = result;
                 break;
             }
@@ -212,14 +219,18 @@ function realtimequiz_set_result(answerid, correct, count) {
 }
 
 function realtimequiz_show_final_results(quizresponse) {
-    var classresult = node_text(quizresponse.getElementsByTagName('classresult').item(0));
-    var msg = '<h1>'+realtimequiz.text['finalresults']+'</h1>';
-    msg += '<p>'+realtimequiz.text['classresult']+classresult+'%'+realtimequiz.text['resultcorrect'];
+    if (realtimequiz.markedquestions > 0) {
+        var classresult = node_text(quizresponse.getElementsByTagName('classresult').item(0));
+        var msg = '<h1>'+realtimequiz.text['finalresults']+'</h1>';
+        msg += '<p>'+realtimequiz.text['classresult']+classresult+'%'+realtimequiz.text['resultcorrect'];
 	if (!realtimequiz.controlquiz) {
-		msg += '<br><strong>'+realtimequiz.text['yourresult']+parseInt((realtimequiz.myscore * 100)/realtimequiz.questionnumber);
-		msg += '%'+realtimequiz.text['resultcorrect']+'</strong>';
+	    msg += '<br><strong>'+realtimequiz.text['yourresult']+parseInt((realtimequiz.myscore * 100)/realtimequiz.questionnumber);
+	    msg += '%'+realtimequiz.text['resultcorrect']+'</strong>';
 	}
 	msg += '</p>';
+    } else {
+        var msg = '<h1>'+realtimequiz.text['quizfinished']+'</h1>';
+    }
     document.getElementById('questionarea').innerHTML = msg;
 }
 
@@ -444,25 +455,30 @@ function realtimequiz_process_contents(httpRequest) {
 			
 		    } else {
 			var results = quizresponse.getElementsByTagName('result');
+                        var nocorrect = quizresponse.getElementsByTagName('nocorrect');
+                        nocorrect = (nocorrect.length != 0);
 			for (var i=0; i<results.length; i++) {
 			    var iscorrect = (results[i].getAttribute('correct') == 'true');
 			    var answerid = parseInt(results[i].getAttribute('id'));
-			    realtimequiz_set_result(answerid, iscorrect, parseInt(node_text(results[i])));
-			    if (iscorrect && (realtimequiz.myanswer == answerid)) {
+			    realtimequiz_set_result(answerid, iscorrect, parseInt(node_text(results[i])), nocorrect);
+			    if (!nocorrect && iscorrect && (realtimequiz.myanswer == answerid)) {
 				realtimequiz.myscore++;
 			    }
 			}
-			var statistics = quizresponse.getElementsByTagName('statistics').item(0);
-			var status = realtimequiz.text['resultthisquestion']+'<strong>';
-			status += node_text(statistics.getElementsByTagName('questionresult').item(0));
-			status += '%</strong>'+realtimequiz.text['resultoverall'];
-			status += node_text(statistics.getElementsByTagName('classresult').item(0));
-			status += '%'+realtimequiz.text['resultcorrect'];
-			if (!realtimequiz.controlquiz) {
-			    status += '<strong> '+realtimequiz.text['yourresult']+parseInt((realtimequiz.myscore * 100) / realtimequiz.questionnumber);
-			    status += '%'+realtimequiz.text['resultcorrect']+'</strong>'; 
-			}
-			realtimequiz_set_status(status);
+                        if (!nocorrect) {
+			    var statistics = quizresponse.getElementsByTagName('statistics').item(0);
+			    var status = realtimequiz.text['resultthisquestion']+'<strong>';
+			    status += node_text(statistics.getElementsByTagName('questionresult').item(0));
+			    status += '%</strong>'+realtimequiz.text['resultoverall'];
+			    status += node_text(statistics.getElementsByTagName('classresult').item(0));
+			    status += '%'+realtimequiz.text['resultcorrect'];
+			    if (!realtimequiz.controlquiz) {
+			        status += '<strong> '+realtimequiz.text['yourresult']+parseInt((realtimequiz.myscore * 100) / realtimequiz.questionnumber);
+			        status += '%'+realtimequiz.text['resultcorrect']+'</strong>'; 
+			    }
+			    realtimequiz_set_status(status);
+                            realtimequiz.markedquestions++;
+                        }
 		    }
 
 		    if (realtimequiz.controlquiz) {

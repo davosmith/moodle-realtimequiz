@@ -124,6 +124,7 @@ function realtimequiz_send_results($quizid, $questionnum) {
             echo '<status>showresults</status>';
             echo '<questionnum>'.$question->questionnum.'</questionnum>';
             echo '<results>';
+            $number_of_correct_answers = 0; // To detect questions that have no 'correct' answers
             foreach ($answers as $answer) {
                 $result = $DB->count_records('realtimequiz_submitted', array('questionid' => $questionid, 'answerid' => $answer->id, 'sessionid' => $quiz->currentsessionid) );
                 $total_answers += $result;
@@ -131,10 +132,11 @@ function realtimequiz_send_results($quizid, $questionnum) {
                 if ($answer->correct == 1) {
                     $correct = 'true';
                     $total_correct += $result;
+                    $number_of_correct_answers++;
                 }
                 echo "<result id='{$answer->id}' correct='{$correct}'>{$result}</result>";
             }
-            if ($total_answers > 0) {
+            if ($total_answers > 0 && $number_of_correct_answers > 0) {
                 $newresult = intval((100 * $total_correct)/$total_answers);
             } else {
                 $newresult = 0;
@@ -148,6 +150,9 @@ function realtimequiz_send_results($quizid, $questionnum) {
             }
             $classresult = intval(($quiz->classresult + $quiz->questionresult) / $questionnum);
             echo '</results>';
+            if ($number_of_correct_answers == 0) {
+                echo '<nocorrect/>';
+            }
             echo '<statistics>';
             echo '<questionresult>'.$quiz->questionresult.'</questionresult>';
             echo '<classresult>'.$classresult.'</classresult>';

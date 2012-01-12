@@ -100,7 +100,7 @@
 	}
 
     function realtimequiz_edit_question($quizid, $maxfilesize, $questionid='', $minanswers=4) {
-        global $DB, $PAGE;
+        global $DB, $PAGE, $CFG;
 
         $jsmodule = array(
                           'name' => 'mod_realtimequiz',
@@ -143,13 +143,19 @@
             // Override the above values with any parameters passed in
             $question->id = optional_param('questionid',$question->id, PARAM_INT);
             $question->questiontext = optional_param('questiontext', $question->questiontext, PARAM_TEXT);
-            $answertexts = optional_param('answertext', false, PARAM_TEXT);
-            $answercorrect = optional_param('answercorrect', false, PARAM_INT);
-            $answerids = optional_param('answerid', false, PARAM_INT);
+            if ($CFG->version >= 2011120100) {
+                $answertexts = optional_param_array('answertext', false, PARAM_TEXT);
+                $answerids = optional_param_array('answerid', false, PARAM_INT);
+            } else {
+                $answertexts = optional_param('answertext', false, PARAM_TEXT);
+                $answerids = optional_param('answerid', false, PARAM_INT);
+            }
+            $answercorrect = optional_param('answercorrect', -1, PARAM_INT);
             $question->questiontime = optional_param('questiontime', $question->questiontime, PARAM_INT);
         }
 
-		if ($answertexts !== false && $answercorrect !== false && $answerids !== false) {
+        // Found data passed in - overwrite that loaded from database
+		if ($answertexts !== false && $answercorrect !== -1 && $answerids !== false) {
 			$answers = array();
 			$answercount = count($answertexts);
 			for ($i=1; $i<=$answercount; $i++) {
@@ -158,7 +164,18 @@
 				$answers[$i]->answertext = $answertexts[$i];
 				$answers[$i]->correct = ($answercorrect == $i);
 			}
-		}
+		} else {
+            $foundanswer = false;
+            foreach ($answers as $answer) {
+                if ($answer->correct) {
+                    $foundanswer = true;
+                    break;
+                }
+            }
+            if (!$foundanswer) {
+                $answercorrect = 0;
+            }
+        }
 
         $url = new moodle_url('/mod/realtimequiz/edit.php', array('quizid'=>$quizid));
 		echo '<form method="post" action="'.$url.'" enctype="multipart/form-data">';
@@ -213,7 +230,12 @@
 			$extraanswer = new stdClass();
 			$extraanswer->id = 0;
 			$extraanswer->answertext = '';
-			$extraanswer->correct = (count($answers) == 0); // Select first item, if it is the only item
+            if (count($answers) == 0) {
+                $extraanswer->correct = true; // Select first item, if it is the only item
+                $answercorrect = -1; // Prevent 'accept any answer' being the default
+            } else {
+                $extraanswer->correct = false;
+            }
 			$answers[] = $extraanswer;
 		}
 
@@ -239,6 +261,11 @@
 
 			$answernum++;
 		}
+        echo '<tr><td align="right"><label for="realtimequiz_answerradio0"> <b>'.get_string('nocorrect', 'realtimequiz').': </b></label></td>';
+        echo '<td align="left">';
+        echo '<input type="radio" name="answercorrect" alt="'.get_string('choosecorrect', 'realtimequiz').'" value="0" class="realtimequiz_answerradio" id="realtimequiz_answerradio0" ';
+        echo ($answercorrect == 0) ? 'checked="checked" ' : '';
+        echo '/></td></tr>';
 
 		echo '</table>';
 		echo '<input type="hidden" name="action" value="'.$action.'" />';
@@ -324,25 +351,28 @@
 			$question->questionnum = required_param('questionnum', PARAM_INT);
 			$question->questiontext = required_param('questiontext', PARAM_TEXT);
 			$question->questiontime = required_param('questiontime', PARAM_INT);
-			$answertexts = required_param('answertext', PARAM_TEXT);
-			$answercorrect = optional_param('answercorrect', false, PARAM_INT);
-			$answerids = required_param('answerid', PARAM_INT);
+            if ($CFG->version >= 2011120100) {
+                $answertexts = required_param_array('answertext', PARAM_TEXT);
+                $answerids = required_param_array('answerid', PARAM_INT);
+            } else {
+                $answertexts = required_param('answertext', PARAM_TEXT);
+                $answerids = required_param('answerid', PARAM_INT);
+            }
+			$answercorrect = required_param('answercorrect', PARAM_INT);
 
 			// Copy the answers into a suitable array and count how many (valid) correct answers there are
-			$correctcount = 0;
-			if ($answercorrect !== false) {
-				$answers = array();
-				$answercount = count($answertexts);
-				for ($i=1; $i<=$answercount; $i++) {
-					$answers[$i] = new stdClass();
-					$answers[$i]->id = $answerids[$i];
-					$answers[$i]->answertext = $answertexts[$i];
-					$answers[$i]->correct = ($answercorrect == $i) ? 1 : 0; // FIX IN CVS
-					if ($answers[$i]->correct == 1 && $answers[$i]->answertext != '') {
-						$correctcount++;
-					}
-				}
-			}
+            $validanswers = 0;
+            $answers = array();
+            $answercount = count($answertexts);
+            for ($i=1; $i<=$answercount; $i++) {
+                $answers[$i] = new stdClass();
+                $answers[$i]->id = $answerids[$i];
+                $answers[$i]->answertext = $answertexts[$i];
+                $answers[$i]->correct = ($answercorrect == $i) ? 1 : 0;
+                if ($answers[$i]->answertext != '') {
+                    $validanswers++;
+                }
+            }
 
 			// Check there is exactly 1 correct answer
 			if ($question->questiontext == '') {
@@ -352,9 +382,16 @@
 				$minanswers = optional_param('minanswers', 4, PARAM_INT);
 				realtimequiz_edit_question($quizid, $course->maxbytes, $questionid, $minanswers);
 
-			} else if ($correctcount != 1) {
+			} else if ($answercorrect && $answers[$answercorrect]->answertext == '') {
 				echo '<div class="errorbox">';
-				print_string('onecorrect','realtimequiz');
+				print_string('correctnotblank','realtimequiz');
+				echo '</div>';
+				$minanswers = optional_param('minanswers', 4, PARAM_INT);
+				realtimequiz_edit_question($quizid, $course->maxbytes, $questionid, $minanswers);
+
+            } else if ($validanswers < 1) {
+				echo '<div class="errorbox">';
+				print_string('atleastoneanswer','realtimequiz');
 				echo '</div>';
 				$minanswers = optional_param('minanswers', 4, PARAM_INT);
 				realtimequiz_edit_question($quizid, $course->maxbytes, $questionid, $minanswers);
