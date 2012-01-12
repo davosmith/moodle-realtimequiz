@@ -7,7 +7,11 @@
  * @package realtimequiz
  **/
 
-$module->version  = 2011030602;  // The current module version (Date: YYYYMMDDXX)
-$module->cron     = 0;           // Period for cron to check this module (secs)
+defined('MOODLE_INTERNAL') || die();
 
-?>
+$module->version   = 2012011200;  // The current module version (Date: YYYYMMDDXX)
+$module->requires  = 2010112400;  // Moodle 2.0 (or above)
+$module->cron      = 0;           // Period for cron to check this module (secs)
+$module->component = 'mod_realtimequiz';
+$module->maturity  = MATURITY_STABLE;
+$module->release   = '2.x (Build: 2012011200)';

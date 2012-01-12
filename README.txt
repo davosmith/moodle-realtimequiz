@@ -1,5 +1,5 @@
-REALTIME QUIZ v0.8
-------------------
+REALTIME QUIZ
+-------------
 
 What is it?
 -----------
@@ -23,13 +23,15 @@ Delete the module from the 'Activities' module list in the amin section.
 Feedback:
 ---------
 
-You can contact me on 'moodle AT davosmith DOT co DOT uk, or at http://www.davosmith.co.uk/contact.php 
+You can contact me on 'moodle AT davosmith DOT co DOT uk, or at http://www.davosmith.co.uk/contact.php
 
 Please let me know any bugs or feature requests - the former I will try to fix ASAP; the latter will be noted and I'll look at them when I have time (in between marking and looking after my children).
 
 Changes:
 --------
 
+
+... lots of changes that were not recorded here - see https://github.com/davosmith/moodle-realtimequiz for details
 v0.8 (20/12/2008) - Fixed: deleting associated answers/submissions when deleting questions. Now able to restore realtime quizzes from backups.
 v0.7 (15/11/2008) - NOT RELEASED. Now able to backup (but not restore) realtime quizzes.
 v0.6 (4/10/2008) - Made the client computer resend requests if nothing comes back from the server within 2 seconds (should stop quiz from getting stuck in heavy network traffic). Moved the language files into the same folder as the rest of the files.
