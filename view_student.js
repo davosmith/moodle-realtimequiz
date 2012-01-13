@@ -465,7 +465,9 @@ function realtimequiz_process_contents(httpRequest) {
 				realtimequiz.myscore++;
 			    }
 			}
-                        if (!nocorrect) {
+                        if (nocorrect) {
+                            realtimequiz.myscore++; // Always correct if no 'correct' answers
+                        } else {
 			    var statistics = quizresponse.getElementsByTagName('statistics').item(0);
 			    var status = realtimequiz.text['resultthisquestion']+'<strong>';
 			    status += node_text(statistics.getElementsByTagName('questionresult').item(0));

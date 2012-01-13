@@ -136,7 +136,9 @@ function realtimequiz_send_results($quizid, $questionnum) {
                 }
                 echo "<result id='{$answer->id}' correct='{$correct}'>{$result}</result>";
             }
-            if ($total_answers > 0 && $number_of_correct_answers > 0) {
+            if ($number_of_correct_answers == 0) {
+                $newresult = 100;
+            } else if ($total_answers > 0) {
                 $newresult = intval((100 * $total_correct)/$total_answers);
             } else {
                 $newresult = 0;
