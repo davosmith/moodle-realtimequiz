@@ -10,6 +10,21 @@ During the lesson, the teacher starts the quiz (optionally giving the quiz a 'se
 
 The teacher can, at a later date, go back through the results and, for each question, see exactly what answer each student gave.
 
+Changes:
+--------
+
+2012-01-13 - Minor tweak: questions with 'no correct answers' score 100% for everyone (not 0%) for statistical purposes
+2012-01-12 - Now able to include questions with no correct answers (for 'surveys'). Note: mixing questions with answers and no answers will give incorrect statistics. Also added various minor fixes.
+... lots of changes that were not recorded here - see https://github.com/davosmith/moodle-realtimequiz for details
+v0.8 (20/12/2008) - Fixed: deleting associated answers/submissions when deleting questions. Now able to restore realtime quizzes from backups.
+v0.7 (15/11/2008) - NOT RELEASED. Now able to backup (but not restore) realtime quizzes.
+v0.6 (4/10/2008) - Made the client computer resend requests if nothing comes back from the server within 2 seconds (should stop quiz from getting stuck in heavy network traffic). Moved the language files into the same folder as the rest of the files.
+v0.5 (18/7/2008) - Fixed bug where '&' '<' '>' symbols in questions / answers would cause quiz to break.
+v0.4 (22/11/2007) - you can now have different times for each question (set to '0' for the default time set for the quiz)
+v0.3 - added individual scores for students, display total number of questions
+v0.2 - fixed 404 errors for non-admin logins
+v0.1 - initial release
+
 Installation:
 -------------
 Unzip all the files into a temporary directory.
@@ -27,17 +42,3 @@ You can contact me on 'moodle AT davosmith DOT co DOT uk, or at http://www.davos
 
 Please let me know any bugs or feature requests - the former I will try to fix ASAP; the latter will be noted and I'll look at them when I have time (in between marking and looking after my children).
 
-Changes:
---------
-
-2012-01-13 - Minor tweak: questions with 'no correct answers' score 100% for everyone (not 0%) for statistical purposes
-2012-01-12 - Now able to include questions with no correct answers (for 'surveys'). Note: mixing questions with answers and no answers will give incorrect statistics. Also added various minor fixes.
-... lots of changes that were not recorded here - see https://github.com/davosmith/moodle-realtimequiz for details
-v0.8 (20/12/2008) - Fixed: deleting associated answers/submissions when deleting questions. Now able to restore realtime quizzes from backups.
-v0.7 (15/11/2008) - NOT RELEASED. Now able to backup (but not restore) realtime quizzes.
-v0.6 (4/10/2008) - Made the client computer resend requests if nothing comes back from the server within 2 seconds (should stop quiz from getting stuck in heavy network traffic). Moved the language files into the same folder as the rest of the files.
-v0.5 (18/7/2008) - Fixed bug where '&' '<' '>' symbols in questions / answers would cause quiz to break.
-v0.4 (22/11/2007) - you can now have different times for each question (set to '0' for the default time set for the quiz)
-v0.3 - added individual scores for students, display total number of questions
-v0.2 - fixed 404 errors for non-admin logins
-v0.1 - initial release
