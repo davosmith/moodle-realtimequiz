@@ -42,8 +42,8 @@ class mod_realtimequiz_mod_form extends moodleform_mod {
         $mform->setType('name', PARAM_TEXT);
         $mform->addRule('name', null, 'required', null, 'client');
         $mform->addRule('name', get_string('maximumchars', '', 255), 'maxlength', 255, 'client');
-        
-        $this->add_intro_editor(true, get_string('checklistintro', 'checklist'));
+
+        $this->add_intro_editor(true, get_string('realtimequizintro', 'realtimequiz'));
 
 //-------------------------------------------------------------------------------
 

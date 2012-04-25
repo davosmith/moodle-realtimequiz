@@ -64,10 +64,11 @@ $string['questiontime_help'] = 'The default time (in seconds) to display each qu
 This can be overriden by individual questions.';
 $string['quizfinished'] = 'No more questions';
 $string['quiznotrunning'] = 'Quiz not running at the moment - wait for your teacher to start it';
-$string['realtimequiz:control'] = 'Start / control a quiz'; 
+$string['realtimequiz:control'] = 'Start / control a quiz';
 $string['realtimequiz:attempt'] = 'Attempt a quiz';
 $string['realtimequiz:seeresponses'] = 'View the responses to a quiz';
 $string['realtimequiz:editquestions'] = 'Edit the questions for a quiz';
+$string['realtimequizintro'] = 'Introduction';
 $string['realtimequizsettings'] = 'Realtime quiz settings';
 $string['removeimage'] = 'Remove image';
 $string['responses'] = 'View responses';
