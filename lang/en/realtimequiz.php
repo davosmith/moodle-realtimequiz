@@ -52,6 +52,7 @@ $string['notallowedattempt'] = 'You are not allowed to attempt this quiz';
 $string['notauthorised'] = 'You are not authorised to control this quiz';
 $string['onecorrect'] = 'Error: There must be exactly one correct answer';
 $string['pluginadministration'] = 'Realtime quiz administration';
+$string['pluginname'] = 'Realtime quiz';
 $string['prevquestion'] = 'Previous question';
 $string['questionimage'] = '(Optional) image: ';
 $string['question'] = 'Question ';
