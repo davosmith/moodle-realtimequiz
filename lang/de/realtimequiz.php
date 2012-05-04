@@ -1,7 +1,8 @@
-<?php 
+<?php
 //Translation: Joachim Vogelgesang
 
 $string['modulename'] = 'Echtzeit Test';
+$string['pluginname'] = 'Echtzeit Test';
 $string['modulenameplural'] = 'Echtzeit Tests';
 $string['editquestions'] = 'Fragen bearbeiten';
 $string['seeresponses'] = 'Antworten sehen';
@@ -13,7 +14,7 @@ $string['sessions'] = 'Sitzungen';
 $string['submissions'] = 'Einreichungen';
 
 // Capabilities
-$string['realtimequiz:control'] = 'Start / Test Kontrolle'; 
+$string['realtimequiz:control'] = 'Start / Test Kontrolle';
 $string['realtimequiz:attempt'] = 'Test versuchen';
 $string['realtimequiz:seeresponses'] = 'Testantworten sehen';
 $string['realtimequiz:editquestions'] = 'Fragen für einen Test bearbeiten';
