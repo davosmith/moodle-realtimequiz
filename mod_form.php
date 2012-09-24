@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 /**
  * This file defines the main checklist configuration form
@@ -33,11 +33,11 @@ class mod_realtimequiz_mod_form extends moodleform_mod {
         global $COURSE;
         $mform =& $this->_form;
 
-//-------------------------------------------------------------------------------
-    /// Adding the "general" fieldset, where all the common settings are showed
+        //-------------------------------------------------------------------------------
+        /// Adding the "general" fieldset, where all the common settings are showed
         $mform->addElement('header', 'general', get_string('general', 'form'));
 
-    /// Adding the standard "name" field
+        /// Adding the standard "name" field
         $mform->addElement('text', 'name', get_string('modulename', 'realtimequiz'), array('size'=>'64'));
         $mform->setType('name', PARAM_TEXT);
         $mform->addRule('name', null, 'required', null, 'client');
@@ -45,7 +45,7 @@ class mod_realtimequiz_mod_form extends moodleform_mod {
 
         $this->add_intro_editor(true, get_string('realtimequizintro', 'realtimequiz'));
 
-//-------------------------------------------------------------------------------
+        //-------------------------------------------------------------------------------
 
         $mform->addElement('header', 'realtimequizsettings', get_string('realtimequizsettings', 'realtimequiz'));
 
@@ -54,17 +54,15 @@ class mod_realtimequiz_mod_form extends moodleform_mod {
         $mform->setDefault('questiontime', 30);
         $mform->addHelpButton('questiontime', 'questiontime', 'realtimequiz');
 
-//-------------------------------------------------------------------------------
+        //-------------------------------------------------------------------------------
         // add standard elements, common to all modules
         $features = new stdClass;
         $features->groups = false;
         $features->groupings = true;
         $features->groupmembersonly = true;
         $this->standard_coursemodule_elements($features);
-//-------------------------------------------------------------------------------
+        //-------------------------------------------------------------------------------
         // add standard buttons, common to all modules
         $this->add_action_buttons();
     }
 }
-
-?>

@@ -12,7 +12,7 @@ require_once('lib.php');
 require_login();
 if (!confirm_sesskey()) {
     error(get_string('badsesskey','realtimequiz'));
-} 
+}
 $requesttype = required_param('requesttype', PARAM_ALPHA);
 $quizid = required_param('quizid', PARAM_INT);
 
@@ -48,10 +48,10 @@ function realtimequiz_send_question($quizid, $preview=false) {
             realtimequiz_send_error(get_string('badcurrentquestion','realtimequiz').$questionid);
         } else {
             $answers = $DB->get_records('realtimequiz_answer', array('questionid' => $questionid),'id');
-			$questioncount = $DB->count_records('realtimequiz_question', array('quizid' => $quizid));
+            $questioncount = $DB->count_records('realtimequiz_question', array('quizid' => $quizid));
             echo '<status>showquestion</status>';
             echo "<question><questionnumber>{$question->questionnum}</questionnumber>";
-			echo "<questioncount>{$questioncount}</questioncount>";
+            echo "<questioncount>{$questioncount}</questioncount>";
             echo "<questiontext><![CDATA[{$question->questiontext}]]></questiontext>";
             /* FIXME
             if ($question->image) {
@@ -83,10 +83,10 @@ function realtimequiz_send_question($quizid, $preview=false) {
                 if ($previewtime > 0) {
                     echo "<delay>{$previewtime}</delay>";
                 }
-				$questiontime = $question->questiontime;
-				if ($questiontime == 0) {
-					$questiontime = $quiz->questiontime;
-				}
+                $questiontime = $question->questiontime;
+                if ($questiontime == 0) {
+                    $questiontime = $quiz->questiontime;
+                }
                 echo "<questiontime>{$questiontime}</questiontime>";
             } else {
                 $questiontime = $quiz->nextendtime - time();
@@ -169,8 +169,8 @@ function realtimequiz_record_answer($quizid, $questionnum, $userid, $answerid) {
     $quiz = $DB->get_record('realtimequiz', array('id' => $quizid));
     $question = $DB->get_record('realtimequiz_question', array('id' => $quiz->currentquestion));
     $answer = $DB->get_record('realtimequiz_answer', array('id' => $answerid));
-    
-    if (($answer->questionid == $quiz->currentquestion) 
+
+    if (($answer->questionid == $quiz->currentquestion)
         && ($question->questionnum == $questionnum)) {
         if (0 < $DB->count_records('realtimequiz_submitted',array('questionid' => $question->id, 'sessionid' => $quiz->currentsessionid, 'userid' => $userid))) {
             // Already got an answer from them - send an error so we know something is amiss
@@ -183,12 +183,12 @@ function realtimequiz_record_answer($quizid, $questionnum, $userid, $answerid) {
             $submitted->userid = $userid;     //FIXME: make sure the userid is on the course
             $submitted->answerid = $answerid;
             $DB->insert_record('realtimequiz_submitted', $submitted);
-            
+
         }
         echo '<status>answerreceived</status>';
-            
+
     } else {
-    
+
         // Answer is not for the current question - so send the current question
         realtimequiz_send_question($quizid);
     }
@@ -214,7 +214,7 @@ function realtimequiz_send_await_results($waittime=2.0) {
 
 function realtimequiz_send_final_results($quizid) {
     global $DB;
-    
+
     $quiz = $DB->get_record('realtimequiz', array('id' => $quizid));
     $questionnum = $DB->get_field('realtimequiz_question', 'questionnum', array('id' => $quiz->currentquestion));
     echo '<status>finalresults</status>';
@@ -226,16 +226,16 @@ function realtimequiz_update_status($quizid, $status) {
     global $DB;
 
     if ($status == REALTIMEQUIZ_STATUS_PREVIEWQUESTION) {
-		$quiz = $DB->get_record('realtimequiz', array('id' => $quizid));
-		if ($quiz->nextendtime < time()) {
-			$questiontime = $DB->get_field('realtimequiz_question','questiontime',array('id' => $quiz->currentquestion));
-			if ($questiontime == 0) {
-				$questiontime = $quiz->questiontime;
-			}
-            $timeleft = $quiz->nextendtime - time() + $questiontime; 
+        $quiz = $DB->get_record('realtimequiz', array('id' => $quizid));
+        if ($quiz->nextendtime < time()) {
+            $questiontime = $DB->get_field('realtimequiz_question','questiontime',array('id' => $quiz->currentquestion));
+            if ($questiontime == 0) {
+                $questiontime = $quiz->questiontime;
+            }
+            $timeleft = $quiz->nextendtime - time() + $questiontime;
             if ($timeleft > 0) {
-    			$quiz->status = REALTIMEQUIZ_STATUS_SHOWQUESTION;
-    			$quiz->nextendtime = time() + $timeleft;
+                $quiz->status = REALTIMEQUIZ_STATUS_SHOWQUESTION;
+                $quiz->nextendtime = time() + $timeleft;
             } else {
                 $quiz->status = REALTIMEQUIZ_STATUS_SHOWRESULTS;
             }
@@ -243,22 +243,22 @@ function realtimequiz_update_status($quizid, $status) {
             $upd->id = $quiz->id;
             $upd->status = $quiz->status;
             $upd->nextendtime = $quiz->nextendtime;
-			$DB->update_record('realtimequiz', $upd);
+            $DB->update_record('realtimequiz', $upd);
 
-			$status = $quiz->status;
-		}			
+            $status = $quiz->status;
+        }
     } else if ($status == REALTIMEQUIZ_STATUS_SHOWQUESTION) {
-		$nextendtime = $DB->get_field('realtimequiz', 'nextendtime', array('id' => $quizid));
-		if ($nextendtime < time()) {
-			$status = REALTIMEQUIZ_STATUS_SHOWRESULTS;
-			$DB->set_field('realtimequiz', 'status', $status, array('id' => $quizid));
-		}
+        $nextendtime = $DB->get_field('realtimequiz', 'nextendtime', array('id' => $quizid));
+        if ($nextendtime < time()) {
+            $status = REALTIMEQUIZ_STATUS_SHOWRESULTS;
+            $DB->set_field('realtimequiz', 'status', $status, array('id' => $quizid));
+        }
     } else if (($status != REALTIMEQUIZ_STATUS_NOTRUNNING) && ($status != REALTIMEQUIZ_STATUS_READYTOSTART) && ($status != REALTIMEQUIZ_STATUS_SHOWRESULTS) && ($status != REALTIMEQUIZ_STATUS_FINALRESULTS)) {
         // Bad status = probably should set it back to 0
         $status = REALTIMEQUIZ_STATUS_NOTRUNNING;
         $DB->set_field('realtimequiz','status', REALTIMEQUIZ_STATUS_NOTRUNNING, array('id' => $quizid));
     }
-        
+
     return $status;
 }
 
@@ -268,10 +268,10 @@ function realtimequiz_current_question($quizid, $questionnumber) {
 
     $questionid = $DB->get_field('realtimequiz', 'currentquestion', array('id' => $quizid));
     if (!$questionid) {
-		return false;
+        return false;
     }
-	if ($questionnumber != $DB->get_field('realtimequiz_question', 'questionnum', array('id' => $questionid))) {
-		return false;
+    if ($questionnumber != $DB->get_field('realtimequiz_question', 'questionnum', array('id' => $questionid))) {
+        return false;
     }
 
     return true;
@@ -306,30 +306,30 @@ function realtimequiz_goto_question($context, $quizid, $questionnum) {
 /***********************************************************
  * End of functions - start of main code
  ***********************************************************/
- 
+
 realtimequiz_start_response();
 
 if (! $realtimequiz = $DB->get_record("realtimequiz", array('id' => $quizid))) {
-	realtimequiz_send_error("Quiz ID incorrect");
-	realtimequiz_end_response();
-	die();
+    realtimequiz_send_error("Quiz ID incorrect");
+    realtimequiz_end_response();
+    die();
 }
 if (! $course = $DB->get_record("course", array('id' => $realtimequiz->course))) {
-	realtimequiz_send_error("Course is misconfigured");
-	realtimequiz_end_response();
-	die();
+    realtimequiz_send_error("Course is misconfigured");
+    realtimequiz_end_response();
+    die();
 }
 if (! $cm = get_coursemodule_from_instance("realtimequiz", $realtimequiz->id, $course->id)) {
-	realtimequiz_send_error("Course Module ID was incorrect");
-	realtimequiz_end_response();
-	die();
+    realtimequiz_send_error("Course Module ID was incorrect");
+    realtimequiz_end_response();
+    die();
 }
 $context = get_context_instance(CONTEXT_MODULE, $cm->id);
 
 if (!has_capability('mod/realtimequiz:attempt', $context)) {
-	realtimequiz_send_error(get_string('notallowedattempt','realtimequiz'));
-	realtimequiz_end_response();
-	die();
+    realtimequiz_send_error(get_string('notallowedattempt','realtimequiz'));
+    realtimequiz_end_response();
+    die();
 }
 
 $status = $realtimequiz->status;
@@ -347,25 +347,25 @@ if ($status === false) {
     } else if ($requesttype == 'startquiz') {
         $userid = required_param('userid', PARAM_INT);
         if (has_capability('mod/realtimequiz:control', $context)) {
-			$session = new Object();
-			$session->timestamp = time();
-			$session->name = optional_param('sessionname', '', PARAM_CLEAN);
+            $session = new Object();
+            $session->timestamp = time();
+            $session->name = optional_param('sessionname', '', PARAM_CLEAN);
             $session->quizid = $quizid;
-			$session->id = $DB->insert_record('realtimequiz_session', $session);
-            		
+            $session->id = $DB->insert_record('realtimequiz_session', $session);
+
             $quiz = $DB->get_record('realtimequiz', array('id' => $quizid));
-			$quiz->currentsessionid = $session->id;
+            $quiz->currentsessionid = $session->id;
             $quiz->status = REALTIMEQUIZ_STATUS_READYTOSTART;
             $quiz->currentquestion = 0;
             $quiz->classresult = 0;
             $quiz->questionresult = 0;
             $DB->update_record('realtimequiz', $quiz);
-			
+
             realtimequiz_send_running();
         } else {
             realtimequiz_send_error(get_string('notauthorised','realtimequiz'));
         }
-        
+
     } else {
 
         switch ($status) {
@@ -392,7 +392,7 @@ if ($status === false) {
                 realtimequiz_send_question($quizid);
 
             } else if ($requesttype == 'postanswer') {
-                $questionnum = required_param('question', PARAM_INT); 
+                $questionnum = required_param('question', PARAM_INT);
                 $userid = required_param('userid', PARAM_INT);
                 $answerid = required_param('answer', PARAM_INT);
                 realtimequiz_record_answer($quizid, $questionnum, $userid, $answerid);
@@ -425,14 +425,14 @@ if ($status === false) {
             } else if ($requesttype == 'nextquestion') {
                 $clientquestionnum = required_param('currentquestion', PARAM_INT);
                 $questionid = $DB->get_field('realtimequiz', 'currentquestion', array('id' => $quizid));
-				$questionnum = $DB->get_field('realtimequiz_question', 'questionnum', array('id' => $questionid));
+                $questionnum = $DB->get_field('realtimequiz_question', 'questionnum', array('id' => $questionid));
                 if ($clientquestionnum != $questionnum) {
                     realtimequiz_send_results($quizid, $questionnum);
                 } else {
                     $questionnum++;
                     realtimequiz_goto_question($context, $quizid, $questionnum);
                 }
-            
+
             } else {
                 realtimequiz_send_error(get_string('unknownrequest','realtimequiz').$requesttype.'\'');
             }

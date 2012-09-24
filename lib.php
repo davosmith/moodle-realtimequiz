@@ -8,9 +8,9 @@
 
 
 /**
- * Given an object containing all the necessary data, 
- * (defined by the form in mod.html) this function 
- * will create a new instance and return the id number 
+ * Given an object containing all the necessary data,
+ * (defined by the form in mod.html) this function
+ * will create a new instance and return the id number
  * of the new instance.
  *
  * @param object $instance An object from the form in mod.html
@@ -18,7 +18,7 @@
  **/
 function realtimequiz_add_instance($realtimequiz) {
     global $DB;
-    
+
     $realtimequiz->timemodified = time();
     $realtimequiz->timecreated = time();
 
@@ -28,13 +28,13 @@ function realtimequiz_add_instance($realtimequiz) {
     $realtimequiz->currentsessionid = 0;
     $realtimequiz->classresult = 0;
     $realtimequiz->questionresult = 0;
-	    
+
     return $DB->insert_record('realtimequiz', $realtimequiz);
 }
 
 /**
- * Given an object containing all the necessary data, 
- * (defined by the form in mod.html) this function 
+ * Given an object containing all the necessary data,
+ * (defined by the form in mod.html) this function
  * will update an existing instance with new data.
  *
  * @param object $instance An object from the form in mod.html
@@ -45,7 +45,7 @@ function realtimequiz_update_instance($realtimequiz) {
 
     $realtimequiz->timemodified = time();
     $realtimequiz->id = $realtimequiz->instance;
-    
+
     $realtimequiz->status = 0;
     $realtimequiz->currentquestion = 0;
     $realtimequiz->nextendtime = 0;
@@ -57,9 +57,9 @@ function realtimequiz_update_instance($realtimequiz) {
 }
 
 /**
- * Given an ID of an instance of this module, 
- * this function will permanently delete the instance 
- * and any data that depends on it. 
+ * Given an ID of an instance of this module,
+ * this function will permanently delete the instance
+ * and any data that depends on it.
  *
  * @param int $id Id of the module instance
  * @return boolean Success/Failure
@@ -73,7 +73,7 @@ function realtimequiz_delete_instance($id) {
 
     $result = true;
 
-	$questions = $DB->get_records('realtimequiz_question', array('quizid' => $id));
+    $questions = $DB->get_records('realtimequiz_question', array('quizid' => $id));
     foreach ($questions as $question) { // Get each question
         $answers = $DB->get_records('realtimequiz_answer', array('questionid' => $question->id));
         foreach ($answers as $answer) { // Get each answer for that question
@@ -81,15 +81,15 @@ function realtimequiz_delete_instance($id) {
         }
         $DB->delete_records('realtimequiz_answer', array('questionid' => $question->id)); // Delete each answer
     }
-	$DB->delete_records('realtimequiz_question', array('quizid' => $id)); // Delete each question
-	$DB->delete_records('realtimequiz_session', array('quizid' => $id)); // Delete each session
+    $DB->delete_records('realtimequiz_question', array('quizid' => $id)); // Delete each question
+    $DB->delete_records('realtimequiz_session', array('quizid' => $id)); // Delete each session
     $DB->delete_records('realtimequiz', array('id' => $realtimequiz->id));
 
     return $result;
 }
 
 /**
- * Return a small object with summary information about what a 
+ * Return a small object with summary information about what a
  * user has done with a given particular instance of this module
  * Used for user activity reports.
  * $return->time = the time they did it
@@ -103,7 +103,7 @@ function realtimequiz_user_outline($course, $user, $mod, $realtimequiz) {
 }
 
 /**
- * Print a detailed representation of what a user has done with 
+ * Print a detailed representation of what a user has done with
  * a given particular instance of this module, for user activity reports.
  *
  * @return boolean
@@ -114,9 +114,9 @@ function realtimequiz_user_complete($course, $user, $mod, $realtimequiz) {
 }
 
 /**
- * Given a course and a time, this module should find recent activity 
- * that has occurred in realtimequiz activities and print it out. 
- * Return true if there was output, or false is there was none. 
+ * Given a course and a time, this module should find recent activity
+ * that has occurred in realtimequiz activities and print it out.
+ * Return true if there was output, or false is there was none.
  *
  * @uses $CFG
  * @return boolean
@@ -128,8 +128,8 @@ function realtimequiz_print_recent_activity($course, $isteacher, $timestart) {
 
 /**
  * Function to be run periodically according to the moodle cron
- * This function searches for things that need to be done, such 
- * as sending out mail, toggling flags etc ... 
+ * This function searches for things that need to be done, such
+ * as sending out mail, toggling flags etc ...
  *
  * @uses $CFG
  * @return boolean
@@ -140,9 +140,9 @@ function realtimequiz_cron () {
 }
 
 /**
- * Must return an array of grades for a given instance of this module, 
+ * Must return an array of grades for a given instance of this module,
  * indexed by user.  It also returns a maximum allowed grade.
- * 
+ *
  * Example:
  *    $return->grades = array of grades;
  *    $return->maxgrade = maximum allowed grade;
@@ -153,7 +153,7 @@ function realtimequiz_cron () {
  * @return mixed Null or object with an array of grades and with the maximum grade
  **/
 function realtimequiz_grades($realtimequizid) {
-   return NULL;
+    return NULL;
 }
 
 /**
@@ -187,7 +187,7 @@ function realtimequiz_scale_used ($realtimequizid,$scaleid) {
     //if (!empty($rec)  && !empty($scaleid)) {
     //    $return = true;
     //}
-   
+
     return $return;
 }
 
@@ -232,5 +232,3 @@ function realtimequiz_view_tabs($currenttab, $cmid, $context) {
 
     print_tabs($tabs, $currenttab, $inactive, $activated);
 }
-
-?>
