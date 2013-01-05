@@ -7,7 +7,9 @@
  **/
 
 require_once('../../config.php');
-require_once('lib.php');
+global $CFG;
+require_once($CFG->dirroot.'/mod/realtimequiz/lib.php');
+require_once($CFG->libdir.'/filelib.php');
 
 require_login();
 if (!confirm_sesskey()) {
@@ -37,7 +39,7 @@ function realtimequiz_send_error($msg) {
     echo "<status>error</status><message><![CDATA[{$msg}]]></message>";
 }
 
-function realtimequiz_send_question($quizid, $preview=false) {
+function realtimequiz_send_question($quizid, $context, $preview=false) {
     global $DB;
 
     if (!$quiz = $DB->get_record('realtimequiz', array('id' => $quizid))) {
@@ -52,32 +54,10 @@ function realtimequiz_send_question($quizid, $preview=false) {
             echo '<status>showquestion</status>';
             echo "<question><questionnumber>{$question->questionnum}</questionnumber>";
             echo "<questioncount>{$questioncount}</questioncount>";
-            echo "<questiontext><![CDATA[{$question->questiontext}]]></questiontext>";
-            /* FIXME
-            if ($question->image) {
-                $filename = $CFG->dataroot.'/'.$question->image;
-                if (file_exists($filename)) {
-                    $size = getimagesize($filename);
-                    if ($size) {
-                        $imageheight = $size[1];
-                        $imagewidth = $size[0];
-                        if ($imagewidth > 400) {
-                            $scale = 400 / $imagewidth;
-                            $imagewidth = 400;
-                            $imageheight *= $scale;
-                        }
-                        if ($imageheight > 400) {
-                            $scale = 400 / $imageheight;
-                            $imageheight = 400;
-                            $imagewidth *= $scale;
-                        }
-                        $fl = $question->image.'&t='.time();
-                        echo "<imageurl><![CDATA[{$CFG->wwwroot}/file.php?file=/{$fl}]]></imageurl>";
-                        echo "<imageheight>$imageheight</imageheight>";
-                        echo "<imagewidth>$imagewidth</imagewidth>";
-                    }
-                }
-                }*/
+            $questiontext = format_text($question->questiontext, $question->questiontextformat);
+            $questiontext = file_rewrite_pluginfile_urls($questiontext, 'pluginfile.php', $context->id, 'mod_realtimequiz',
+                                                          'question', $questionid);
+            echo "<questiontext><![CDATA[{$questiontext}]]></questiontext>";
             if ($preview) {
                 $previewtime = $quiz->nextendtime - time();
                 if ($previewtime > 0) {
@@ -291,7 +271,7 @@ function realtimequiz_goto_question($context, $quizid, $questionnum) {
             $quiz->status = REALTIMEQUIZ_STATUS_PREVIEWQUESTION;
             $quiz->nextendtime = time() + 2;    // Give everyone a chance to get the question before starting
             $DB->update_record('realtimequiz', $quiz); // FIXME - not update all fields?
-            realtimequiz_send_question($quizid, true);
+            realtimequiz_send_question($quizid, $context, true);
         } else { // Assume we have run out of questions
             $quiz->status = REALTIMEQUIZ_STATUS_FINALRESULTS;
             $DB->update_record('realtimequiz', $quiz); // FIXME - not update all fields?
@@ -384,12 +364,12 @@ if ($status === false) {
             break;
 
         case REALTIMEQUIZ_STATUS_PREVIEWQUESTION: // Previewing question (send it out, but ask them to wait before showing)
-            realtimequiz_send_question($quizid, true); // (don't care what they asked for)
+            realtimequiz_send_question($quizid, $context, true); // (don't care what they asked for)
             break;
 
         case REALTIMEQUIZ_STATUS_SHOWQUESTION: // Question being displayed
             if (($requesttype == 'getquestion') || ($requesttype == 'nextquestion')) { // Student asked for a question - so send it
-                realtimequiz_send_question($quizid);
+                realtimequiz_send_question($quizid, $context);
 
             } else if ($requesttype == 'postanswer') {
                 $questionnum = required_param('question', PARAM_INT);
@@ -406,7 +386,7 @@ if ($status === false) {
                     }
                     realtimequiz_send_await_results($timeleft + 0.1); // results not yet ready
                 } else {
-                    realtimequiz_send_question($quizid); // asked for results for wrong question
+                    realtimequiz_send_question($quizid, $context); // asked for results for wrong question
                 }
 
             } else {

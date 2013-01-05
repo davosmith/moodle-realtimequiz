@@ -7,12 +7,12 @@
  **/
 
 require_once("../../config.php");
-require_once("lib.php");
+global $CFG, $DB, $OUTPUT, $PAGE;
+require_once($CFG->dirroot.'/mod/realtimequiz/lib.php');
 
 define('REALTIMEQUIZ_DEFAULT_PERPAGE', 30);
 
-$id = optional_param('id', 0, PARAM_INT); // Course Module ID, or
-$a  = optional_param('a', 0, PARAM_INT);  // realtimequiz ID
+$id = required_param('id', PARAM_INT); // Course Module ID, or
 $showsession = optional_param('showsession', 0, PARAM_INT);
 $questionid = optional_param('questionid', 0, PARAM_INT);
 $nextquestion = optional_param('nextquestion', false, PARAM_TEXT);
@@ -23,30 +23,9 @@ $showusers = optional_param('showusers', false, PARAM_BOOL);
 $page = optional_param('page', 0, PARAM_INT);
 $perpage = optional_param('perpage', REALTIMEQUIZ_DEFAULT_PERPAGE, PARAM_INT);
 
-if ($id) {
-    if (! $cm = $DB->get_record("course_modules", array('id' => $id))) {
-        error("Course Module ID was incorrect");
-    }
-
-    if (! $course = $DB->get_record("course", array('id' => $cm->course))) {
-        error("Course is misconfigured");
-    }
-
-    if (! $realtimequiz = $DB->get_record("realtimequiz", array('id' => $cm->instance))) {
-        error("Course module is incorrect");
-    }
-
-} else {
-    if (! $realtimequiz = $DB->get_record("realtimequiz", array('id' => $a))) {
-        error("Course module is incorrect");
-    }
-    if (! $course = $DB->get_record("course", array('id' => $realtimequiz->course))) {
-        error("Course is misconfigured");
-    }
-    if (! $cm = get_coursemodule_from_instance("realtimequiz", $realtimequiz->id, $course->id)) {
-        error("Course Module ID was incorrect");
-    }
-}
+$cm = get_coursemodule_from_id('realtimequiz', $id, 0, false, MUST_EXIST);
+$course = $DB->get_record('course', array('id' => $cm->course), '*', MUST_EXIST);
+$realtimequiz = $DB->get_record('realtimequiz', array('id' => $cm->instance), '*', MUST_EXIST);
 
 $url = new moodle_url('/mod/realtimequiz/responses.php', array('id' => $cm->id));
 if ($showsession) {
@@ -235,7 +214,11 @@ if ($questionid == 0) { // Show all of the questions
                     echo '&nbsp;';
                 }
                 echo '</td>';
-                echo '</tr><tr class="realtimequiz_report_answer"><td><a href="'.$linkurl->out(true, array('questionid'=>$question->id)).'">'.s($question->questiontext).'</a></td>';
+                $questiontext = format_string($question->questiontext);
+                if (empty($questiontext)) {
+                    $questiontext = get_string('question', 'mod_realtimequiz').$question->questionnum;
+                }
+                echo '</tr><tr class="realtimequiz_report_answer"><td><a href="'.$linkurl->out(true, array('questionid'=>$question->id)).'">'.format_string($questiontext).'</a></td>';
 
                 $total = 0;
                 $gotAnswerRight = 0;
@@ -372,7 +355,9 @@ if ($questionid == 0) { // Show all of the questions
     $question = $DB->get_record('realtimequiz_question', array('id' => $questionid) );
 
     echo '<h2>'.get_string('question','realtimequiz').$question->questionnum.'</h2>';
-    echo '<p>'.s($question->questiontext).'</p><br />';
+    $questiontext = format_text($question->questiontext, $question->questiontextformat);
+    $questiontext = file_rewrite_pluginfile_urls($questiontext, 'pluginfile.php', $context->id, 'mod_realtimequiz', 'question', $question->id);
+    echo '<p>'.$questiontext.'</p><br />';
     echo '<table border="1" class="realtimequiz_report_answer"><tr class="realtimequiz_report_question"><td width="30%">&nbsp;</td>';
     $answers = $DB->get_records('realtimequiz_answer', array('questionid' => $questionid),'id');
     if (!empty($answers)) {

@@ -35,5 +35,20 @@ function xmldb_realtimequiz_upgrade($oldversion) {
         upgrade_mod_savepoint(true, 2012102100, 'realtimequiz');
     }
 
+    if ($oldversion < 2012102101) {
+
+        // Define field questiontextformat to be added to realtimequiz_question
+        $table = new xmldb_table('realtimequiz_question');
+        $field = new xmldb_field('questiontextformat', XMLDB_TYPE_INTEGER, FORMAT_PLAIN, null, null, null, '1', 'questiontext');
+
+        // Conditionally launch add field questiontextformat
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        // realtimequiz savepoint reached
+        upgrade_mod_savepoint(true, 2012102101, 'realtimequiz');
+    }
+
     return true;
 }

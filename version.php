@@ -9,9 +9,9 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$module->version   = 2012102100;  // The current module version (Date: YYYYMMDDXX)
+$module->version   = 2013010500;  // The current module version (Date: YYYYMMDDXX)
 $module->requires  = 2010112400;  // Moodle 2.0 (or above)
 $module->cron      = 0;           // Period for cron to check this module (secs)
 $module->component = 'mod_realtimequiz';
 $module->maturity  = MATURITY_STABLE;
-$module->release   = '2.x (Build: 2012102100)';
+$module->release   = '2.x (Build: 2013010500)';

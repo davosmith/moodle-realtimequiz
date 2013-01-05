@@ -232,3 +232,38 @@ function realtimequiz_view_tabs($currenttab, $cmid, $context) {
 
     print_tabs($tabs, $currenttab, $inactive, $activated);
 }
+
+function realtimequiz_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload, array $options=array()) {
+    global $DB;
+
+    if ($context->contextlevel != CONTEXT_MODULE) {
+        return false;
+    }
+
+    if ($filearea != 'question') {
+        return false;
+    }
+
+    require_course_login($course, true, $cm);
+
+    $questionid = (int)array_shift($args);
+
+    if (!$quiz = $DB->get_record('realtimequiz', array('id' => $cm->instance))) {
+        return false;
+    }
+
+    if (!$question = $DB->get_record('realtimequiz_question', array('id' => $questionid, 'quizid' => $cm->instance))) {
+        return false;
+    }
+
+    $fs = get_file_storage();
+    $relativepath = implode('/', $args);
+    $fullpath = "/$context->id/mod_realtimequiz/$filearea/$questionid/$relativepath";
+    if (!$file = $fs->get_file_by_hash(sha1($fullpath)) or $file->is_directory()) {
+        return false;
+    }
+
+    // finally send the file
+    send_stored_file($file);
+    return false;
+}
