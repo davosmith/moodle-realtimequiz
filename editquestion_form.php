@@ -26,12 +26,14 @@ class realtimequiz_editquestion_form extends moodleform {
         // Answers
         for ($i = 1; $i <= $numanswers; $i++) {
             $ansgroup = array(
-                $mform->createElement('radio', 'answercorrect', '', '', $i),
+                $mform->createElement('radio', 'answercorrect', '', '', $i,
+                                      array('class' => 'realtimequiz_answerradio')),
                 $mform->createElement('text', "answertext[$i]", '', array('size' => 30)),
             );
             $mform->addGroup($ansgroup, 'answer', get_string('answer','realtimequiz').$i, array(' '), false);
         }
-        $mform->addElement('radio', 'answercorrect', get_string('nocorrect', 'realtimequiz'), '', 0);
+        $mform->addElement('radio', 'answercorrect', get_string('nocorrect', 'realtimequiz'), '', 0,
+                           array('class' => 'realtimequiz_answerradio'));
         $mform->addElement('submit', 'addanswers', get_string('addanswers', 'realtimequiz'));
 
         // Action buttons

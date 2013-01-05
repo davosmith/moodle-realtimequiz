@@ -139,7 +139,7 @@ if ($data = $form->get_data()) {
         }
 
         if (isset($data->saveadd)) {
-            $redirect(new moodle_url('/mod/realtimequiz/editquestion.php', array('quizid' => $quizid)));
+            redirect(new moodle_url('/mod/realtimequiz/editquestion.php', array('quizid' => $quizid)));
         }
 
         redirect($return);
