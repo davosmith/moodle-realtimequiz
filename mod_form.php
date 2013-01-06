@@ -56,11 +56,8 @@ class mod_realtimequiz_mod_form extends moodleform_mod {
 
         //-------------------------------------------------------------------------------
         // add standard elements, common to all modules
-        $features = new stdClass;
-        $features->groups = false;
-        $features->groupings = true;
-        $features->groupmembersonly = true;
-        $this->standard_coursemodule_elements($features);
+        $this->standard_coursemodule_elements();
+
         //-------------------------------------------------------------------------------
         // add standard buttons, common to all modules
         $this->add_action_buttons();
