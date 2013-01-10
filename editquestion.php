@@ -149,9 +149,8 @@ if ($data = $form->get_data()) {
 $jsmodule = array(
     'name' => 'mod_realtimequiz',
     'fullpath' => new moodle_url('/mod/realtimequiz/editquestions.js'),
-    'requires' => array('core','node', 'event')
 );
-$PAGE->requires->js_init_call('M.mod_realtimequiz.init_editpage', null, false, $jsmodule);
+$PAGE->requires->js_init_call('M.mod_realtimequiz.init_editpage', array(), false, $jsmodule);
 
 $PAGE->set_heading($heading.$question->questionnum);
 $PAGE->set_title(get_string('pluginname', 'mod_realtimequiz'));

@@ -13,6 +13,7 @@ The teacher can, at a later date, go back through the results and, for each ques
 Changes:
 --------
 
+2013-01-10 - Fixed HTML Editor in Moodle 2.3
 2013-01-06 - Backup and restore now available
 2013-01-05 - Questions now use a standard Moodle form, so can include images, videos, etc.
 2012-07-02 - Reports page can now show all user responses - thanks to Frankie Kam and Al Rachels for the original code
