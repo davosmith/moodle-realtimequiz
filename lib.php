@@ -269,6 +269,11 @@ function realtimequiz_pluginfile($course, $cm, $context, $filearea, $args, $forc
 }
 
 function realtimequiz_supports($feature) {
+
+    if (!defined('FEATURE_PLAGIARISM')) {
+        define('FEATURE_PLAGIARISM', 'plagiarism');
+    }
+
     switch($feature) {
     case FEATURE_GROUPS:                  return false;
     case FEATURE_GROUPINGS:               return true;
