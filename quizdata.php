@@ -6,6 +6,8 @@
  * @package realtimequiz
  **/
 
+define('AJAX_SCRIPT', true);
+
 require_once('../../config.php');
 global $CFG;
 require_once($CFG->dirroot.'/mod/realtimequiz/lib.php');
@@ -77,7 +79,8 @@ function realtimequiz_send_question($quizid, $context, $preview=false) {
             }
             echo '<answers>';
             foreach ($answers as $answer) {
-                echo "<answer id='{$answer->id}'><![CDATA[{$answer->answertext}]]></answer>";
+                $answertext = $answer->answertext;
+                echo "<answer id='{$answer->id}'><![CDATA[{$answertext}]]></answer>";
             }
             echo '</answers>';
             echo '</question>';
@@ -143,7 +146,7 @@ function realtimequiz_send_results($quizid, $questionnum) {
     }
 }
 
-function realtimequiz_record_answer($quizid, $questionnum, $userid, $answerid) {
+function realtimequiz_record_answer($quizid, $questionnum, $userid, $answerid, $context) {
     global $DB;
 
     $quiz = $DB->get_record('realtimequiz', array('id' => $quizid));
@@ -170,7 +173,7 @@ function realtimequiz_record_answer($quizid, $questionnum, $userid, $answerid) {
     } else {
 
         // Answer is not for the current question - so send the current question
-        realtimequiz_send_question($quizid);
+        realtimequiz_send_question($quizid, $context);
     }
 }
 
@@ -375,7 +378,7 @@ if ($status === false) {
                 $questionnum = required_param('question', PARAM_INT);
                 $userid = required_param('userid', PARAM_INT);
                 $answerid = required_param('answer', PARAM_INT);
-                realtimequiz_record_answer($quizid, $questionnum, $userid, $answerid);
+                realtimequiz_record_answer($quizid, $questionnum, $userid, $answerid, $context);
 
             } else if ($requesttype == 'getresults') {
                 $questionnum = required_param('question', PARAM_INT);

@@ -52,6 +52,7 @@ class mod_realtimequiz_mod_form extends moodleform_mod {
         $mform->addElement('text', 'questiontime', get_string('questiontime', 'realtimequiz'));
         $mform->addRule('questiontime', null, 'numeric', null, 'client');
         $mform->setDefault('questiontime', 30);
+        $mform->setType('questiontime', PARAM_INT);
         $mform->addHelpButton('questiontime', 'questiontime', 'realtimequiz');
 
         //-------------------------------------------------------------------------------

@@ -12,8 +12,11 @@ class realtimequiz_editquestion_form extends moodleform {
         $numanswers = $this->_customdata['numanswers'];
         $editoroptions = $this->_customdata['editoroptions'];
         $mform->addElement('hidden', 'quizid');
+        $mform->setType('quizid', PARAM_INT);
         $mform->addElement('hidden', 'questionid');
+        $mform->setType('questionid', PARAM_INT);
         $mform->addElement('hidden', 'numanswers');
+        $mform->setType('numanswers', PARAM_INT);
 
         $mform->addElement('header', 'general', get_string('general', 'form'));
 
@@ -31,6 +34,7 @@ class realtimequiz_editquestion_form extends moodleform {
                 $mform->createElement('text', "answertext[$i]", '', array('size' => 30)),
             );
             $mform->addGroup($ansgroup, 'answer', get_string('answer','realtimequiz').$i, array(' '), false);
+            $mform->setType("answertext[$i]", PARAM_RAW);
         }
         $mform->addElement('radio', 'answercorrect', get_string('nocorrect', 'realtimequiz'), '', 0,
                            array('class' => 'realtimequiz_answerradio'));

@@ -99,21 +99,27 @@ if ($form->is_cancelled()) {
 
 if ($data = $form->get_data()) {
     if (isset($data->save) || isset($data->saveadd)) {
-        $data = file_postupdate_standard_editor($data, 'questiontext', $editoroptions, $context, 'mod_realtimequiz',
-                                                'question', $question->id);
         $updquestion = (object)array(
             'quizid' => $quizid,
             'questionnum' => $question->questionnum,
-            'questiontext' => $data->questiontext,
-            'questiontextformat' => $data->questiontextformat,
+            'questiontext' => 'toupdate',
+            'questiontextformat' => FORMAT_HTML,
             'questiontime' => $data->questiontime,
         );
+
         if (!empty($question->id)) {
             $updquestion->id = $question->id;
-            $DB->update_record('realtimequiz_question', $updquestion);
         } else {
             $updquestion->id = $DB->insert_record('realtimequiz_question', $updquestion);
         }
+
+        // Save the attached files (now we know we have got a question id).
+        $data = file_postupdate_standard_editor($data, 'questiontext', $editoroptions, $context, 'mod_realtimequiz',
+                                                'question', $updquestion->id);
+        $updquestion->questiontext = $data->questiontext;
+        $updquestion->questiontextformat = $data->questiontextformat;
+
+        $DB->update_record('realtimequiz_question', $updquestion);
 
         // Save each of the answers
         foreach ($data->answertext as $pos => $answertext) {

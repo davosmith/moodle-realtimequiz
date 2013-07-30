@@ -90,9 +90,10 @@ function realtimequiz_list_questions($quizid, $cm) {
 function realtimequiz_confirm_deletequestion($quizid, $questionid, $context) {
     global $DB;
 
+    $question = $DB->get_record('realtimequiz_question', array('id' => $questionid, 'quizid' => $quizid), '*', MUST_EXIST);
+
     echo '<center><h2>'.get_string('deletequestion', 'realtimequiz').'</h2>';
     echo '<p>'.get_string('checkdelete','realtimequiz').'</p><p>';
-    $question = $DB->get_record('realtimequiz_question', array('id' => $questionid));
     $questiontext = format_text($question->questiontext, $question->questiontextformat);
     $questiontext =  file_rewrite_pluginfile_urls($questiontext, 'pluginfile.php', $context->id, 'mod_realtimequiz',
                                                   'question', $questionid);
@@ -128,15 +129,21 @@ if ($action == 'dodeletequestion') {
     }
 
     if (optional_param('yes', false, PARAM_BOOL)) {
-        $answers = $DB->get_records('realtimequiz_answer', array('questionid' => $questionid));
-        if (!empty($answers)) {
-            foreach ($answers as $answer) { // Get each answer for that question
-                $DB->delete_records('realtimequiz_submitted', array('answerid' => $answer->id)); // Delete any submissions for that answer
+        if ($question = $DB->get_record('realtimequiz_question', array('id' => $questionid, 'quizid' => $quiz->id))) {
+            $answers = $DB->get_records('realtimequiz_answer', array('questionid' => $question->id));
+            if (!empty($answers)) {
+                foreach ($answers as $answer) { // Get each answer for that question.
+                    $DB->delete_records('realtimequiz_submitted', array('answerid' => $answer->id)); // Delete any submissions for that answer.
+                }
             }
+            $DB->delete_records('realtimequiz_answer', array('questionid' => $question->id)); // Delete each answer.
+            $DB->delete_records('realtimequiz_question', array('id' => $question->id));
+
+            // Delete files embedded in the heading.
+            $fs = get_file_storage();
+            $fs->delete_area_files($context->id, 'mod_realtimequiz', 'question', $questionid);
+            // Questionnumbers sorted out when we display the list of questions
         }
-        $DB->delete_records('realtimequiz_answer', array('questionid' => $questionid)); // Delete each answer
-        $DB->delete_records('realtimequiz_question', array('id' => $questionid));
-        // Questionnumbers sorted out when we display the list of questions
     }
 
     $action = 'listquestions';
