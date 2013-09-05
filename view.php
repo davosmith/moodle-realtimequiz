@@ -14,26 +14,26 @@ $a  = optional_param('a', 0, PARAM_INT);  // realtimequiz ID
 
 if ($id) {
     if (! $cm = $DB->get_record("course_modules", array('id' => $id))) {
-        error("Course Module ID was incorrect");
+        print_error('invalidcoursemodule');
     }
 
     if (! $course = $DB->get_record("course", array('id' => $cm->course))) {
-        error("Course is misconfigured");
+        print_error('coursemisconf');
     }
 
     if (! $realtimequiz = $DB->get_record("realtimequiz", array('id' => $cm->instance))) {
-        error("Course module is incorrect");
+        print_error('invalidrealtimequizid', 'realtimequiz');
     }
 
 } else {
     if (! $realtimequiz = $DB->get_record("realtimequiz", array('id' => $a))) {
-        error("Course module is incorrect");
+        print_error('invalidrealtimequizid', 'realtimequiz');
     }
     if (! $course = $DB->get_record("course", array('id' => $realtimequiz->course))) {
-        error("Course is misconfigured");
+        print_error('invalidcourseid');
     }
     if (! $cm = get_coursemodule_from_instance("realtimequiz", $realtimequiz->id, $course->id)) {
-        error("Course Module ID was incorrect");
+        print_error('missingparameter');
     }
 }
 

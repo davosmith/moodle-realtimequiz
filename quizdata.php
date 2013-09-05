@@ -15,7 +15,7 @@ require_once($CFG->libdir.'/filelib.php');
 
 require_login();
 if (!confirm_sesskey()) {
-    error(get_string('badsesskey','realtimequiz'));
+    print_error(get_string('badsesskey', 'realtimequiz'));
 }
 $requesttype = required_param('requesttype', PARAM_ALPHA);
 $quizid = required_param('quizid', PARAM_INT);

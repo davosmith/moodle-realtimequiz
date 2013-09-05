@@ -39,6 +39,7 @@ $string['httperror'] = 'There was a problem with the request - status: ';
 $string['httprequestfail'] = 'Giving up :( Cannot create an XMLHTTP instance';
 $string['incorrectstatus'] = 'Quiz has incorrect status: \'';
 $string['invalidanswer'] = 'Invalid answer number ';
+$string['invalidrealtimequizid'] = 'Realtime quiz ID was incorrect';
 $string['joininstruct'] = 'Wait until your teacher tells you before you click on this';
 $string['joinquiz'] = 'Join Quiz';
 $string['modulename'] = 'Realtime quiz';
