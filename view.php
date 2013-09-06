@@ -13,28 +13,14 @@ $id = optional_param('id', 0, PARAM_INT); // Course Module ID, or
 $a  = optional_param('a', 0, PARAM_INT);  // realtimequiz ID
 
 if ($id) {
-    if (! $cm = $DB->get_record("course_modules", array('id' => $id))) {
-        error("Course Module ID was incorrect");
-    }
-
-    if (! $course = $DB->get_record("course", array('id' => $cm->course))) {
-        error("Course is misconfigured");
-    }
-
-    if (! $realtimequiz = $DB->get_record("realtimequiz", array('id' => $cm->instance))) {
-        error("Course module is incorrect");
-    }
-
+    $cm = get_coursemodule_from_id('realtimequiz', $id, 0, false, MUST_EXIST);
+    $course = $DB->get_record('course', array('id' => $cm->course), '*', MUST_EXIST);
+    $realtimequiz = $DB->get_record('realtimequiz', array('id' => $cm->instance), '*', MUST_EXIST);
 } else {
-    if (! $realtimequiz = $DB->get_record("realtimequiz", array('id' => $a))) {
-        error("Course module is incorrect");
-    }
-    if (! $course = $DB->get_record("course", array('id' => $realtimequiz->course))) {
-        error("Course is misconfigured");
-    }
-    if (! $cm = get_coursemodule_from_instance("realtimequiz", $realtimequiz->id, $course->id)) {
-        error("Course Module ID was incorrect");
-    }
+    $realtimequiz = $DB->get_record('realtimequiz', array('id' => $bid), '*', MUST_EXIST);
+    $cm = get_coursemodule_from_instance('realtimequiz', $realtimequiz->id, 0, false, MUST_EXIST);
+    $course = $DB->get_record('course', array('id' => $cm->course), '*', MUST_EXIST);
+    $id = $cm->id;
 }
 
 $PAGE->set_url(new moodle_url('/mod/realtimequiz/view.php', array('id' => $cm->id)));

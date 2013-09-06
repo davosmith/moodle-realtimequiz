@@ -14,9 +14,7 @@ require_once($CFG->dirroot.'/mod/realtimequiz/lib.php');
 require_once($CFG->libdir.'/filelib.php');
 
 require_login();
-if (!confirm_sesskey()) {
-    error(get_string('badsesskey','realtimequiz'));
-}
+require_sesskey();
 $requesttype = required_param('requesttype', PARAM_ALPHA);
 $quizid = required_param('quizid', PARAM_INT);
 
