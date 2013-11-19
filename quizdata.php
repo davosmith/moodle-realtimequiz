@@ -305,7 +305,11 @@ if (! $cm = get_coursemodule_from_instance("realtimequiz", $realtimequiz->id, $c
     realtimequiz_end_response();
     die();
 }
-$context = get_context_instance(CONTEXT_MODULE, $cm->id);
+if ($CFG->version < 2011120100) {
+    $context = get_context_instance(CONTEXT_MODULE, $cm->id);
+} else {
+    $context = context_module::instance($cm->id);
+}
 
 if (!has_capability('mod/realtimequiz:attempt', $context)) {
     realtimequiz_send_error(get_string('notallowedattempt','realtimequiz'));

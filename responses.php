@@ -47,7 +47,11 @@ $PAGE->set_url($url);
 
 require_login($course->id, false, $cm);
 $PAGE->set_pagelayout('incourse');
-$context = get_context_instance(CONTEXT_MODULE, $cm->id);
+if ($CFG->version < 2011120100) {
+    $context = get_context_instance(CONTEXT_MODULE, $cm->id);
+} else {
+    $context = context_module::instance($cm->id);
+}
 require_capability('mod/realtimequiz:seeresponses', $context);
 
 if ($questionid != 0) {

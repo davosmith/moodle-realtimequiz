@@ -38,7 +38,11 @@ $PAGE->set_url(new moodle_url('/mod/realtimequiz/edit.php', array('id' => $cm->i
 require_login($course->id, false, $cm);
 
 $PAGE->set_pagelayout('incourse');
-$context = get_context_instance(CONTEXT_MODULE, $cm->id);
+if ($CFG->version < 2011120100) {
+    $context = get_context_instance(CONTEXT_MODULE, $cm->id);
+} else {
+    $context = context_module::instance($cm->id);
+}
 require_capability('mod/realtimequiz:editquestions', $context);
 add_to_log($course->id, "realtimequiz", "update: $action", "edit.php?quizid=$quizid");
 

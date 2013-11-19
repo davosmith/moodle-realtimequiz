@@ -8,6 +8,7 @@
 
 require_once("../../config.php");
 require_once("lib.php");
+global $CFG, $DB, $PAGE, $OUTPUT;
 
 $id = optional_param('id', 0, PARAM_INT); // Course Module ID, or
 $a  = optional_param('a', 0, PARAM_INT);  // realtimequiz ID
@@ -28,7 +29,11 @@ $PAGE->set_url(new moodle_url('/mod/realtimequiz/view.php', array('id' => $cm->i
 require_login($course->id, false, $cm);
 $PAGE->set_pagelayout('incourse');
 
-$context = get_context_instance(CONTEXT_MODULE, $cm->id);
+if ($CFG->version < 2011120100) {
+    $context = get_context_instance(CONTEXT_MODULE, $cm->id);
+} else {
+    $context = context_module::instance($cm->id);
+}
 
 $questioncount = $DB->count_records('realtimequiz_question', array('quizid' => $realtimequiz->id));
 if ($questioncount == 0 && has_capability('mod/realtimequiz:editquestions', $context)) {
