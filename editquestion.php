@@ -132,13 +132,13 @@ if ($data = $form->get_data()) {
                 $changed = $updanswer->answertext != $oldanswer->answertext;
                 $changed = $changed || $updanswer->correct != $oldanswer->correct;
                 if ($changed) {
-                    if (empty($updanswer->answertext)) {
+                    if ($updanswer->answertext === "") {
                         $DB->delete_records('realtimequiz_answer', array('id' => $updanswer->id));
                     } else {
                         $DB->update_record('realtimequiz_answer', $updanswer);
                     }
                 }
-            } else if (!empty($updanswer->answertext)) {
+            } else if ($updanswer->answertext !== "") {
                 $updanswer->questionid = $updquestion->id;
                 $updanswer->id = $DB->insert_record('realtimequiz_answer', $updanswer);
             }
