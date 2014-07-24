@@ -42,7 +42,13 @@ if ($questioncount == 0 && has_capability('mod/realtimequiz:editquestions', $con
 
 require_capability('mod/realtimequiz:attempt', $context);
 
-add_to_log($course->id, "realtimequiz", "view", "view.php?id=$cm->id", "$realtimequiz->id");
+$params = array(
+    'context' => $context,
+    'objectid' => $realtimequiz->id
+);
+$event = \mod_realtimequiz\event\course_module_viewed::create($params);
+$event->add_record_snapshot('realtimequiz', $realtimequiz);
+$event->trigger();
 
 /// Print the page header
 
