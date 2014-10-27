@@ -183,12 +183,19 @@ function realtimequiz_send_not_running() {
     echo '<status>quiznotrunning</status>';
 }
 
-function realtimequiz_send_await_question($waittime=2.0) {
+function realtimequiz_send_await_question() {
+    $waittime = get_config('realtimequiz', 'awaittime');
     echo '<status>waitforquestion</status>';
     echo "<waittime>{$waittime}</waittime>";
 }
 
-function realtimequiz_send_await_results($waittime=2.0) {
+function realtimequiz_send_await_results($timeleft) {
+    $waittime = (int)get_config('realtimequiz', 'awaittime');
+    // We need to randomise the waittime a little, otherwise all clients will
+    // start sending 'waitforquestion' simulatiniously after the first question -
+    // it can cause a problem is there is a large number of clients.
+    // If waittime is 1 sec, there is no point to randomise it.
+    $waittime = mt_rand(1, $waittime) + $timeleft;
     echo '<status>waitforresults</status>';
     echo "<waittime>{$waittime}</waittime>";
 }
@@ -389,7 +396,7 @@ if ($status === false) {
                     if ($timeleft < 0) {
                         $timeleft = 0;
                     }
-                    realtimequiz_send_await_results($timeleft + 0.1); // results not yet ready
+                    realtimequiz_send_await_results($timeleft); // results not yet ready
                 } else {
                     realtimequiz_send_question($quizid, $context); // asked for results for wrong question
                 }

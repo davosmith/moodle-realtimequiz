@@ -9,7 +9,7 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version   = 2014072400;  // The current module version (Date: YYYYMMDDXX)
+$plugin->version   = 2014072401;  // The current module version (Date: YYYYMMDDXX)
 $plugin->requires  = 2014051200;  // Moodle 2.7 (or above)
 $plugin->cron      = 0;           // Period for cron to check this module (secs)
 $plugin->component = 'mod_realtimequiz';
