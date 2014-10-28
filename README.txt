@@ -13,6 +13,7 @@ The teacher can, at a later date, go back through the results and, for each ques
 Changes:
 --------
 
+2014-10-28 - Moodle 2.7 compatibility fixes (from Tony Butler); reduced server load with large number of clients (from Ruslan Kabalin); ability for teachers to reconnect to running quizzes, if they navigate away from them
 2013-11-28 - More Moodle 2.6 compatibility fixes
 2013-11-19 - Moodle 2.6 compatibility fixes
 2013-07-30 - Fixed embedding images when first creating a question.
