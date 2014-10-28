@@ -81,6 +81,8 @@ $string['realtimequiz:seeresponses'] = 'View the responses to a quiz';
 $string['realtimequiz:editquestions'] = 'Edit the questions for a quiz';
 $string['realtimequizintro'] = 'Introduction';
 $string['realtimequizsettings'] = 'Realtime quiz settings';
+$string['reconnectquiz'] = 'Reconnect to quiz';
+$string['reconnectinstruct'] = 'The quiz is already running - you can connect to this quiz and take control of it';
 $string['removeimage'] = 'Remove image';
 $string['responses'] = 'View responses';
 $string['resultcorrect'] = ' correct.';
@@ -108,4 +110,3 @@ $string['view'] = 'View quiz';
 $string['waitfirst'] = 'Waiting for the first question to be sent';
 $string['waitstudent'] = 'Waiting for students to connect';
 $string['yourresult'] = 'Your result: ';
-

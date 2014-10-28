@@ -7,8 +7,9 @@
  **/
 
 require_once("../../config.php");
-require_once("lib.php");
 global $CFG, $DB, $PAGE, $OUTPUT;
+require_once($CFG->dirroot.'/mod/realtimequiz/lib.php');
+require_once($CFG->dirroot.'/mod/realtimequiz/locallib.php');
 
 $id = optional_param('id', 0, PARAM_INT); // Course Module ID, or
 $a  = optional_param('a', 0, PARAM_INT);  // realtimequiz ID
@@ -54,6 +55,8 @@ if ($CFG->version > 2014051200) { // Moodle 2.7+
     add_to_log($course->id, 'realtimequiz', 'view all', "index.php?id=$course->id", "");
 }
 
+$quizstatus = realtimequiz_update_status($realtimequiz->id, $realtimequiz->status);
+
 /// Print the page header
 
 $strrealtimequizzes = get_string("modulenameplural", "realtimequiz");
@@ -93,6 +96,7 @@ echo $OUTPUT->box_start('generalbox boxwidthwide boxaligncenter realtimequizbox'
     realtimequiz_set_sesskey('<?php echo sesskey(); ?>');
     realtimequiz_set_coursepage('<?php echo "$CFG->wwwroot/course/view.php?id=$course->id"; ?>');
     realtimequiz_set_siteroot('<?php echo "$CFG->wwwroot"; ?>');
+    realtimequiz_set_running(<?php echo (realtimequiz_is_running($quizstatus) ? 'true' : 'false'); ?>);
 
     realtimequiz_set_image('tick',"<?php echo $tickimg ?>");
     realtimequiz_set_image('cross',"<?php echo $crossimg ?>");
@@ -137,6 +141,8 @@ echo $OUTPUT->box_start('generalbox boxwidthwide boxaligncenter realtimequizbox'
     realtimequiz_set_text('startquiz',"<?php print_string('startquiz', 'realtimequiz') ?>");
     realtimequiz_set_text('teacherstartinstruct',"<?php print_string('teacherstartinstruct', 'realtimequiz') ?>");
     realtimequiz_set_text('teacherjoinquizinstruct',"<?php print_string('teacherjoinquizinstruct', 'realtimequiz') ?>");
+    realtimequiz_set_text('reconnectquiz',"<?php print_string('reconnectquiz', 'realtimequiz') ?>");
+    realtimequiz_set_text('reconnectinstruct',"<?php print_string('reconnectinstruct', 'realtimequiz') ?>");
 </script>
 
 <?php

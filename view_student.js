@@ -6,7 +6,7 @@
  **/
 
 // Set up the variables used throughout the javascript
-var realtimequiz=new Object();
+var realtimequiz = {};
 realtimequiz.givenanswer=false;
 realtimequiz.timeleft=-1;
 realtimequiz.timer=null;
@@ -22,11 +22,13 @@ realtimequiz.myscore=0;
 realtimequiz.myanswer=-1;
 realtimequiz.resendtimer = null;
 realtimequiz.resenddelay = 2000; // How long to wait before resending request
+realtimequiz.alreadyrunning = false;
+realtimequiz.questionviewinitialised = false;
 
 realtimequiz.markedquestions = 0;
 
-realtimequiz.image = new Array();
-realtimequiz.text = new Array();
+realtimequiz.image = [];
+realtimequiz.text = [];
 
 /**************************************************
  * Debugging
@@ -87,6 +89,10 @@ function realtimequiz_set_siteroot(url) {
     realtimequiz.siteroot = url;
 }
 
+function realtimequiz_set_running(running) {
+    realtimequiz.alreadyrunning = running;
+}
+
 /**************************************************
  * Set up the basic layout of the student view
  **************************************************/
@@ -97,6 +103,9 @@ function realtimequiz_init_student_view() {
 }
 
 function realtimequiz_init_question_view() {
+    if (realtimequiz.questionviewinitialised) {
+        return;
+    }
     if (realtimequiz.controlquiz) {
         document.getElementById("questionarea").innerHTML = "<h1><span id='questionnumber'>"+realtimequiz.text['waitstudent']+"</span></h1><div id='questionimage'></div><div id='questiontext'>"+realtimequiz.text['clicknext']+"</div><ul id='answers'></ul><p><span id='status'></span> <span id='timeleft'></span></p>";
         document.getElementById("questionarea").innerHTML += "<div id='questioncontrols'></div><br style='clear: both;' />";
@@ -106,8 +115,7 @@ function realtimequiz_init_question_view() {
         realtimequiz_get_question();
         realtimequiz.myscore = 0;
     }
-
-
+    realtimequiz.questionviewinitialised = true;
 }
 
 /**************************************************
@@ -427,6 +435,10 @@ function realtimequiz_process_contents(httpRequest) {
                 realtimequiz_delayed_request("realtimequiz_resend_request()", 700);
 
             } else {
+
+                // Make sure the question view has been initialised, before displaying the question.
+                realtimequiz_init_question_view();
+
                 var quizstatus = node_text(quizresponse.getElementsByTagName('status').item(0));
                 if (quizstatus == 'showquestion') {
                     realtimequiz.questionxml = quizresponse.getElementsByTagName('question').item(0);
@@ -445,6 +457,7 @@ function realtimequiz_process_contents(httpRequest) {
                             realtimequiz_set_question();
                         }
                     }
+                    realtimequiz_update_next_button(false); // Just in case.
 
                 } else if (quizstatus == 'showresults') {
                     var questionnum = parseInt(node_text(quizresponse.getElementsByTagName('questionnum').item(0)));
