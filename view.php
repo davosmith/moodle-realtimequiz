@@ -42,13 +42,17 @@ if ($questioncount == 0 && has_capability('mod/realtimequiz:editquestions', $con
 
 require_capability('mod/realtimequiz:attempt', $context);
 
-$params = array(
-    'context' => $context,
-    'objectid' => $realtimequiz->id
-);
-$event = \mod_realtimequiz\event\course_module_viewed::create($params);
-$event->add_record_snapshot('realtimequiz', $realtimequiz);
-$event->trigger();
+if ($CFG->version > 2014051200) { // Moodle 2.7+
+    $params = array(
+        'context' => $context,
+        'objectid' => $realtimequiz->id
+    );
+    $event = \mod_realtimequiz\event\course_module_viewed::create($params);
+    $event->add_record_snapshot('realtimequiz', $realtimequiz);
+    $event->trigger();
+} else {
+    add_to_log($course->id, 'realtimequiz', 'view all', "index.php?id=$course->id", "");
+}
 
 /// Print the page header
 

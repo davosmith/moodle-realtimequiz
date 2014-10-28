@@ -87,16 +87,20 @@ if ($questionid != 0) {
 }
 
 // Log that the responses were viewed.
-$params = array(
-    'context' => $context,
-    'other' => array(
-        'quizid' => $realtimequiz->id
-    )
-);
-$event = \mod_realtimequiz\event\responses_viewed::create($params);
-$event->add_record_snapshot('course', $course);
-$event->add_record_snapshot('realtimequiz', $realtimequiz);
-$event->trigger();
+if ($CFG->version > 2014051200) { // Moodle 2.7+
+    $params = array(
+        'context' => $context,
+        'other' => array(
+            'quizid' => $realtimequiz->id
+        )
+    );
+    $event = \mod_realtimequiz\event\responses_viewed::create($params);
+    $event->add_record_snapshot('course', $course);
+    $event->add_record_snapshot('realtimequiz', $realtimequiz);
+    $event->trigger();
+} else {
+    add_to_log($course->id, "realtimequiz", "seeresponses", "responses.php?id=$cm->id", "$realtimequiz->id");
+}
 
 /// Print the page header
 

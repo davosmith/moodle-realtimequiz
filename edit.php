@@ -46,15 +46,19 @@ if ($CFG->version < 2011120100) {
 require_capability('mod/realtimequiz:editquestions', $context);
 
 // Log this visit.
-$params = array(
-    'courseid' => $course->id,
-    'context' => $context,
-    'other' => array(
-        'quizid' => $quiz->id
-    )
-);
-$event = \mod_realtimequiz\event\edit_page_viewed::create($params);
-$event->trigger();
+if ($CFG->version > 2014051200) { // Moodle 2.7+
+    $params = array(
+        'courseid' => $course->id,
+        'context' => $context,
+        'other' => array(
+            'quizid' => $quiz->id
+        )
+    );
+    $event = \mod_realtimequiz\event\edit_page_viewed::create($params);
+    $event->trigger();
+} else {
+    add_to_log($course->id, "realtimequiz", "update: $action", "edit.php?quizid=$quizid");
+}
 
 // Some useful functions:
 function realtimequiz_list_questions($quizid, $cm) {

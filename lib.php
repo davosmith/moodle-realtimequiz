@@ -89,6 +89,31 @@ function realtimequiz_delete_instance($id) {
 }
 
 /**
+ * Return a small object with summary information about what a
+ * user has done with a given particular instance of this module
+ * Used for user activity reports.
+ * $return->time = the time they did it
+ * $return->info = a short text description
+ *
+ * @return null
+ * @todo Finish documenting this function
+ **/
+function realtimequiz_user_outline($course, $user, $mod, $realtimequiz) {
+    return null;
+}
+
+/**
+ * Print a detailed representation of what a user has done with
+ * a given particular instance of this module, for user activity reports.
+ *
+ * @return boolean
+ * @todo Finish documenting this function
+ **/
+function realtimequiz_user_complete($course, $user, $mod, $realtimequiz) {
+    return true;
+}
+
+/**
  * Given a course and a time, this module should find recent activity
  * that has occurred in realtimequiz activities and print it out.
  * Return true if there was output, or false is there was none.

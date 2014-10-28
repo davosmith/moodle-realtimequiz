@@ -19,13 +19,16 @@ $PAGE->set_url(new moodle_url('/mod/realtimequiz/index.php',array('id'=>$course-
 require_course_login($course);
 $PAGE->set_pagelayout('incourse');
 
-$params = array(
-    'context' => context_course::instance($course->id)
-);
-$event = \mod_realtimequiz\event\course_module_instance_list_viewed::create($params);
-$event->add_record_snapshot('course', $course);
-$event->trigger();
-
+if ($CFG->version > 2014051200) { // Moodle 2.7+
+    $params = array(
+        'context' => context_course::instance($course->id)
+    );
+    $event = \mod_realtimequiz\event\course_module_instance_list_viewed::create($params);
+    $event->add_record_snapshot('course', $course);
+    $event->trigger();
+} else {
+    add_to_log($course->id, "realtimequiz", "view all", "index.php?id=$course->id", "");
+}
 
 /// Get all required strings
 
