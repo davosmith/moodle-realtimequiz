@@ -86,7 +86,17 @@ if ($questionid != 0) {
     }
 }
 
-add_to_log($course->id, "realtimequiz", "seeresponses", "responses.php?id=$cm->id", "$realtimequiz->id");
+// Log that the responses were viewed.
+$params = array(
+    'context' => $context,
+    'other' => array(
+        'quizid' => $realtimequiz->id
+    )
+);
+$event = \mod_realtimequiz\event\responses_viewed::create($params);
+$event->add_record_snapshot('course', $course);
+$event->add_record_snapshot('realtimequiz', $realtimequiz);
+$event->trigger();
 
 /// Print the page header
 

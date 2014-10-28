@@ -44,7 +44,17 @@ if ($CFG->version < 2011120100) {
     $context = context_module::instance($cm->id);
 }
 require_capability('mod/realtimequiz:editquestions', $context);
-add_to_log($course->id, "realtimequiz", "update: $action", "edit.php?quizid=$quizid");
+
+// Log this visit.
+$params = array(
+    'courseid' => $course->id,
+    'context' => $context,
+    'other' => array(
+        'quizid' => $quiz->id
+    )
+);
+$event = \mod_realtimequiz\event\edit_page_viewed::create($params);
+$event->trigger();
 
 // Some useful functions:
 function realtimequiz_list_questions($quizid, $cm) {
