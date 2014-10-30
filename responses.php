@@ -177,7 +177,12 @@ if ($questionid == 0) { // Show all of the questions
 
     if ($showusers) {
         $linkurl->param('showusers', 1);
-        $sql = 'SELECT DISTINCT u.id, u.firstname, u.lastname
+        if ($CFG->version < 2013111800) {
+            $usernames = 'u.firstname, u.lastname';
+        } else {
+            $usernames = get_all_user_name_fields(true, 'u');
+        }
+        $sql = 'SELECT DISTINCT u.id, '.$usernames.'
                   FROM {user} u
                   JOIN {realtimequiz_submitted} s ON s.userid = u.id
                   JOIN {realtimequiz_question} q ON s.questionid = q.id

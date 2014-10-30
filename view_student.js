@@ -147,13 +147,13 @@ function realtimequiz_clear_answers() {
     realtimequiz.answernumber = 0;
 }
 
-function realtimequiz_set_answer(id, text) {
+function realtimequiz_set_answer(id, text, position) {
     if (realtimequiz.answernumber > realtimequiz.maxanswers || realtimequiz.answernumber < 0) {
         alert(realtimequiz.text['invalidanswer'] + realtimequiz.answernumber + ' - ' + text);
     }
 
     var letter = String.fromCharCode(65 + realtimequiz.answernumber);        //ASCII 'A'
-    var newanswer = '<li id="answer'+id+'"><input '
+    var newanswer = '<li id="answer'+id+'" data-position="'+position+'"><input ';
     if (realtimequiz.controlquiz) {
         newanswer += 'disabled=disabled ';
     }
@@ -190,7 +190,7 @@ function realtimequiz_set_question() {
     var answers = realtimequiz.questionxml.getElementsByTagName('answer');
     realtimequiz_clear_answers();
     for (var i=0; i<answers.length; i++) {
-        realtimequiz_set_answer(parseInt(answers[i].getAttribute('id')), node_text(answers[i]));
+        realtimequiz_set_answer(parseInt(answers[i].getAttribute('id')), node_text(answers[i]), i+1);
     }
     realtimequiz.givenanswer = false;
     realtimequiz.myanswer = -1;
@@ -227,7 +227,7 @@ function realtimequiz_set_result(answerid, correct, count, nocorrect) {
 }
 
 function realtimequiz_show_final_results(quizresponse) {
-    if (realtimequiz.markedquestions > 0) {
+    if (realtimequiz.controlquiz || realtimequiz.markedquestions > 0) {
         var classresult = node_text(quizresponse.getElementsByTagName('classresult').item(0));
         var msg = '<h1>'+realtimequiz.text['finalresults']+'</h1>';
         msg += '<p>'+realtimequiz.text['classresult']+classresult+'%'+realtimequiz.text['resultcorrect'];
@@ -480,6 +480,7 @@ function realtimequiz_process_contents(httpRequest) {
                         }
                         if (nocorrect) {
                             realtimequiz.myscore++; // Always correct if no 'correct' answers
+                            realtimequiz_set_status('');
                         } else {
                             var statistics = quizresponse.getElementsByTagName('statistics').item(0);
                             var status = realtimequiz.text['resultthisquestion']+'<strong>';
