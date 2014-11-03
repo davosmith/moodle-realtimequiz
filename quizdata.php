@@ -9,7 +9,7 @@
 define('AJAX_SCRIPT', true);
 
 require_once('../../config.php');
-global $CFG, $DB, $USER;
+global $CFG, $DB, $USER, $PAGE;
 require_once($CFG->dirroot.'/mod/realtimequiz/lib.php');
 require_once($CFG->dirroot.'/mod/realtimequiz/locallib.php');
 require_once($CFG->libdir.'/filelib.php');
@@ -45,6 +45,7 @@ if ($CFG->version < 2011120100) {
 } else {
     $context = context_module::instance($cm->id);
 }
+$PAGE->set_context($context);
 
 if (!has_capability('mod/realtimequiz:attempt', $context)) {
     realtimequiz_send_error(get_string('notallowedattempt','realtimequiz'));
