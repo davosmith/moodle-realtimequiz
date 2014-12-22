@@ -191,6 +191,10 @@ function realtimequiz_scale_used ($realtimequizid,$scaleid) {
     return $return;
 }
 
+function realtimequiz_scale_used_anywhere($scaleid) {
+    return false;
+}
+
 //////////////////////////////////////////////////////////////////////////////////////
 /// Any other realtimequiz functions go here.  Each of them must have a name that 
 /// starts with realtimequiz_
