@@ -43,7 +43,7 @@ Feature: Students can attempt a quiz under the control of a teacher
     And I set the field "No 'right' answer" to "1"
     And I press "Save question"
 
-  @javascript @wip
+  @javascript
   Scenario: Teacher starts quiz, then students attempt it
     When I follow "View quiz"
     And I set the field "sessionname" to "Test session"
