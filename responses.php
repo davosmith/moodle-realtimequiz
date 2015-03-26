@@ -114,7 +114,9 @@ echo $OUTPUT->heading(format_string($realtimequiz->name));
 
 realtimequiz_view_tabs('responses', $cm->id, $context);
 
-$sessions = $DB->get_records('realtimequiz_session', array('quizid' => $realtimequiz->id), 'timestamp');
+$select = "quizid = ? AND id IN (SELECT sessionid FROM {realtimequiz_submitted})";
+$params = array($realtimequiz->id);
+$sessions = $DB->get_records_select('realtimequiz_session', $select, $params, 'timestamp');
 if (empty($sessions)) {
     echo $OUTPUT->box_start('generalbox boxwidthwide boxaligncenter realtimequizbox');
     print_string('nosessions','realtimequiz');
