@@ -137,9 +137,13 @@ echo $OUTPUT->box_start('generalbox boxwidthwide boxaligncenter realtimequizbox'
 
 
     // Used by view_teacher.js
+    realtimequiz_set_text('joinquizasstudent',"<?php print_string('joinquizasstudent', 'realtimequiz') ?>");
     realtimequiz_set_text('next',"<?php print_string('next', 'realtimequiz') ?>");
     realtimequiz_set_text('startquiz',"<?php print_string('startquiz', 'realtimequiz') ?>");
+    realtimequiz_set_text('startnewquiz',"<?php print_string('startnewquiz', 'realtimequiz') ?>");
+    realtimequiz_set_text('startnewquizconfirm',"<?php print_string('startnewquizconfirm', 'realtimequiz') ?>");
     realtimequiz_set_text('teacherstartinstruct',"<?php print_string('teacherstartinstruct', 'realtimequiz') ?>");
+    realtimequiz_set_text('teacherstartnewinstruct',"<?php print_string('teacherstartnewinstruct', 'realtimequiz') ?>");
     realtimequiz_set_text('teacherjoinquizinstruct',"<?php print_string('teacherjoinquizinstruct', 'realtimequiz') ?>");
     realtimequiz_set_text('reconnectquiz',"<?php print_string('reconnectquiz', 'realtimequiz') ?>");
     realtimequiz_set_text('reconnectinstruct',"<?php print_string('reconnectinstruct', 'realtimequiz') ?>");
