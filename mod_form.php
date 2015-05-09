@@ -29,9 +29,9 @@ require_once($CFG->dirroot.'/course/moodleform_mod.php');
 class mod_realtimequiz_mod_form extends moodleform_mod {
 
     function definition() {
+        global $CFG;
 
-        global $COURSE;
-        $mform =& $this->_form;
+        $mform = $this->_form;
 
         //-------------------------------------------------------------------------------
         /// Adding the "general" fieldset, where all the common settings are showed
@@ -43,7 +43,11 @@ class mod_realtimequiz_mod_form extends moodleform_mod {
         $mform->addRule('name', null, 'required', null, 'client');
         $mform->addRule('name', get_string('maximumchars', '', 255), 'maxlength', 255, 'client');
 
-        $this->add_intro_editor(true, get_string('realtimequizintro', 'realtimequiz'));
+        if ($CFG->branch < 29) {
+            $this->add_intro_editor(true, get_string('realtimequizintro', 'realtimequiz'));
+        } else {
+            $this->standard_intro_elements(get_string('realtimequizintro', 'realtimequiz'));
+        }
 
         //-------------------------------------------------------------------------------
 
