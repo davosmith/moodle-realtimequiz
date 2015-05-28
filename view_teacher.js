@@ -44,6 +44,13 @@ function realtimequiz_start_quiz() {
     realtimequiz_first_question();
 }
 
+function realtimequiz_start_new_quiz() {
+    var confirm = window.confirm(realtimequiz.text['startnewquizconfirm']);
+    if (confirm == true) {
+        realtimequiz_start_quiz();
+    }
+}
+
 function realtimequiz_reconnect_quiz() {
     realtimequiz.controlquiz = true;
     realtimequiz_create_request('requesttype=teacherrejoin&quizid='+realtimequiz.quizid);
@@ -51,14 +58,18 @@ function realtimequiz_reconnect_quiz() {
 
 function realtimequiz_init_teacher_view() {
     realtimequiz.controlquiz = false;     // Set to true when controlling the quiz
-    var msg = "<center><input type='button' onclick='realtimequiz_start_quiz();' value='"+realtimequiz.text['startquiz']+"' /> <input type='text' name='sessionname' id='sessionname' maxlength='255' value='' />";
-    msg += "<p>"+realtimequiz.text['teacherstartinstruct']+"</p>";
+    var msg = "<div style='text-align: center;'>";
     if (realtimequiz.alreadyrunning) {
         msg += "<input type='button' onclick='realtimequiz_reconnect_quiz();' value='" + realtimequiz.text['reconnectquiz'] + "' />";
         msg += "<p>"+realtimequiz.text['reconnectinstruct']+"</p>";
+        msg += "<input type='button' onclick='realtimequiz_start_new_quiz();' value='" + realtimequiz.text['startnewquiz'] + "' /> <input type='text' name='sessionname' id='sessionname' maxlength='255' value='' />";
+        msg += "<p>" + realtimequiz.text['teacherstartnewinstruct'] + "</p>";
+    } else {
+        msg += "<input type='button' onclick='realtimequiz_start_quiz();' value='" + realtimequiz.text['startquiz'] + "' /> <input type='text' name='sessionname' id='sessionname' maxlength='255' value='' />";
+        msg += "<p>" + realtimequiz.text['teacherstartinstruct'] + "</p>";
     }
-    msg += "<input type='button' onclick='realtimequiz_join_quiz();' value='"+realtimequiz.text['joinquiz']+"' />";
-    msg += "<p id='status'>"+realtimequiz.text['teacherjoinquizinstruct']+"</p></center>";
+    msg += "<input type='button' onclick='realtimequiz_join_quiz();' value='"+realtimequiz.text['joinquizasstudent']+"' />";
+    msg += "<p id='status'>"+realtimequiz.text['teacherjoinquizinstruct']+"</p></div>";
     document.getElementById('questionarea').innerHTML = msg;
 }
 
