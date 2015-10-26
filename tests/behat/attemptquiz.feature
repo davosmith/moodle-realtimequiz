@@ -18,7 +18,7 @@ Feature: Students can attempt a quiz under the control of a teacher
     And I add a "Realtime quiz" to section "1" and I fill the form with:
       | Realtime quiz         | Test realtime quiz                |
       | Introduction          | Test the realtime quiz is working |
-      | Default question time | 30                                |
+      | Default question time | 15                                |
     And I follow "Test realtime quiz"
     And I press "Add question"
     And I set the following fields to these values:
