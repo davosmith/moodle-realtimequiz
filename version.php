@@ -21,7 +21,7 @@ $plugin->component = 'mod_realtimequiz';
 $plugin->maturity  = MATURITY_STABLE;
 $plugin->release   = '2.x (Build: 2015110800)';
 
-if ($CFG->branch < 26) {
+if (isset($CFG->branch) && $CFG->branch < 26) {
     $module->version = $plugin->version;
     $module->requires = $plugin->requires;
     $module->cron = $plugin->cron;
