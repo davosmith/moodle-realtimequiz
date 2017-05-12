@@ -13,8 +13,7 @@ Feature: Students can attempt a quiz under the control of a teacher
       | teacher1 | C1     | editingteacher |
       | student1 | C1     | student        |
     Given I log in as "teacher1"
-    And I follow "Course 1"
-    And I turn editing mode on
+    And I am on "Course 1" course homepage with editing mode on
     And I add a "Realtime quiz" to section "1" and I fill the form with:
       | Realtime quiz         | Test realtime quiz                |
       | Introduction          | Test the realtime quiz is working |
@@ -54,7 +53,7 @@ Feature: Students can attempt a quiz under the control of a teacher
     Then I should see "Which UK city is known as the Steel City?"
     When I log out
     And I log in as "student1"
-    And I follow "Course 1"
+    And I am on "Course 1" course homepage
     And I follow "Test realtime quiz"
     And I press "Join"
     Then I should see "Which UK city is known as the Steel City?"
@@ -63,7 +62,7 @@ Feature: Students can attempt a quiz under the control of a teacher
     # Question 1 results.
     When I log out
     And I log in as "teacher1"
-    And I follow "Course 1"
+    And I am on "Course 1" course homepage
     And I follow "Test realtime quiz"
     And I press "Reconnect to quiz"
     And I wait "10" seconds
@@ -81,7 +80,7 @@ Feature: Students can attempt a quiz under the control of a teacher
     Then I should see "How many trees are there in Sheffield?"
     And I log out
     And I log in as "student1"
-    And I follow "Course 1"
+    And I am on "Course 1" course homepage
     And I follow "Test realtime quiz"
     And I press "Join"
     Then I should see "How many trees are there in Sheffield?"
@@ -90,7 +89,7 @@ Feature: Students can attempt a quiz under the control of a teacher
     # Question 2 results.
     When I log out
     And I log in as "teacher1"
-    And I follow "Course 1"
+    And I am on "Course 1" course homepage
     And I follow "Test realtime quiz"
     And I press "Reconnect to quiz"
     And I wait "10" seconds
@@ -107,7 +106,7 @@ Feature: Students can attempt a quiz under the control of a teacher
     Then I should see "What is your favourite colour?"
     And I log out
     And I log in as "student1"
-    And I follow "Course 1"
+    And I am on "Course 1" course homepage
     And I follow "Test realtime quiz"
     And I press "Join"
     Then I should see "What is your favourite colour?"
@@ -116,7 +115,7 @@ Feature: Students can attempt a quiz under the control of a teacher
     # Question 3 results.
     When I log out
     And I log in as "teacher1"
-    And I follow "Course 1"
+    And I am on "Course 1" course homepage
     And I follow "Test realtime quiz"
     And I press "Reconnect to quiz"
     And I wait "10" seconds
@@ -144,11 +143,11 @@ Feature: Students can attempt a quiz under the control of a teacher
     And "1" "text" in the "What is your favourite colour?" "table_row" should be visible
     And "0" "text" in the "What is your favourite colour?" "table_row" should be visible
     When I follow "Which UK city is known as the Steel City?"
-    Then "img[alt='Correct answer']" "css_element" in the "Student 1" "table_row" should be visible
+    Then "*[title='Correct answer']" "css_element" in the "Student 1" "table_row" should be visible
     When I press "Next question"
-    Then "img[alt='Wrong answer']" "css_element" in the "Student 1" "table_row" should be visible
+    Then "*[title='Wrong answer']" "css_element" in the "Student 1" "table_row" should be visible
     When I press "Next question"
-    Then "img[alt='Correct answer']" "css_element" in the "Student 1" "table_row" should be visible
+    Then "*[title='Correct answer']" "css_element" in the "Student 1" "table_row" should be visible
     When I press "Back to full results"
     And I follow "Show users"
     Then I should see "Student 1"

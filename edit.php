@@ -84,19 +84,25 @@ function realtimequiz_list_questions($quizid, $cm) {
         echo " </span><span class='realtimequiz_editicons'>";
         if ($question->questionnum > 1) {
             $alt = get_string('questionmoveup', 'mod_realtimequiz', $question->questionnum);
-            echo "<a href='edit.php?quizid=$quizid&amp;action=moveup&amp;questionid=$question->id'><img src='".$OUTPUT->pix_url('t/up')."' alt='{$alt}' title='{$alt}' /></a> ";
+            echo "<a href='edit.php?quizid=$quizid&amp;action=moveup&amp;questionid=$question->id'>";
+            echo $OUTPUT->pix_icon('t/up', $alt);
+            echo '</a>';
         } else {
-            echo '<img src="'.$OUTPUT->pix_url('spacer').'" width="15px" />';
+            echo $OUTPUT->spacer(['width' => '16px']);
         }
         if ($question->questionnum < $questioncount) {
             $alt = get_string('questionmovedown', 'mod_realtimequiz', $question->questionnum);
-            echo "<a href='edit.php?quizid=$quizid&amp;action=movedown&amp;questionid=$question->id'><img src='".$OUTPUT->pix_url('t/down')."' alt='{$alt}' title='{$alt}' /></a> ";
+            echo "<a href='edit.php?quizid=$quizid&amp;action=movedown&amp;questionid=$question->id'>";
+            echo $OUTPUT->pix_icon('t/down', $alt);
+            echo '</a>';
         } else {
-            echo '<img src="'.$OUTPUT->pix_url('spacer').'" width="15px" />';
+            echo $OUTPUT->spacer(['width' => '15px']);
         }
         echo '&nbsp;';
         $alt = get_string('questiondelete', 'mod_realtimequiz', $question->questionnum);
-        echo "<a href='edit.php?quizid=$quizid&amp;action=deletequestion&amp;questionid=$question->id'><img src='".$OUTPUT->pix_url('t/delete')."' alt='{$alt}' title='{$alt}' /></a>";
+        echo "<a href='edit.php?quizid=$quizid&amp;action=deletequestion&amp;questionid=$question->id'>";
+        echo $OUTPUT->pix_icon('t/delete', $alt);
+        echo '</a>';
         echo '</span></li>';
         $expectednumber++;
     }

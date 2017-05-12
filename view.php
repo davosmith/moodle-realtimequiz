@@ -78,8 +78,8 @@ if ($CFG->version < 2013111800) {
     $tickimg = $OUTPUT->pix_url('i/tick_green_big');
     $crossimg = $OUTPUT->pix_url('i/cross_red_big');
 } else {
-    $tickimg = $OUTPUT->pix_url('i/grade_correct');
-    $crossimg = $OUTPUT->pix_url('i/grade_incorrect');
+    $tickimg = $OUTPUT->image_url('i/grade_correct');
+    $crossimg = $OUTPUT->image_url('i/grade_incorrect');
 }
 
 
@@ -100,7 +100,7 @@ echo $OUTPUT->box_start('generalbox boxwidthwide boxaligncenter realtimequizbox'
 
     realtimequiz_set_image('tick',"<?php echo $tickimg ?>");
     realtimequiz_set_image('cross',"<?php echo $crossimg ?>");
-    realtimequiz_set_image('blank',"<?php echo $OUTPUT->pix_url('spacer'); ?>");
+    realtimequiz_set_image('blank',"<?php echo $OUTPUT->image_url('spacer'); ?>");
 
     //Pass all the text strings into the javascript (to allow for translation)
     // Used by view_student.js

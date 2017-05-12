@@ -14,7 +14,7 @@ Feature: Teacher can create a realtime quiz and edit the questions
   @javascript
   Scenario: Create a quiz and edit the questions
     Given I log in as "teacher1"
-    And I follow "Course 1"
+    And I am on "Course 1" course homepage
     And I turn editing mode on
     And I add a "Realtime quiz" to section "1" and I fill the form with:
       | Realtime quiz         | Test realtime quiz                |
@@ -84,4 +84,3 @@ Feature: Teacher can create a realtime quiz and edit the questions
     # Check the responses are empty.
     When I follow "View responses"
     Then I should see "This Realtime quiz has not yet been attempted"
-

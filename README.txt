@@ -13,6 +13,7 @@ The teacher can, at a later date, go back through the results and, for each ques
 Changes:
 --------
 
+2017-05-12 - Moodle 3.3 compatibility fixes.
 2015-11-08 - Moodle 3.0 minor compatibility fix.
 2015-05-09 - Moodle 2.9 compatibility fixes.
 2014-10-28 - Moodle 2.7 compatibility fixes (from Tony Butler); reduced server load with large number of clients (from Ruslan Kabalin); ability for teachers to reconnect to running quizzes, if they navigate away from them

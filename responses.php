@@ -158,8 +158,8 @@ if ($CFG->version < 2013111800) {
     $tickimg = '<img src="'.$OUTPUT->pix_url('i/tick_green_big').'" alt="'.get_string('tick','realtimequiz').'" />';
     $crossimg = '<img src="'.$OUTPUT->pix_url('i/cross_red_big').'" alt="'.get_string('cross','realtimequiz').'" />';
 } else {
-    $tickimg = '<img src="'.$OUTPUT->pix_url('i/grade_correct').'" alt="'.get_string('tick','realtimequiz').'" />';
-    $crossimg = '<img src="'.$OUTPUT->pix_url('i/grade_incorrect').'" alt="'.get_string('cross','realtimequiz').'" />';
+    $tickimg = $OUTPUT->pix_icon('i/grade_correct', get_string('tick', 'realtimequiz'));
+    $crossimg = $OUTPUT->pix_icon('i/grade_incorrect', get_string('cross', 'realtimequiz'));
 }
 
 if ($questionid == 0) { // Show all of the questions
