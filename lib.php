@@ -1,4 +1,21 @@
 <?php
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
+defined('MOODLE_INTERNAL') || die();
+
 /**
  * Library of functions and constants for module realtimequiz
  *
@@ -6,14 +23,13 @@
  * @package realtimequiz
  **/
 
-
 /**
  * Given an object containing all the necessary data,
  * (defined by the form in mod.html) this function
  * will create a new instance and return the id number
  * of the new instance.
  *
- * @param object $instance An object from the form in mod.html
+ * @param object $realtimequiz An object from the form in mod.html
  * @return int The id of the newly inserted realtimequiz record
  **/
 function realtimequiz_add_instance($realtimequiz) {
@@ -37,7 +53,7 @@ function realtimequiz_add_instance($realtimequiz) {
  * (defined by the form in mod.html) this function
  * will update an existing instance with new data.
  *
- * @param object $instance An object from the form in mod.html
+ * @param object $realtimequiz An object from the form in mod.html
  * @return boolean Success/Fail
  **/
 function realtimequiz_update_instance($realtimequiz) {
@@ -67,22 +83,23 @@ function realtimequiz_update_instance($realtimequiz) {
 function realtimequiz_delete_instance($id) {
     global $DB;
 
-    if (! $realtimequiz = $DB->get_record('realtimequiz', array('id' => $id))) {
+    if (!$realtimequiz = $DB->get_record('realtimequiz', array('id' => $id))) {
         return false;
     }
 
     $result = true;
 
     $questions = $DB->get_records('realtimequiz_question', array('quizid' => $id));
-    foreach ($questions as $question) { // Get each question
+    foreach ($questions as $question) { // Get each question.
         $answers = $DB->get_records('realtimequiz_answer', array('questionid' => $question->id));
         foreach ($answers as $answer) { // Get each answer for that question
-            $DB->delete_records('realtimequiz_submitted', array('answerid' => $answer->id)); // Delete each submission for that answer
+            // Delete each submission for that answer.
+            $DB->delete_records('realtimequiz_submitted', array('answerid' => $answer->id));
         }
-        $DB->delete_records('realtimequiz_answer', array('questionid' => $question->id)); // Delete each answer
+        $DB->delete_records('realtimequiz_answer', array('questionid' => $question->id)); // Delete each answer.
     }
-    $DB->delete_records('realtimequiz_question', array('quizid' => $id)); // Delete each question
-    $DB->delete_records('realtimequiz_session', array('quizid' => $id)); // Delete each session
+    $DB->delete_records('realtimequiz_question', array('quizid' => $id)); // Delete each question.
+    $DB->delete_records('realtimequiz_session', array('quizid' => $id)); // Delete each session.
     $DB->delete_records('realtimequiz', array('id' => $realtimequiz->id));
 
     return $result;
@@ -123,7 +140,7 @@ function realtimequiz_user_complete($course, $user, $mod, $realtimequiz) {
  * @todo Finish documenting this function
  **/
 function realtimequiz_print_recent_activity($course, $isteacher, $timestart) {
-    return false;  //  True if anything was printed, otherwise false 
+    return false;  //  True if anything was printed, otherwise false.
 }
 
 /**
@@ -135,7 +152,7 @@ function realtimequiz_print_recent_activity($course, $isteacher, $timestart) {
  * @return boolean
  * @todo Finish documenting this function
  **/
-function realtimequiz_cron () {
+function realtimequiz_cron() {
     return true;
 }
 
@@ -153,7 +170,7 @@ function realtimequiz_cron () {
  * @return mixed Null or object with an array of grades and with the maximum grade
  **/
 function realtimequiz_grades($realtimequizid) {
-    return NULL;
+    return null;
 }
 
 /**
@@ -179,14 +196,8 @@ function realtimequiz_get_participants($realtimequizid) {
  * @return mixed
  * @todo Finish documenting this function
  **/
-function realtimequiz_scale_used ($realtimequizid,$scaleid) {
+function realtimequiz_scale_used($realtimequizid, $scaleid) {
     $return = false;
-
-    //$rec = get_record("realtimequiz","id","$realtimequizid","scale","-$scaleid");
-    //
-    //if (!empty($rec)  && !empty($scaleid)) {
-    //    $return = true;
-    //}
 
     return $return;
 }
@@ -195,9 +206,9 @@ function realtimequiz_scale_used_anywhere($scaleid) {
     return false;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////
-/// Any other realtimequiz functions go here.  Each of them must have a name that 
-/// starts with realtimequiz_
+// --------------------------------------------------------------------------------
+// Any other realtimequiz functions go here.  Each of them must have a name that
+// starts with realtimequiz_ .
 
 function realtimequiz_view_tabs($currenttab, $cmid, $context) {
     $tabs = array();
@@ -206,17 +217,20 @@ function realtimequiz_view_tabs($currenttab, $cmid, $context) {
     $activated = array();
 
     if (has_capability('mod/realtimequiz:attempt', $context)) {
-        $row[] = new tabobject('view', new moodle_url('/mod/realtimequiz/view.php', array('id' => $cmid)), get_string('view', 'realtimequiz'));
+        $row[] = new tabobject('view', new moodle_url('/mod/realtimequiz/view.php', array('id' => $cmid)),
+                               get_string('view', 'realtimequiz'));
     }
     if (has_capability('mod/realtimequiz:editquestions', $context)) {
-        $row[] = new tabobject('edit', new moodle_url('/mod/realtimequiz/edit.php', array('id' => $cmid)), get_string('edit', 'realtimequiz'));
+        $row[] = new tabobject('edit', new moodle_url('/mod/realtimequiz/edit.php', array('id' => $cmid)),
+                               get_string('edit', 'realtimequiz'));
     }
     if (has_capability('mod/realtimequiz:seeresponses', $context)) {
-        $row[] = new tabobject('responses', new moodle_url('/mod/realtimequiz/responses.php', array('id' => $cmid)), get_string('responses', 'realtimequiz'));
+        $row[] = new tabobject('responses', new moodle_url('/mod/realtimequiz/responses.php', array('id' => $cmid)),
+                               get_string('responses', 'realtimequiz'));
     }
 
     if ($currenttab == 'view' && count($row) == 1) {
-        // No tabs for students
+        // No tabs for students.
         echo '<br />';
     } else {
         $tabs[] = $row;
@@ -237,7 +251,7 @@ function realtimequiz_view_tabs($currenttab, $cmid, $context) {
     print_tabs($tabs, $currenttab, $inactive, $activated);
 }
 
-function realtimequiz_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload, array $options=array()) {
+function realtimequiz_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload, array $options = array()) {
     global $DB;
 
     if ($context->contextlevel != CONTEXT_MODULE) {
@@ -267,7 +281,7 @@ function realtimequiz_pluginfile($course, $cm, $context, $filearea, $args, $forc
         return false;
     }
 
-    // finally send the file
+    // Finally send the file.
     send_stored_file($file);
     return false;
 }
@@ -278,20 +292,33 @@ function realtimequiz_supports($feature) {
         define('FEATURE_PLAGIARISM', 'plagiarism');
     }
 
-    switch($feature) {
-    case FEATURE_GROUPS:                  return false;
-    case FEATURE_GROUPINGS:               return true;
-    case FEATURE_GROUPMEMBERSONLY:        return true;
-    case FEATURE_MOD_INTRO:               return true;
-    case FEATURE_COMPLETION_TRACKS_VIEWS: return false;
-    case FEATURE_COMPLETION_HAS_RULES:    return false;
-    case FEATURE_GRADE_HAS_GRADE:         return false;
-    case FEATURE_GRADE_OUTCOMES:          return false;
-    case FEATURE_RATE:                    return false;
-    case FEATURE_BACKUP_MOODLE2:          return true;
-    case FEATURE_SHOW_DESCRIPTION:        return true;
-    case FEATURE_PLAGIARISM:              return false;
+    switch ($feature) {
+        case FEATURE_GROUPS:
+            return false;
+        case FEATURE_GROUPINGS:
+            return true;
+        case FEATURE_GROUPMEMBERSONLY:
+            return true;
+        case FEATURE_MOD_INTRO:
+            return true;
+        case FEATURE_COMPLETION_TRACKS_VIEWS:
+            return false;
+        case FEATURE_COMPLETION_HAS_RULES:
+            return false;
+        case FEATURE_GRADE_HAS_GRADE:
+            return false;
+        case FEATURE_GRADE_OUTCOMES:
+            return false;
+        case FEATURE_RATE:
+            return false;
+        case FEATURE_BACKUP_MOODLE2:
+            return true;
+        case FEATURE_SHOW_DESCRIPTION:
+            return true;
+        case FEATURE_PLAGIARISM:
+            return false;
 
-    default: return null;
+        default:
+            return null;
     }
 }

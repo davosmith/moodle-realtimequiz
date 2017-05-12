@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -46,7 +45,7 @@ class restore_realtimequiz_activity_structure_step extends restore_activity_stru
                                                 '/activity/realtimequiz/questions/question/submissions/submission');
         }
 
-        // Return the paths wrapped into standard activity structure
+        // Return the paths wrapped into standard activity structure.
         return $this->prepare_activity_structure($paths);
     }
 
@@ -54,7 +53,6 @@ class restore_realtimequiz_activity_structure_step extends restore_activity_stru
         global $DB;
 
         $data = (object)$data;
-        $oldid = $data->id;
         $data->course = $this->get_courseid();
 
         $data->timecreated = $this->apply_date_offset($data->timecreated);
@@ -105,20 +103,19 @@ class restore_realtimequiz_activity_structure_step extends restore_activity_stru
         global $DB;
 
         $data = (object)$data;
-        $oldid = $data->id;
 
         $data->questionid = $this->get_new_parentid('realtimequiz_question');
         $data->userid = $this->get_mappingid('user', $data->userid);
         $data->answerid = $this->get_mappingid('realtimequiz_answer', $data->answerid);
 
         if ($data->answerid) {
-            // Skip any user responses that don't match an existing answer
-            $newitemid = $DB->insert_record('realtimequiz_submitted', $data);
+            // Skip any user responses that don't match an existing answer.
+            $DB->insert_record('realtimequiz_submitted', $data);
         }
     }
 
     protected function after_execute() {
-        // Add question files
+        // Add question files.
         $this->add_related_files('mod_realtimequiz', 'question', 'realtimequiz_question');
     }
 }

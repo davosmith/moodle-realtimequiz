@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -33,10 +32,10 @@ class backup_realtimequiz_activity_structure_step extends backup_activity_struct
 
     protected function define_structure() {
 
-        // To know if we are including userinfo
+        // To know if we are including userinfo.
         $userinfo = $this->get_setting_value('userinfo');
 
-        // Define each element separated
+        // Define each element separated.
 
         $realtimequiz = new backup_nested_element('realtimequiz', array('id'), array(
             'name', 'intro', 'introformat', 'timecreated', 'timemodified', 'questiontime'
@@ -62,10 +61,9 @@ class backup_realtimequiz_activity_structure_step extends backup_activity_struct
             'sessionid', 'userid', 'answerid'
         ));
 
-
-        // Build the tree
+        // Build the tree.
         if ($userinfo) {
-            // Sessions need to be backed up (& restored) before the questions (with the submissions within them)
+            // Sessions need to be backed up (& restored) before the questions (with the submissions within them).
             $realtimequiz->add_child($sessions);
             $sessions->add_child($session);
         }
@@ -81,7 +79,7 @@ class backup_realtimequiz_activity_structure_step extends backup_activity_struct
             $submissions->add_child($submission);
         }
 
-        // Define sources
+        // Define sources.
 
         $realtimequiz->set_source_table('realtimequiz', array('id' => backup::VAR_ACTIVITYID));
         $question->set_source_table('realtimequiz_question', array('quizid' => backup::VAR_PARENTID));
@@ -92,16 +90,16 @@ class backup_realtimequiz_activity_structure_step extends backup_activity_struct
             $submission->set_source_table('realtimequiz_submitted', array('questionid' => backup::VAR_PARENTID));
         }
 
-        // Define id annotations
+        // Define id annotations.
         if ($userinfo) {
             $submission->annotate_ids('user', 'userid');
         }
 
-        // Define file annotations
-        $realtimequiz->annotate_files('mod_realtimequiz', 'intro', null); // This file area hasn't itemid
+        // Define file annotations.
+        $realtimequiz->annotate_files('mod_realtimequiz', 'intro', null); // This file area hasn't itemid.
         $question->annotate_files('mod_realtimequiz', 'question', 'id');
 
-        // Return the root element (realtimequiz), wrapped into standard activity structure
+        // Return the root element (realtimequiz), wrapped into standard activity structure.
         return $this->prepare_activity_structure($realtimequiz);
     }
 

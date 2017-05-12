@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -23,8 +22,8 @@
  */
 
 defined('MOODLE_INTERNAL') || die();
-
-require_once($CFG->dirroot . '/mod/realtimequiz/backup/moodle2/restore_realtimequiz_stepslib.php'); // Because it exists (must)
+global $CFG;
+require_once($CFG->dirroot.'/mod/realtimequiz/backup/moodle2/restore_realtimequiz_stepslib.php'); // Because it exists (must).
 
 /**
  * realtimequiz restore task that provides all the settings and steps to perform one
@@ -36,14 +35,14 @@ class restore_realtimequiz_activity_task extends restore_activity_task {
      * Define (add) particular settings this activity can have
      */
     protected function define_my_settings() {
-        // No particular settings for this activity
+        // No particular settings for this activity.
     }
 
     /**
      * Define (add) particular steps this activity can have
      */
     protected function define_my_steps() {
-        // Choice only has one structure step
+        // Choice only has one structure step.
         $this->add_step(new restore_realtimequiz_activity_structure_step('realtimequiz_structure', 'realtimequiz.xml'));
     }
 
@@ -67,9 +66,9 @@ class restore_realtimequiz_activity_task extends restore_activity_task {
     static public function define_decode_rules() {
         $rules = array();
 
-        // List of realtimequizs in course
+        // List of realtimequizs in course.
         $rules[] = new restore_decode_rule('REALTIMEQUIZINDEX', '/mod/realtimequiz/index.php?id=$1', 'course');
-        // Realtimequiz by cm->id and realtimequiz->id
+        // Realtimequiz by cm->id and realtimequiz->id.
         $rules[] = new restore_decode_rule('REALTIMEQUIZVIEWBYID', '/mod/realtimequiz/view.php?id=$1', 'course_module');
 
         return $rules;

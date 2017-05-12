@@ -1,12 +1,27 @@
 <?php
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
+defined('MOODLE_INTERNAL') || die;
+
 /**
  * This implements admin settings in realtimequiz
  *
  * @author: Davosmith
  * @package mod_realtimequiz
  **/
-
-defined('MOODLE_INTERNAL') || die;
 
 /**
  * Admin setting for code source, adds validation.
@@ -26,10 +41,10 @@ class realtimequiz_awaittime_setting extends admin_setting_configtext {
     public function validate($data) {
         $result = parent::validate($data);
         if ($result !== true) {
-           return $result;
+            return $result;
         }
         if ((int)$data < 1) {
-           return get_string('awaittimeerror', 'realtimequiz');
+            return get_string('awaittimeerror', 'realtimequiz');
         }
 
         return true;

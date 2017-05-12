@@ -1,4 +1,19 @@
 <?php
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
 /**
  * This allows you to edit questions for a realtimequiz
  *
@@ -6,9 +21,8 @@
  * @package mod_realtimequiz
  **/
 
-
 require_once('../../config.php');
-global $CFG, $DB, $PAGE;
+global $CFG, $DB, $PAGE, $OUTPUT;
 require_once($CFG->dirroot.'/mod/realtimequiz/lib.php');
 
 $id = optional_param('id', false, PARAM_INT);
@@ -46,7 +60,7 @@ if ($CFG->version < 2011120100) {
 require_capability('mod/realtimequiz:editquestions', $context);
 
 // Log this visit.
-if ($CFG->version > 2014051200) { // Moodle 2.7+
+if ($CFG->version > 2014051200) { // Moodle 2.7+.
     $params = array(
         'courseid' => $course->id,
         'context' => $context,
@@ -60,18 +74,18 @@ if ($CFG->version > 2014051200) { // Moodle 2.7+
     add_to_log($course->id, "realtimequiz", "update: $action", "edit.php?quizid=$quizid");
 }
 
-// Some useful functions:
+// Some useful functions.
 function realtimequiz_list_questions($quizid, $cm) {
     global $DB, $OUTPUT;
 
-    echo '<h2>'.get_string('questionslist','realtimequiz').'</h2>';
+    echo '<h2>'.get_string('questionslist', 'realtimequiz').'</h2>';
 
     $questions = $DB->get_records('realtimequiz_question', array('quizid' => $quizid), 'questionnum');
     $questioncount = count($questions);
     $expectednumber = 1;
     echo '<ol>';
     foreach ($questions as $question) {
-        // A good place to double-check the question numbers and fix any that are broken
+        // A good place to double-check the question numbers and fix any that are broken.
         if ($question->questionnum != $expectednumber) {
             $question->questionnum = $expectednumber;
             $DB->update_record('realtimequiz_question', $question);
@@ -107,8 +121,8 @@ function realtimequiz_list_questions($quizid, $cm) {
         $expectednumber++;
     }
     echo '</ol>';
-    $url = new moodle_url('/mod/realtimequiz/editquestion.php', array('quizid'=>$quizid));
-    echo $OUTPUT->single_button($url, get_string('addquestion','realtimequiz'), 'GET');
+    $url = new moodle_url('/mod/realtimequiz/editquestion.php', array('quizid' => $quizid));
+    echo $OUTPUT->single_button($url, get_string('addquestion', 'realtimequiz'), 'GET');
 }
 
 function realtimequiz_confirm_deletequestion($quizid, $questionid, $context) {
@@ -117,14 +131,14 @@ function realtimequiz_confirm_deletequestion($quizid, $questionid, $context) {
     $question = $DB->get_record('realtimequiz_question', array('id' => $questionid, 'quizid' => $quizid), '*', MUST_EXIST);
 
     echo '<center><h2>'.get_string('deletequestion', 'realtimequiz').'</h2>';
-    echo '<p>'.get_string('checkdelete','realtimequiz').'</p><p>';
+    echo '<p>'.get_string('checkdelete', 'realtimequiz').'</p><p>';
     $questiontext = format_text($question->questiontext, $question->questiontextformat);
-    $questiontext =  file_rewrite_pluginfile_urls($questiontext, 'pluginfile.php', $context->id, 'mod_realtimequiz',
-                                                  'question', $questionid);
+    $questiontext = file_rewrite_pluginfile_urls($questiontext, 'pluginfile.php', $context->id, 'mod_realtimequiz',
+                                                 'question', $questionid);
     echo $questiontext;
     echo '</p>';
 
-    $url = new moodle_url('/mod/realtimequiz/edit.php',array('quizid'=>$quizid));
+    $url = new moodle_url('/mod/realtimequiz/edit.php', array('quizid' => $quizid));
     echo '<form method="post" action="'.$url.'">';
     echo '<input type="hidden" name="action" value="dodeletequestion" />';
     echo '<input type="hidden" name="questionid" value="'.$questionid.'" />';
@@ -134,11 +148,11 @@ function realtimequiz_confirm_deletequestion($quizid, $questionid, $context) {
     echo '</form></center>';
 }
 
-// Back to the main code
+// Back to the main code.
 $strrealtimequizzes = get_string("modulenameplural", "realtimequiz");
-$strrealtimequiz  = get_string("modulename", "realtimequiz");
+$strrealtimequiz = get_string("modulename", "realtimequiz");
 
-$PAGE->set_title(strip_tags($course->shortname.': '.$strrealtimequiz.': '.format_string($quiz->name,true)));
+$PAGE->set_title(strip_tags($course->shortname.': '.$strrealtimequiz.': '.format_string($quiz->name, true)));
 $PAGE->set_heading($course->fullname);
 echo $OUTPUT->header();
 
@@ -148,16 +162,15 @@ echo $OUTPUT->box_start('generalbox boxwidthwide boxaligncenter realtimequizbox'
 
 if ($action == 'dodeletequestion') {
 
-    if (!confirm_sesskey()) {
-        error(get_string('badsesskey','realtimequiz'));
-    }
+    require_sesskey();
 
     if (optional_param('yes', false, PARAM_BOOL)) {
         if ($question = $DB->get_record('realtimequiz_question', array('id' => $questionid, 'quizid' => $quiz->id))) {
             $answers = $DB->get_records('realtimequiz_answer', array('questionid' => $question->id));
             if (!empty($answers)) {
                 foreach ($answers as $answer) { // Get each answer for that question.
-                    $DB->delete_records('realtimequiz_submitted', array('answerid' => $answer->id)); // Delete any submissions for that answer.
+                    // Delete any submissions for that answer.
+                    $DB->delete_records('realtimequiz_submitted', array('answerid' => $answer->id));
                 }
             }
             $DB->delete_records('realtimequiz_answer', array('questionid' => $question->id)); // Delete each answer.
@@ -166,19 +179,21 @@ if ($action == 'dodeletequestion') {
             // Delete files embedded in the heading.
             $fs = get_file_storage();
             $fs->delete_area_files($context->id, 'mod_realtimequiz', 'question', $questionid);
-            // Questionnumbers sorted out when we display the list of questions
+            // Questionnumbers sorted out when we display the list of questions.
         }
     }
 
     $action = 'listquestions';
 
-} elseif ($action == 'moveup') {
+} else if ($action == 'moveup') {
 
     $thisquestion = $DB->get_record('realtimequiz_question', array('id' => $questionid));
     if ($thisquestion) {
         $questionnum = $thisquestion->questionnum;
         if ($questionnum > 1) {
-            $swapquestion = $DB->get_record('realtimequiz_question', array('quizid' => $quizid, 'questionnum' => ($questionnum - 1)));
+            $swapquestion = $DB->get_record('realtimequiz_question', array(
+                'quizid' => $quizid, 'questionnum' => ($questionnum - 1)
+            ));
             if ($swapquestion) {
                 $upd = new stdClass;
                 $upd->id = $thisquestion->id;
@@ -189,17 +204,13 @@ if ($action == 'dodeletequestion') {
                 $upd->id = $swapquestion->id;
                 $upd->questionnum = $questionnum;
                 $DB->update_record('realtimequiz_question', $upd);
-                //} else {
-                // FIXME? Is it safe just to ignore this?
             }
         }
-        //} else {
-        // FIXME? Not really that important - can we get away with just ignoring it?
     }
 
     $action = 'listquestions';
 
-} elseif ($action == 'movedown') {
+} else if ($action == 'movedown') {
     $thisquestion = $DB->get_record('realtimequiz_question', array('id' => $questionid));
     if ($thisquestion) {
         $questionnum = $thisquestion->questionnum;
@@ -214,11 +225,7 @@ if ($action == 'dodeletequestion') {
             $upd->id = $swapquestion->id;
             $upd->questionnum = $questionnum;
             $DB->update_record('realtimequiz_question', $upd);
-            //} else {
-            // FIXME? Is it safe just to ignore this?
         }
-        //} else {
-        // FIXME? Not really that important - can we get away with just ignoring it?
     }
 
     $action = 'listquestions';
@@ -226,18 +233,18 @@ if ($action == 'dodeletequestion') {
 
 switch ($action) {
 
-case 'listquestions': //Show all the currently available questions
-    realtimequiz_list_questions($quizid, $cm);
-    break;
+    case 'listquestions': // Show all the currently available questions.
+        realtimequiz_list_questions($quizid, $cm);
+        break;
 
-case 'deletequestion': // Deleting a question - ask 'Are you sure?'
-    realtimequiz_confirm_deletequestion($quizid, $questionid, $context);
-    break;
+    case 'deletequestion': // Deleting a question - ask 'Are you sure?'
+        realtimequiz_confirm_deletequestion($quizid, $questionid, $context);
+        break;
 
 }
 
 echo $OUTPUT->box_end();
 
-/// Finish the page
+// Finish the page.
 echo $OUTPUT->footer();
 

@@ -89,7 +89,8 @@ $editoroptions = array(
 $numanswers = max(count($question->answers), $numanswers);
 $form = new realtimequiz_editquestion_form(null, array('editoroptions' => $editoroptions, 'numanswers' => $numanswers));
 
-$question = file_prepare_standard_editor($question, 'questiontext', $editoroptions, $context, 'mod_realtimequiz', 'question', $question->id);
+$question = file_prepare_standard_editor($question, 'questiontext', $editoroptions, $context,
+                                         'mod_realtimequiz', 'question', $question->id);
 $form->set_data($question);
 
 $return = new moodle_url('/mod/realtimequiz/edit.php', array('quizid' => $quiz->id));
@@ -121,7 +122,7 @@ if ($data = $form->get_data()) {
 
         $DB->update_record('realtimequiz_question', $updquestion);
 
-        // Save each of the answers
+        // Save each of the answers.
         foreach ($data->answertext as $pos => $answertext) {
             $updanswer = new stdClass();
             $updanswer->answertext = $answertext;
