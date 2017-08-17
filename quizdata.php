@@ -83,7 +83,7 @@ if ($status === false) {
         }
     } else if ($requesttype == 'startquiz') {
         if (has_capability('mod/realtimequiz:control', $context)) {
-            $session = new Object();
+            $session = new stdClass();
             $session->timestamp = time();
             $session->name = optional_param('sessionname', '', PARAM_TEXT);
             $session->quizid = $quizid;
