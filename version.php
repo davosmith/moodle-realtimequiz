@@ -14,12 +14,12 @@ if (!isset($plugin)) {
     $plugin = new stdClass(); // Avoid warnings in Moodle 2.5 and below.
 }
 
-$plugin->version = 2017051201;  // The current module version (Date: YYYYMMDDXX).
+$plugin->version = 2017110900;  // The current module version (Date: YYYYMMDDXX).
 $plugin->requires = 2010112400;  // Moodle 2.0 (or above).
 $plugin->cron = 0;           // Period for cron to check this module (secs).
 $plugin->component = 'mod_realtimequiz';
 $plugin->maturity = MATURITY_STABLE;
-$plugin->release = '2.x (Build: 2017051201)';
+$plugin->release = '2.x (Build: 2017110900)';
 
 if (isset($CFG->branch) && $CFG->branch < 26) {
     $module->version = $plugin->version;
