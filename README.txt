@@ -13,6 +13,7 @@ The teacher can, at a later date, go back through the results and, for each ques
 Changes:
 --------
 
+2018-04-21 - Add support for GDPR. This requires Moodle 3.4 or above.
 2017-11-09 - Minor PHP 7 compatibility fix.
 2017-05-12 - Moodle 3.3 compatibility fixes.
 2015-11-08 - Moodle 3.0 minor compatibility fix.
