@@ -60,7 +60,7 @@ function xmldb_realtimequiz_upgrade($oldversion) {
             $dbman->add_field($table, $field);
         }
 
-        // realtimequiz savepoint reached.
+        // Realtimequiz savepoint reached.
         upgrade_mod_savepoint(true, 2012102101, 'realtimequiz');
     }
 

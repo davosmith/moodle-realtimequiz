@@ -140,7 +140,7 @@ function realtimequiz_user_complete($course, $user, $mod, $realtimequiz) {
  * @todo Finish documenting this function
  **/
 function realtimequiz_print_recent_activity($course, $isteacher, $timestart) {
-    return false;  //  True if anything was printed, otherwise false.
+    return false;  // True if anything was printed, otherwise false.
 }
 
 /**
@@ -206,7 +206,6 @@ function realtimequiz_scale_used_anywhere($scaleid) {
     return false;
 }
 
-// --------------------------------------------------------------------------------
 // Any other realtimequiz functions go here.  Each of them must have a name that
 // starts with realtimequiz_ .
 

@@ -314,7 +314,7 @@ class mod_realtimequiz_privacy_provider_testcase extends \core_privacy\tests\pro
 
         // After deletion, we should have 3 submitted responses.
         $this->assertEquals(3, $DB->count_records('realtimequiz_submitted', []));
-        // Confirm the remaining responses are for the second student
+        // Confirm the remaining responses are for the second student.
         $this->assertEquals([$student->id], $DB->get_fieldset_select('realtimequiz_submitted', 'DISTINCT userid', "1=1"));
 
         // Delete the data for the second student, for all quizzes.

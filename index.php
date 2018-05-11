@@ -14,16 +14,17 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-require_once("../../config.php");
-global $CFG, $PAGE, $OUTPUT, $DB;
-require_once($CFG->dirroot.'/mod/realtimequiz/lib.php');
-
 /**
  * This page lists all the instances of realtimequiz in a particular course
  *
- * @author: Davosmith
- * @package realtimequiz
- **/
+ * @package mod_realtimequiz
+ * @author Davo Smith
+ */
+
+require_once(__DIR__."/../../config.php");
+global $CFG, $PAGE, $OUTPUT, $DB;
+require_once($CFG->dirroot.'/mod/realtimequiz/lib.php');
+
 
 $id = required_param('id', PARAM_INT);   // Course.
 $course = $DB->get_record('course', array('id' => $id), '*', MUST_EXIST);

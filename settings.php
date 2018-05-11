@@ -14,21 +14,20 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-defined('MOODLE_INTERNAL') || die();
-global $CFG;
-
 /**
  * Settings for module realtimequiz
  *
- * @author : Davosmith
- * @package realtimequiz
- **/
+ * @package mod_realtimequiz
+ * @author Davo Smith
+ */
 
+defined('MOODLE_INTERNAL') || die();
+global $CFG;
 require_once($CFG->dirroot.'/mod/realtimequiz/adminlib.php');
 
 if ($ADMIN->fulltree) {
 
     $settings->add(new realtimequiz_awaittime_setting('realtimequiz/awaittime',
-                                                      get_string('awaittime', 'realtimequiz'),
-                                                      get_string('awaittimedesc', 'realtimequiz'), 2, PARAM_INT));
+                                                      new lang_string('awaittime', 'realtimequiz'),
+                                                      new lang_string('awaittimedesc', 'realtimequiz'), 2, PARAM_INT));
 }

@@ -161,21 +161,18 @@ function realtimequiz_record_answer($quizid, $questionnum, $userid, $answerid, $
     if (($answer->questionid == $quiz->currentquestion)
         && ($question->questionnum == $questionnum)
     ) {
-        if (0 < $DB->count_records('realtimequiz_submitted', array(
-                'questionid' => $question->id, 'sessionid' => $quiz->currentsessionid, 'userid' => $userid
-            ))
-        ) {
-            // Already got an answer from them - send an error so we know something is amiss
-            //realtimequiz_send_error(get_string('alreadyanswered','realtimequiz'));
-            // Do not send error, as this is likely to be the result of lost network packets & resends, just ignore silently.
-        } else {
+        $conditions = array(
+            'questionid' => $question->id, 'sessionid' => $quiz->currentsessionid, 'userid' => $userid
+        );
+        if (!$DB->record_exists('realtimequiz_submitted', $conditions)) {
+            // If we already have an answer from them, do not send error, as this is likely to be the
+            // result of lost network packets & resends, just ignore silently.
             $submitted = new stdClass;
             $submitted->questionid = $question->id;
             $submitted->sessionid = $quiz->currentsessionid;
             $submitted->userid = $userid;     // FIXME: make sure the userid is on the course.
             $submitted->answerid = $answerid;
             $DB->insert_record('realtimequiz_submitted', $submitted);
-
         }
         echo '<status>answerreceived</status>';
 

@@ -161,7 +161,7 @@ if ($showsession == 0) {
 foreach ($sessions as $session) {
     $sesstext = '';
     if ($session->name) {
-        $sesstext = $session->name.' '; // session name (if it exits) + date.
+        $sesstext = $session->name.' '; // Session name (if it exits) + date.
     }
     $sesstext .= date('j/m/Y H:i', $session->timestamp);
 
@@ -271,7 +271,8 @@ if ($questionid == 0) { // Show all of the questions.
                 if (empty($questiontext)) {
                     $questiontext = get_string('question', 'mod_realtimequiz').$question->questionnum;
                 }
-                echo '</tr><tr class="realtimequiz_report_answer"><td><a href="'.$linkurl->out(true, array('questionid' => $question->id)).'">'.format_string($questiontext).'</a></td>';
+                echo '</tr><tr class="realtimequiz_report_answer"><td><a href="'.
+                    $linkurl->out(true, array('questionid' => $question->id)).'">'.format_string($questiontext).'</a></td>';
 
                 $total = 0;
                 $gotanswerright = 0;
