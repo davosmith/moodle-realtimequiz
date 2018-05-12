@@ -149,6 +149,12 @@ class mod_realtimequiz_privacy_provider_testcase extends \core_privacy\tests\pro
         $this->assertArrayHasKey('userid', $privacyfields);
         $this->assertArrayHasKey('answerid', $privacyfields);
         $this->assertEquals('privacy:metadata:realtimequiz_submitted', $table->get_summary());
+
+        // Make sure all language strings exist.
+        foreach ($privacyfields as $langstr) {
+            get_string($langstr, 'mod_realtimequiz');
+        }
+        get_string($table->get_summary(), 'mod_realtimequiz');
     }
 
     /**
