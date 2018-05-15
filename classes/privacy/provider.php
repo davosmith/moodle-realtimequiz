@@ -170,8 +170,13 @@ class provider implements \core_privacy\local\metadata\provider,
         if (!$context) {
             return;
         }
-        $instanceid = $DB->get_field('course_modules', 'instance', ['id' => $context->instanceid], MUST_EXIST);
-        $questionids = $DB->get_fieldset_select('realtimequiz_question', 'id', 'quizid = ?', [$instanceid]);
+        if ($context->contextlevel != CONTEXT_MODULE) {
+            return;
+        }
+        if (!$cm = get_coursemodule_from_id('checklist', $context->instanceid)) {
+            return;
+        }
+        $questionids = $DB->get_fieldset_select('realtimequiz_question', 'id', 'quizid = ?', [$cm->instance]);
         if ($questionids) {
             $DB->delete_records_list('realtimequiz_submitted', 'questionid', $questionids);
         }
@@ -185,8 +190,13 @@ class provider implements \core_privacy\local\metadata\provider,
 
         $userid = $contextlist->get_user()->id;
         foreach ($contextlist->get_contexts() as $context) {
-            $instanceid = $DB->get_field('course_modules', 'instance', ['id' => $context->instanceid], MUST_EXIST);
-            $questionids = $DB->get_fieldset_select('realtimequiz_question', 'id', 'quizid = ?', [$instanceid]);
+            if ($context->contextlevel != CONTEXT_MODULE) {
+                continue;
+            }
+            if (!$cm = get_coursemodule_from_id('checklist', $context->instanceid)) {
+                continue;
+            }
+            $questionids = $DB->get_fieldset_select('realtimequiz_question', 'id', 'quizid = ?', [$cm->instance]);
             if ($questionids) {
                 list($qsql, $params) = $DB->get_in_or_equal($questionids, SQL_PARAMS_NAMED);
                 $params['userid'] = $userid;
