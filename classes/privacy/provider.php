@@ -63,7 +63,7 @@ class provider implements \core_privacy\local\metadata\provider,
         $contextlist = new contextlist();
         $modid = self::get_modid();
         if (!$modid) {
-            return $contextlist; // Checklist module not installed.
+            return $contextlist; // Realtime quiz module not installed.
         }
 
         $params = [
@@ -146,9 +146,9 @@ class provider implements \core_privacy\local\metadata\provider,
     }
 
     /**
-     * Export the supplied personal data for a single checklist activity, along with any generic data or area files.
+     * Export the supplied personal data for a single realtime quiz activity, along with any generic data or area files.
      *
-     * @param array $responses the data for each of the items in the checklist
+     * @param array $responses the data for each of the items in the realtime quiz
      * @param int $cmid
      * @param \stdClass $user
      */
@@ -157,7 +157,7 @@ class provider implements \core_privacy\local\metadata\provider,
         $context = \context_module::instance($cmid);
         $contextdata = helper::get_context_data($context, $user);
 
-        // Merge with checklist data and write it.
+        // Merge with realtime quiz data and write it.
         $contextdata = (object)array_merge((array)$contextdata, ['responses' => $responses]);
         writer::with_context($context)->export_data([], $contextdata);
 
@@ -173,7 +173,7 @@ class provider implements \core_privacy\local\metadata\provider,
         if ($context->contextlevel != CONTEXT_MODULE) {
             return;
         }
-        if (!$cm = get_coursemodule_from_id('checklist', $context->instanceid)) {
+        if (!$cm = get_coursemodule_from_id('realtimequiz', $context->instanceid)) {
             return;
         }
         $questionids = $DB->get_fieldset_select('realtimequiz_question', 'id', 'quizid = ?', [$cm->instance]);
@@ -193,7 +193,7 @@ class provider implements \core_privacy\local\metadata\provider,
             if ($context->contextlevel != CONTEXT_MODULE) {
                 continue;
             }
-            if (!$cm = get_coursemodule_from_id('checklist', $context->instanceid)) {
+            if (!$cm = get_coursemodule_from_id('realtimequiz', $context->instanceid)) {
                 continue;
             }
             $questionids = $DB->get_fieldset_select('realtimequiz_question', 'id', 'quizid = ?', [$cm->instance]);
