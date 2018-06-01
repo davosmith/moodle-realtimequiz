@@ -552,18 +552,35 @@ function realtimequiz_process_contents(httpRequest) {
                     }
                 }
             }
-        } else {
-            // Server responded with anything other than OK
-            // Decided just to silently resend the request - if the connection dies altoghether, the user can navigate
-            // to another page to stop the requests
+            return;
+        } else if (httpRequest.status == 403 || httpRequest.status == 500) {
+            var jsonresp;
+            try {
+                jsonresp = JSON.parse(httpRequest.responseText);
+            } catch {
+                jsonresp = {errorcode: 'unknown'};
+            }
 
-            //alert(realtimequiz.text['httperror']+httpRequest.status);
-            //if (confirm(realtimequiz.text['tryagain'])) {
-            realtimequiz_delayed_request("realtimequiz_resend_request()", 700);
-            //} else {
-            //realtimequiz_return_course();
-            // }
+            // In the event a users sesskey is invalid (like when their user
+            // session times out), then no amount of polling is going to result
+            // in a good outcome - and we should let the user know they need to
+            // log in again.
+            if (jsonresp.errorcode == 'invalidsesskey' || jsonresp.errorcode == 'requireloginerror') {
+                alert(jsonresp.error);
+                return;
+            }
         }
+
+        // Server responded with anything other than OK
+        // Decided just to silently resend the request - if the connection dies altoghether, the user can navigate
+        // to another page to stop the requests
+
+        //alert(realtimequiz.text['httperror']+httpRequest.status);
+        //if (confirm(realtimequiz.text['tryagain'])) {
+        realtimequiz_delayed_request("realtimequiz_resend_request()", 700);
+        //} else {
+        //realtimequiz_return_course();
+        // }
     }
 }
 
