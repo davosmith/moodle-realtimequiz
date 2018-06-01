@@ -97,8 +97,8 @@ function realtimequiz_set_running(running) {
  * Set up the basic layout of the student view
  **************************************************/
 function realtimequiz_init_student_view() {
-    var msg="<center><input type='button' onclick='realtimequiz_join_quiz();' value='"+realtimequiz.text['joinquiz']+"' />"
-    msg += "<p id='status'>"+realtimequiz.text['joininstruct']+"</p></center>"
+    var msg="<center><input type='button' onclick='realtimequiz_join_quiz();' value='"+realtimequiz.text['joinquiz']+"' />";
+    msg += "<p id='status'>"+realtimequiz.text['joininstruct']+"</p></center>";
     document.getElementById('questionarea').innerHTML = msg;
 }
 
@@ -325,7 +325,7 @@ function realtimequiz_create_request(parameters) {
         return;
     }
 
-    // Sending a new request, so forget about resending an old request	
+    // Sending a new request, so forget about resending an old request
     if (realtimequiz.resendtimer != null) {
         clearTimeout(realtimequiz.resendtimer);
         realtimequiz.resendtimer = null;
@@ -416,7 +416,7 @@ function realtimequiz_join_quiz() {
 function realtimequiz_process_contents(httpRequest) {
     if (httpRequest.readyState == 4) {
 
-        // We've heard back from the server, so do not need to resend the request 
+        // We've heard back from the server, so do not need to resend the request
         if (realtimequiz.resendtimer != null) {
             clearTimeout(realtimequiz.resendtimer);
             realtimequiz.resendtimer = null;
@@ -557,7 +557,7 @@ function realtimequiz_process_contents(httpRequest) {
             var jsonresp;
             try {
                 jsonresp = JSON.parse(httpRequest.responseText);
-            } catch {
+            } catch (e) {
                 jsonresp = {errorcode: 'unknown'};
             }
 
