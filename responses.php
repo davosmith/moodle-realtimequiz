@@ -309,7 +309,10 @@ if ($questionid == 0) { // Show all of the questions.
             }
 
             echo '<td width="10%"><center>';
-            echo @round($gotanswerright / ($total / 100), 2).'%';
+			if ($total != 0)
+                echo @round($gotanswerright / ($total / 100), 2).'%';
+			else 
+				echo '0%';
             echo '</td></center>';
             echo '</tr>';
 
