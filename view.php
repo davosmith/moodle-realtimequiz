@@ -165,6 +165,8 @@ echo $OUTPUT->box_start('generalbox boxwidthwide boxaligncenter realtimequizbox'
         realtimequiz_set_text('teacherjoinquizinstruct', "<?php print_string('teacherjoinquizinstruct', 'realtimequiz') ?>");
         realtimequiz_set_text('reconnectquiz', "<?php print_string('reconnectquiz', 'realtimequiz') ?>");
         realtimequiz_set_text('reconnectinstruct', "<?php print_string('reconnectinstruct', 'realtimequiz') ?>");
+        realtimequiz_set_text('student', "<?php print_string('student', 'realtimequiz') ?>");
+        realtimequiz_set_text('students', "<?php print_string('students', 'realtimequiz') ?>");
     </script>
 
 <?php

@@ -183,6 +183,22 @@ function realtimequiz_record_answer($quizid, $questionnum, $userid, $answerid, $
     }
 }
 
+function realtimequiz_number_students($quizid) {
+    global $DB,$USER;
+    $quiz = $DB->get_record('realtimequiz', array('id' => $quizid));
+    if (! $realtimequiz = $DB->get_record("realtimequiz_submitted", array('userid' => $USER->id, 'questionid' => 0, 'answerid' => 0, 'sessionid' => $quiz->currentsessionid))) {
+        $data = new stdClass;
+        $data->questionid = 0;
+        $data->userid = $USER->id;
+        $data->answerid = 0;
+        $data->sessionid = $quiz->currentsessionid;
+        $DB->insert_record('realtimequiz_submitted', $data);
+    }
+	// -1 : subtract the teacher
+    echo "<numberstudents>".($DB->count_records('realtimequiz_submitted', array('questionid' => 0, 'answerid' => 0, 'sessionid' => $quiz->currentsessionid)) - 1)."</numberstudents>";
+}
+
+
 function realtimequiz_send_running() {
     echo '<status>quizrunning</status>';
 }

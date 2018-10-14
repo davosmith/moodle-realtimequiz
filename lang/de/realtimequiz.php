@@ -116,6 +116,8 @@ $string['sendinganswer'] = 'Antwort senden';
 $string['timeleft'] = 'Verbleibende Zeit für die Antwort:';
 $string['tick'] = 'Richtige Antwort';
 $string['cross'] = 'Falsche Antwort';
+$string['student'] = 'schüler';
+$string['students'] = 'studenten';
 
 // Used by view_teacher.js
 // Important - do not use any double-quotes (") in this text as it will cause problems when passing
