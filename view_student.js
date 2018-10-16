@@ -523,10 +523,11 @@ function realtimequiz_process_contents(httpRequest) {
                     }
                     var number_of_students = quizresponse.getElementsByTagName('numberstudents').item(0) ;
                     if (number_of_students && document.getElementById("numberstudents")) {
-                        if (node_text(number_of_students) == '1' || node_text(number_of_students) == '0')
-                            document.getElementById("numberstudents").innerHTML = node_text(number_of_students)+' '+realtimequiz.text['student'] ;
-                        else
-                            document.getElementById("numberstudents").innerHTML = node_text(number_of_students)+' '+realtimequiz.text['students'] ;
+                        if (node_text(number_of_students) == '1') {
+                            document.getElementById("numberstudents").innerHTML = node_text(number_of_students)+' '+realtimequiz.text['studentconnected'] ;
+                        } else {
+                            document.getElementById("numberstudents").innerHTML = node_text(number_of_students)+' '+realtimequiz.text['studentsconnected'] ;
+                        }
                     }
                     realtimequiz_delayed_request("realtimequiz_get_question()", waittime);
 
@@ -542,6 +543,7 @@ function realtimequiz_process_contents(httpRequest) {
 
                 } else if (quizstatus == 'quizrunning') {
                     realtimequiz_init_question_view();
+
                 } else if (quizstatus == 'quiznotrunning') {
                     realtimequiz_set_status(realtimequiz.text['quiznotrunning']);
 

@@ -116,13 +116,13 @@ $string['sendinganswer'] = 'Antwort senden';
 $string['timeleft'] = 'Verbleibende Zeit für die Antwort:';
 $string['tick'] = 'Richtige Antwort';
 $string['cross'] = 'Falsche Antwort';
-$string['student'] = 'schüler';
-$string['students'] = 'studenten';
 
 // Used by view_teacher.js
 // Important - do not use any double-quotes (") in this text as it will cause problems when passing
 // the text into javascript (edit 'view.php' if this is a major problem).
 $string['next'] = 'Weiter >>';
 $string['startquiz'] = 'Test starten';
+$string['studentconnected'] = 'schüler verbunden';
+$string['studentsconnected'] = 'studenten verbunden';
 $string['teacherstartinstruct'] = 'Hier können Sie einen Test für die Teilnehmer beginnen.<br />Benutzen Sie das Eingabefeld um einen Namen für diese Sitzung festzulegen (das kann helfen um zu einem späteren Zeitpunkt die Ergebnisse besser zu finden).';
 $string['teacherjoinquizinstruct'] = 'Benutzen Sie dies um selbst einen Test auszuprobieren<br />(Sie müssen ebenfalls den Test in einem separaten Fenster starten)';

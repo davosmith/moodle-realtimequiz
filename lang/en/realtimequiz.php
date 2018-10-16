@@ -121,6 +121,8 @@ $string['showusers'] = 'Show users';
 $string['startquiz'] = 'Start quiz';
 $string['startnewquiz'] = 'Start new quiz session';
 $string['startnewquizconfirm'] = 'Are you absolutely sure you want to abandon the currently running quiz session and start a new one?';
+$string['studentconnected'] = 'student connected';
+$string['studentsconnected'] = 'students connected';
 $string['submissions'] = 'Submissions';
 $string['teacherjoinquizinstruct'] = 'Use this if you want to try out a quiz yourself<br />(you will also need to start/reconnect to the quiz in a separate window).';
 $string['teacherstartinstruct'] = 'Use this to start a quiz for the students to take<br />Use the textbox to define a name for this session (to help when looking through the results at a later date).';
@@ -135,5 +137,4 @@ $string['view'] = 'View quiz';
 $string['waitfirst'] = 'Waiting for the first question to be sent';
 $string['waitstudent'] = 'Waiting for students to connect';
 $string['yourresult'] = 'Your result: ';
-$string['student'] = 'student';
-$string['students'] = 'students';
+
