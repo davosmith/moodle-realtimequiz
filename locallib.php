@@ -184,7 +184,7 @@ function realtimequiz_record_answer($quizid, $questionnum, $userid, $answerid, $
 }
 
 function realtimequiz_number_students($quizid) {
-    global $CFG,$DB,$USER;
+    global $CFG, $DB, $USER;
     if ($realtimequiz = $DB->get_record("realtimequiz", array('id' => $quizid))) {
         if ($course = $DB->get_record("course", array('id' => $realtimequiz->course))) {
             if ($cm = get_coursemodule_from_instance("realtimequiz", $realtimequiz->id, $course->id)) {
@@ -194,11 +194,13 @@ function realtimequiz_number_students($quizid) {
                     $context = context_module::instance($cm->id);
                 }
                 // Is it a student and not a teacher?
-                if (! has_capability('mod/realtimequiz:control', $context, $USER->id)) {
-                    if (! $DB->record_exists("realtimequiz_submitted",array(
-                        'userid' => $USER->id, 'questionid' => 0, 'answerid' => 0, 'sessionid' => $realtimequiz->currentsessionid
-                    ))) {
-                        $data = new stdClass;
+                if (!has_capability('mod/realtimequiz:control', $context, $USER->id)) {
+                    $cond = array(
+                        'userid' => $USER->id, 'questionid' => 0, 'answerid' => 0,
+                        'sessionid' => $realtimequiz->currentsessionid,
+                    );
+                    if (!$DB->record_exists("realtimequiz_submitted", $cond)) {
+                        $data = new stdClass();
                         $data->questionid = 0;
                         $data->userid = $USER->id;
                         $data->answerid = 0;
@@ -212,7 +214,7 @@ function realtimequiz_number_students($quizid) {
         echo ($DB->count_records('realtimequiz_submitted', array(
             'questionid' => 0, 'answerid' => 0, 'sessionid' => $realtimequiz->currentsessionid
         )));
-        echo "</numberstudents>";     
+        echo "</numberstudents>";
     }
 }
 

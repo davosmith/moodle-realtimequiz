@@ -115,7 +115,7 @@ if ($status === false) {
                     realtimequiz_goto_question($context, $quizid, 1);
                 } else {
                     realtimequiz_send_await_question(); // Don't care what they asked for.
-                    realtimequiz_number_students($quizid) ;
+                    realtimequiz_number_students($quizid);
                 }
                 break;
 
