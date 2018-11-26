@@ -333,4 +333,56 @@ class mod_realtimequiz_privacy_provider_testcase extends \core_privacy\tests\pro
         // After deletion, we should have 0 submitted responses.
         $this->assertEquals(0, $DB->count_records('realtimequiz_submitted', []));
     }
+
+    /**
+     * Test provider::get_users_in_context()
+     */
+    public function test_get_users_in_context() {
+        $cms = [
+            get_coursemodule_from_instance('realtimequiz', $this->quizzes[0]->id),
+            get_coursemodule_from_instance('realtimequiz', $this->quizzes[1]->id),
+        ];
+        $ctxs = [
+            context_module::instance($cms[0]->id),
+            context_module::instance($cms[1]->id),
+        ];
+
+        $userlist = new \core_privacy\local\request\userlist($ctxs[0], 'mod_realtimequiz');
+        provider::get_users_in_context($userlist);
+        $this->assertCount(1, $userlist);
+
+        $userlist = new \core_privacy\local\request\userlist($ctxs[1], 'mod_realtimequiz');
+        provider::get_users_in_context($userlist);
+        $this->assertCount(0, $userlist);
+    }
+
+    /**
+     * Test provider::delete_data_for_users()
+     */
+    public function test_delete_data_for_users() {
+        $cms = [
+            get_coursemodule_from_instance('realtimequiz', $this->quizzes[0]->id),
+            get_coursemodule_from_instance('realtimequiz', $this->quizzes[1]->id),
+        ];
+        $ctxs = [
+            context_module::instance($cms[0]->id),
+            context_module::instance($cms[1]->id),
+        ];
+
+        // Delete all data for student.
+        $userlist = new \core_privacy\local\request\userlist($ctxs[0], 'mod_realtimequiz');
+        provider::get_users_in_context($userlist);
+        $approvedlist = new \core_privacy\local\request\approved_userlist($ctxs[0], 'mod_realtimequiz', [$this->student->id]);
+        provider::delete_data_for_users($approvedlist);
+
+        // Check user list for checklist 0.
+        $userlist = new \core_privacy\local\request\userlist($ctxs[0], 'mod_realtimequiz');
+        provider::get_users_in_context($userlist);
+        $this->assertCount(0, $userlist);
+
+        // Check user list for checklist 1.
+        $userlist = new \core_privacy\local\request\userlist($ctxs[1], 'mod_realtimequiz');
+        provider::get_users_in_context($userlist);
+        $this->assertCount(0, $userlist);
+    }
 }

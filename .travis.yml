@@ -4,7 +4,7 @@ sudo: required
 
 addons:
   firefox: "47.0.1"
-  postgresql: "9.3"
+  postgresql: "9.4"
   apt:
     packages:
       - oracle-java8-installer
@@ -21,11 +21,13 @@ php:
  - 7.2
 
 env:
- global:
-  - MOODLE_BRANCH=master
  matrix:
-  - DB=pgsql
-  - DB=mysqli
+  - DB=pgsql MOODLE_BRANHC=master
+  - DB=mysqli MOODLE_BRANHC=master
+  - DB=pgsql MOODLE_BRANHC=MOODLE_35_STABLE
+  - DB=mysqli MOODLE_BRANHC=MOODLE_35_STABLE
+  - DB=pgsql MOODLE_BRANHC=MOODLE_34_STABLE
+  - DB=mysqli MOODLE_BRANHC=MOODLE_34_STABLE
 
 before_install:
   - phpenv config-rm xdebug.ini

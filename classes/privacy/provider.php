@@ -26,9 +26,11 @@ namespace mod_realtimequiz\privacy;
 
 use core_privacy\local\metadata\collection;
 use core_privacy\local\request\approved_contextlist;
+use core_privacy\local\request\approved_userlist;
 use core_privacy\local\request\contextlist;
 use core_privacy\local\request\helper;
 use core_privacy\local\request\transform;
+use core_privacy\local\request\userlist;
 use core_privacy\local\request\writer;
 
 defined('MOODLE_INTERNAL') || die();
@@ -203,5 +205,67 @@ class provider implements \core_privacy\local\metadata\provider,
                 $DB->delete_records_select('realtimequiz_submitted', "questionid $qsql AND userid = :userid", $params);
             }
         }
+    }
+
+    /**
+     * Get the list of users who have data within a context.
+     *
+     * @param   userlist    $userlist   The userlist containing the list of users who have data in this context/plugin combination.
+     */
+    public static function get_users_in_context(userlist $userlist) {
+        $context = $userlist->get_context();
+        if (!is_a($context, \context_module::class)) {
+            return;
+        }
+        $modid = self::get_modid();
+        if (!$modid) {
+            return; // Realtimequiz module not installed.
+        }
+        $params = [
+            'modid' => $modid,
+            'contextlevel' => CONTEXT_MODULE,
+            'contextid'    => $context->id,
+        ];
+
+        // Quiz responses.
+        $sql = "
+            SELECT qs.userid
+              FROM {realtimequiz_submitted} qs
+              JOIN {realtimequiz_question} qq ON qq.id = qs.questionid
+              JOIN {realtimequiz} q ON q.id = qq.quizid
+              JOIN {course_modules} cm ON cm.instance = q.id AND cm.module = :modid
+              JOIN {context} ctx ON ctx.instanceid = cm.id AND ctx.contextlevel = :contextlevel
+             WHERE ctx.id = :contextid
+        ";
+        $userlist->add_from_sql('userid', $sql, $params);
+    }
+
+
+    /**
+     * Delete multiple users within a single context.
+     *
+     * @param   approved_userlist       $userlist The approved context and user information to delete information for.
+     */
+    public static function delete_data_for_users(approved_userlist $userlist) {
+        global $DB;
+        $context = $userlist->get_context();
+        if (!is_a($context, \context_module::class)) {
+            return;
+        }
+        $modid = self::get_modid();
+        if (!$modid) {
+            return; // Checklist module not installed.
+        }
+
+        // Prepare SQL to gather all completed IDs.
+        $userids = $userlist->get_userids();
+        list($insql, $inparams) = $DB->get_in_or_equal($userids, SQL_PARAMS_NAMED);
+
+        // Delete quiz responses.
+        $DB->delete_records_select(
+            'realtimequiz_submitted',
+            "userid $insql",
+            $inparams
+        );
     }
 }

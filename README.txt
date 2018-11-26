@@ -13,6 +13,7 @@ The teacher can, at a later date, go back through the results and, for each ques
 Changes:
 --------
 
+2018-11-26 - Minor fixes to work with Moodle 3.6
 2018-10-15 - Show number of students connected on start page - thanks to Alain Corbière for this feature
 2018-04-21 - Add support for GDPR. This requires Moodle 3.4 or above.
 2017-11-09 - Minor PHP 7 compatibility fix.
