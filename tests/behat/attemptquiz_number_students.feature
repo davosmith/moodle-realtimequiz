@@ -1,5 +1,6 @@
 @mod @mod_realtimequiz
 Feature: The teacher waits for a sufficient number of students
+
   Background:
     Given the following "courses" exist:
       | fullname | shortname | category |
@@ -24,7 +25,7 @@ Feature: The teacher waits for a sufficient number of students
       | Question text | Which UK city is known as the Steel City? |
       | answertext[1] | Sheffield                                 |
       | answertext[2] | Manchester                                |
-      | answertext[3] | London                                    | 
+      | answertext[3] | London                                    |
     And I press "Save question"
 
   @javascript
