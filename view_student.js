@@ -155,7 +155,7 @@ function realtimequiz_set_answer(id, text, position) {
     }
 
     var letter = String.fromCharCode(65 + realtimequiz.answernumber);        //ASCII 'A'
-    var newanswer = '<li id="answer'+id+'" data-position="'+position+'"><input ';
+    var newanswer = '<li id="answer'+id+'" class="realtimequiz-answer-pos-'+position+'"><input ';
     if (realtimequiz.controlquiz) {
         newanswer += 'disabled=disabled ';
     }

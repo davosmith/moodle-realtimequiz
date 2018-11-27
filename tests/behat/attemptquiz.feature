@@ -66,13 +66,13 @@ Feature: Students can attempt a quiz under the control of a teacher
     And I follow "Test realtime quiz"
     And I press "Reconnect to quiz"
     And I wait "10" seconds
-    # Warning! These tests (unfortunately) rely on the database ID of the answers, so may be fragile.
-    Then I should see "Sheffield" in the "li[data-position='1']" "css_element"
-    And I should see "1" in the "li[data-position='1']" "css_element"
-    And I should see "Manchester" in the "li[data-position='2']" "css_element"
-    And I should see "0" in the "li[data-position='2']" "css_element"
-    And I should see "London" in the "li[data-position='3']" "css_element"
-    And I should see "0" in the "li[data-position='3']" "css_element"
+    # Question 1 results.
+    Then I should see "Sheffield" in the "li.realtimequiz-answer-pos-1" "css_element"
+    And I should see "1" in the "li.realtimequiz-answer-pos-1" "css_element"
+    And I should see "Manchester" in the "li.realtimequiz-answer-pos-2" "css_element"
+    And I should see "0" in the "li.realtimequiz-answer-pos-2" "css_element"
+    And I should see "London" in the "li.realtimequiz-answer-pos-3" "css_element"
+    And I should see "0" in the "li.realtimequiz-answer-pos-3" "css_element"
     And I should see "This question: 100% correct. Overall: 100% correct."
     # Question 2.
     When I press "Next"
@@ -93,12 +93,12 @@ Feature: Students can attempt a quiz under the control of a teacher
     And I follow "Test realtime quiz"
     And I press "Reconnect to quiz"
     And I wait "10" seconds
-    Then I should see "200" in the "li[data-position='1']" "css_element"
-    And I should see "0" in the "li[data-position='1']" "css_element"
-    And I should see "60 million" in the "li[data-position='2']" "css_element"
-    And I should see "1" in the "li[data-position='2']" "css_element"
-    And I should see "2.5 million" in the "li[data-position='3']" "css_element"
-    And I should see "0" in the "li[data-position='3']" "css_element"
+    Then I should see "200" in the "li.realtimequiz-answer-pos-1" "css_element"
+    And I should see "0" in the "li.realtimequiz-answer-pos-1" "css_element"
+    And I should see "60 million" in the "li.realtimequiz-answer-pos-2" "css_element"
+    And I should see "1" in the "li.realtimequiz-answer-pos-2" "css_element"
+    And I should see "2.5 million" in the "li.realtimequiz-answer-pos-3" "css_element"
+    And I should see "0" in the "li.realtimequiz-answer-pos-3" "css_element"
     And I should see "This question: 0% correct. Overall: 50% correct."
     # Question 3.
     When I press "Next"
@@ -119,12 +119,12 @@ Feature: Students can attempt a quiz under the control of a teacher
     And I follow "Test realtime quiz"
     And I press "Reconnect to quiz"
     And I wait "10" seconds
-    Then I should see "Red" in the "li[data-position='1']" "css_element"
-    And I should see "0" in the "li[data-position='1']" "css_element"
-    And I should see "Green" in the "li[data-position='2']" "css_element"
-    And I should see "0" in the "li[data-position='2']" "css_element"
-    And I should see "Purple" in the "li[data-position='3']" "css_element"
-    And I should see "1" in the "li[data-position='3']" "css_element"
+    Then I should see "Red" in the "li.realtimequiz-answer-pos-1" "css_element"
+    And I should see "0" in the "li.realtimequiz-answer-pos-1" "css_element"
+    And I should see "Green" in the "li.realtimequiz-answer-pos-2" "css_element"
+    And I should see "0" in the "li.realtimequiz-answer-pos-2" "css_element"
+    And I should see "Purple" in the "li.realtimequiz-answer-pos-3" "css_element"
+    And I should see "1" in the "li.realtimequiz-answer-pos-3" "css_element"
     # Final results.
     When I press "Next"
     Then I should see "Final results"
