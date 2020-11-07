@@ -40,7 +40,7 @@ class mod_realtimequiz_privacy_provider_testcase extends \core_privacy\tests\pro
     /**
      * {@inheritdoc}
      */
-    protected function setUp() {
+    protected function setUp(): void {
         $this->resetAfterTest();
 
         global $DB;
@@ -135,7 +135,7 @@ class mod_realtimequiz_privacy_provider_testcase extends \core_privacy\tests\pro
     /**
      * Test for provider::get_metadata().
      */
-    public function test_get_metadata() {
+    public function test_get_metadata(): void {
         $collection = new collection('mod_realtimequiz');
         $newcollection = provider::get_metadata($collection);
         $itemcollection = $newcollection->get_collection();
@@ -160,7 +160,7 @@ class mod_realtimequiz_privacy_provider_testcase extends \core_privacy\tests\pro
     /**
      * Test for provider::get_contexts_for_userid().
      */
-    public function test_get_contexts_for_userid() {
+    public function test_get_contexts_for_userid(): void {
         $cms = [
             get_coursemodule_from_instance('realtimequiz', $this->quizzes[0]->id),
             get_coursemodule_from_instance('realtimequiz', $this->quizzes[1]->id),
@@ -185,7 +185,7 @@ class mod_realtimequiz_privacy_provider_testcase extends \core_privacy\tests\pro
     /**
      * Test for provider::export_user_data().
      */
-    public function test_export_for_context() {
+    public function test_export_for_context(): void {
         $cms = [
             get_coursemodule_from_instance('realtimequiz', $this->quizzes[0]->id),
             get_coursemodule_from_instance('realtimequiz', $this->quizzes[1]->id),
@@ -208,7 +208,7 @@ class mod_realtimequiz_privacy_provider_testcase extends \core_privacy\tests\pro
     /**
      * Test for provider::delete_data_for_all_users_in_context().
      */
-    public function test_delete_data_for_all_users_in_context() {
+    public function test_delete_data_for_all_users_in_context(): void {
         global $DB;
 
         $gen = self::getDataGenerator();
@@ -259,7 +259,7 @@ class mod_realtimequiz_privacy_provider_testcase extends \core_privacy\tests\pro
     /**
      * Test for provider::delete_data_for_user().
      */
-    public function test_delete_data_for_user() {
+    public function test_delete_data_for_user(): void {
         global $DB;
 
         $gen = self::getDataGenerator();
@@ -337,7 +337,7 @@ class mod_realtimequiz_privacy_provider_testcase extends \core_privacy\tests\pro
     /**
      * Test provider::get_users_in_context()
      */
-    public function test_get_users_in_context() {
+    public function test_get_users_in_context(): void {
         $cms = [
             get_coursemodule_from_instance('realtimequiz', $this->quizzes[0]->id),
             get_coursemodule_from_instance('realtimequiz', $this->quizzes[1]->id),
@@ -359,7 +359,7 @@ class mod_realtimequiz_privacy_provider_testcase extends \core_privacy\tests\pro
     /**
      * Test provider::delete_data_for_users()
      */
-    public function test_delete_data_for_users() {
+    public function test_delete_data_for_users(): void {
         $cms = [
             get_coursemodule_from_instance('realtimequiz', $this->quizzes[0]->id),
             get_coursemodule_from_instance('realtimequiz', $this->quizzes[1]->id),
