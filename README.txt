@@ -53,7 +53,7 @@ Delete the module from the 'Activities' module list in the amin section.
 Feedback:
 ---------
 
-You can contact me on 'moodle AT davosmith DOT co DOT uk, or at http://www.davosmith.co.uk/contact.php
+You can contact me on moodle@davosmith.co.uk
 
 Please let me know any bugs or feature requests - the former I will try to fix ASAP; the latter will be noted and I'll look at them when I have time (in between marking and looking after my children).
 
