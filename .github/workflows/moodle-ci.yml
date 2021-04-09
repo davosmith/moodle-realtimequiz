@@ -111,5 +111,5 @@ jobs:
         run: moodle-plugin-ci phpunit
 
       - name: Behat features
-        if: ${{ matrix.moodle-branch != 'MOODLE_39_STABLE' }} # M3.9 needs core change to support, M3.10+ does not.
+        if: ${{ always() }}
         run: moodle-plugin-ci behat --profile chrome
