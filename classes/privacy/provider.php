@@ -35,10 +35,19 @@ use core_privacy\local\request\writer;
 
 defined('MOODLE_INTERNAL') || die();
 
+/**
+ * Class provider
+ * @package mod_realtimequiz
+ */
 class provider implements \core_privacy\local\metadata\provider,
                           \core_privacy\local\request\plugin\provider,
                           \core_privacy\local\request\core_userlist_provider {
 
+    /**
+     * Get details of user data stored by this plugin
+     * @param collection $collection
+     * @return collection
+     */
     public static function get_metadata(collection $collection) : collection {
         $collection->add_database_table(
             'realtimequiz_submitted',
@@ -53,7 +62,14 @@ class provider implements \core_privacy\local\metadata\provider,
         return $collection;
     }
 
+    /** @var int */
     private static $modid;
+
+    /**
+     * Get the id of the 'realtimequiz' module record.
+     * @return false|mixed
+     * @throws \dml_exception
+     */
     private static function get_modid() {
         global $DB;
         if (self::$modid === null) {
@@ -62,6 +78,12 @@ class provider implements \core_privacy\local\metadata\provider,
         return self::$modid;
     }
 
+    /**
+     * Get the contexts where the given user has realtimequiz data.
+     * @param int $userid
+     * @return contextlist
+     * @throws \dml_exception
+     */
     public static function get_contexts_for_userid(int $userid) : contextlist {
         $contextlist = new contextlist();
         $modid = self::get_modid();
@@ -91,6 +113,12 @@ class provider implements \core_privacy\local\metadata\provider,
         return $contextlist;
     }
 
+    /**
+     * Export the realtimequiz user data for the given contexts.
+     * @param approved_contextlist $contextlist
+     * @throws \coding_exception
+     * @throws \dml_exception
+     */
     public static function export_user_data(approved_contextlist $contextlist) {
         global $DB;
 
@@ -168,6 +196,12 @@ class provider implements \core_privacy\local\metadata\provider,
         helper::export_context_files($context, $user);
     }
 
+    /**
+     * Delete all realtimequiz data in the given context.
+     * @param \context $context
+     * @throws \coding_exception
+     * @throws \dml_exception
+     */
     public static function delete_data_for_all_users_in_context(\context $context) {
         global $DB;
         if (!$context) {
@@ -185,6 +219,12 @@ class provider implements \core_privacy\local\metadata\provider,
         }
     }
 
+    /**
+     * Delete all realtimequiz data for the given user and contexts.
+     * @param approved_contextlist $contextlist
+     * @throws \coding_exception
+     * @throws \dml_exception
+     */
     public static function delete_data_for_user(approved_contextlist $contextlist) {
         global $DB;
         if (!$contextlist->count()) {

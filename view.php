@@ -17,8 +17,9 @@
 /**
  * This page prints a particular instance of realtimequiz
  *
- * @author  Davosmith
- * @package realtimequiz
+ * @copyright Davo Smith <moodle@davosmith.co.uk>
+ * @package mod_realtimequiz
+ * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  **/
 
 require_once("../../config.php");
@@ -26,8 +27,8 @@ global $CFG, $DB, $PAGE, $OUTPUT, $USER;
 require_once($CFG->dirroot.'/mod/realtimequiz/lib.php');
 require_once($CFG->dirroot.'/mod/realtimequiz/locallib.php');
 
-$id = optional_param('id', 0, PARAM_INT); // Course Module ID, or
-$a = optional_param('a', 0, PARAM_INT);  // realtimequiz ID.
+$id = optional_param('id', 0, PARAM_INT); // Course Module ID, or ...
+$a = optional_param('a', 0, PARAM_INT);  // Realtimequiz ID.
 
 if ($id) {
     $cm = get_coursemodule_from_id('realtimequiz', $id, 0, false, MUST_EXIST);

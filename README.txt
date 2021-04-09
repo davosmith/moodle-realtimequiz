@@ -13,6 +13,7 @@ The teacher can, at a later date, go back through the results and, for each ques
 Changes:
 --------
 
+2021-04-09 - Minor internal documentation fixes and switch from Travis to Github actions, M3.11 compatibility fix
 2018-11-26 - Minor fixes to work with Moodle 3.6
 2018-10-15 - Show number of students connected on start page - thanks to Alain Corbière for this feature
 2018-04-21 - Add support for GDPR. This requires Moodle 3.4 or above.

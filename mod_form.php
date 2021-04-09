@@ -14,12 +14,27 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+/**
+ * Instance settings form
+ *
+ * @copyright Davo Smith <moodle@davosmith.co.uk>
+ * @package mod_realtimequiz
+ * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ **/
+
 defined('MOODLE_INTERNAL') || die();
 global $CFG;
 require_once($CFG->dirroot.'/course/moodleform_mod.php');
 
+/**
+ * Class mod_realtimequiz_mod_form
+ */
 class mod_realtimequiz_mod_form extends moodleform_mod {
 
+    /**
+     * Form definition
+     * @throws coding_exception
+     */
     protected function definition() {
         global $CFG;
 

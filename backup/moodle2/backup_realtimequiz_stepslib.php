@@ -15,6 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
+ * Backup a realtimequiz
  * @package mod_realtimequiz
  * @subpackage backup-moodle2
  * @copyright 2013 Davo Smith
@@ -32,6 +33,12 @@ defined('MOODLE_INTERNAL') || die();
  */
 class backup_realtimequiz_activity_structure_step extends backup_activity_structure_step {
 
+    /**
+     * Define the backup structure
+     * @return backup_nested_element
+     * @throws base_element_struct_exception
+     * @throws base_step_exception
+     */
     protected function define_structure() {
 
         // To know if we are including userinfo.

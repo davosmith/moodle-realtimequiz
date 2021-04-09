@@ -14,12 +14,27 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+/**
+ * Form to edit a set of questions
+ *
+ * @copyright Davo Smith <moodle@davosmith.co.uk>
+ * @package mod_realtimequiz
+ * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ **/
+
 defined('MOODLE_INTERNAL') || die();
 global $CFG;
 require_once($CFG->libdir.'/formslib.php');
 
+/**
+ * Class realtimequiz_editquestion_form
+ */
 class realtimequiz_editquestion_form extends moodleform {
 
+    /**
+     * Form definition
+     * @throws coding_exception
+     */
     protected function definition() {
 
         $mform = $this->_form;
@@ -64,6 +79,9 @@ class realtimequiz_editquestion_form extends moodleform {
         $mform->closeHeaderBefore('buttonar');
     }
 
+    /**
+     * Update form after data has been set.
+     */
     public function definition_after_data() {
         // Override any 'numanswers' value from the form submission (as it will be wrong if the 'add answers' button
         // was clicked).

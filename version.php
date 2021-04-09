@@ -15,17 +15,17 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Code fragment to define the version of realtimequiz
- * This fragment is called by moodle_needs_upgrading() and /admin/index.php
+ * Version information
  *
- * @author: Davo Smith
- * @package realtimequiz
+ * @copyright Davo Smith <moodle@davosmith.co.uk>
+ * @package mod_realtimequiz
+ * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  **/
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version = 2018101500;  // The current module version (Date: YYYYMMDDXX).
+$plugin->version = 2021040900;  // The current module version (Date: YYYYMMDDXX).
 $plugin->requires = 2017111306;  // Moodle 3.4.6 (or above).
 $plugin->component = 'mod_realtimequiz';
 $plugin->maturity = MATURITY_STABLE;
-$plugin->release = '3.4+ (Build: 2018051500)';
+$plugin->release = '3.4+ (Build: 2021040900)';

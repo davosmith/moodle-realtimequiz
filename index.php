@@ -17,9 +17,10 @@
 /**
  * This page lists all the instances of realtimequiz in a particular course
  *
+ * @copyright Davo Smith <moodle@davosmith.co.uk>
  * @package mod_realtimequiz
- * @author Davo Smith
- */
+ * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ **/
 
 require_once(__DIR__."/../../config.php");
 global $CFG, $PAGE, $OUTPUT, $DB;

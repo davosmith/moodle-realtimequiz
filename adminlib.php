@@ -14,19 +14,20 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-defined('MOODLE_INTERNAL') || die;
-
 /**
  * This implements admin settings in realtimequiz
  *
- * @author: Davosmith
+ * @copyright Davo Smith <moodle@davosmith.co.uk>
  * @package mod_realtimequiz
+ * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  **/
+
+defined('MOODLE_INTERNAL') || die;
 
 /**
  * Admin setting for code source, adds validation.
  *
- * @package    mod_aspirelist
+ * @package    mod_realtimequiz
  * @copyright  2014 Lancaster University {@link http://www.lancaster.ac.uk/}
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */

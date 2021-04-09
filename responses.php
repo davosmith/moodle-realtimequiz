@@ -15,10 +15,11 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * This page prints a particular instance of realtimequiz
+ * View responses to a quiz
  *
- * @author  Davo
- * @package realtimequiz
+ * @copyright Davo Smith <moodle@davosmith.co.uk>
+ * @package mod_realtimequiz
+ * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  **/
 
 require_once("../../config.php");
@@ -200,15 +201,24 @@ if ($questionid == 0) { // Show all of the questions.
         $linkurl->param('showusers', 1);
         if ($CFG->version < 2013111800) {
             $usernames = 'u.firstname, u.lastname';
+        } else if (class_exists('\core_user\fields')) {
+            $namesql = \core_user\fields::for_name()->get_sql('u', true);
         } else {
-            $usernames = get_all_user_name_fields(true, 'u');
+            $namesql = (object)[
+                'selects' => ','.get_all_user_name_fields(true, 'u'),
+                'joins' => '',
+                'params' => [],
+                'mappings' => [],
+            ];
         }
-        $sql = 'SELECT DISTINCT u.id, '.$usernames.'
+
+        $sql = "SELECT DISTINCT u.id {$namesql->selects}
                   FROM {user} u
                   JOIN {realtimequiz_submitted} s ON s.userid = u.id
                   JOIN {realtimequiz_question} q ON s.questionid = q.id
-                 WHERE q.quizid = :quizid';
-        $params = array('quizid' => $realtimequiz->id);
+                       {$namesql->joins}
+                 WHERE q.quizid = :quizid";
+        $params = array_merge(['quizid' => $realtimequiz->id], $namesql->params);
         if ($showsession) {
             $sql .= ' AND s.sessionid = :sessionid';
             $params['sessionid'] = $showsession;

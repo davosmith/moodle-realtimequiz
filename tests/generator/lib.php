@@ -24,7 +24,17 @@
 
 defined('MOODLE_INTERNAL') || die();
 
+/**
+ * Class mod_realtimequiz_generator
+ */
 class mod_realtimequiz_generator extends testing_module_generator {
+    /**
+     * Create activity instance
+     * @param object|array|null $record
+     * @param array|null $options
+     * @return stdClass
+     * @throws coding_exception
+     */
     public function create_instance($record = null, array $options = null) {
         $record = (object)(array)$record;
 

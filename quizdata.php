@@ -17,8 +17,9 @@
 /**
  * This dynamically sends quiz data to clients
  *
- * @author: Davosmith
- * @package realtimequiz
+ * @copyright Davo Smith <moodle@davosmith.co.uk>
+ * @package mod_realtimequiz
+ * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  **/
 
 define('AJAX_SCRIPT', true);
@@ -106,8 +107,8 @@ if ($status === false) {
 
         switch ($status) {
 
-            case REALTIMEQUIZ_STATUS_NOTRUNNING:   // Quiz is not running
-                realtimequiz_send_not_running(); // (don't care what they asked for).
+            case REALTIMEQUIZ_STATUS_NOTRUNNING:   // Quiz is not running.
+                realtimequiz_send_not_running(); // We don't care what they asked for.
                 break;
 
             case REALTIMEQUIZ_STATUS_READYTOSTART: // Quiz is ready to start.
@@ -119,8 +120,8 @@ if ($status === false) {
                 }
                 break;
 
-            case REALTIMEQUIZ_STATUS_PREVIEWQUESTION: // Previewing question (send it out, but ask them to wait before showing)
-                realtimequiz_send_question($quizid, $context, true); // (don't care what they asked for).
+            case REALTIMEQUIZ_STATUS_PREVIEWQUESTION: // Previewing question (send it out, but ask them to wait before showing).
+                realtimequiz_send_question($quizid, $context, true); // We don't care what they asked for.
                 break;
 
             case REALTIMEQUIZ_STATUS_SHOWQUESTION: // Question being displayed.

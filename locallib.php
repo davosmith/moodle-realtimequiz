@@ -24,26 +24,50 @@
 
 defined('MOODLE_INTERNAL') || die();
 
+/** Quiz not running */
 define('REALTIMEQUIZ_STATUS_NOTRUNNING', 0);
+/** Quiz ready to start */
 define('REALTIMEQUIZ_STATUS_READYTOSTART', 10);
+/** Quiz showing 'review question' page */
 define('REALTIMEQUIZ_STATUS_PREVIEWQUESTION', 15);
+/** Quiz showing a question */
 define('REALTIMEQUIZ_STATUS_SHOWQUESTION', 20);
+/** Quiz showing results */
 define('REALTIMEQUIZ_STATUS_SHOWRESULTS', 30);
+/** Quiz showing the final results */
 define('REALTIMEQUIZ_STATUS_FINALRESULTS', 40);
 
+/**
+ * Output the response start
+ */
 function realtimequiz_start_response() {
     header('content-type: text/xml');
     echo '<?xml version="1.0" ?><realtimequiz>';
 }
 
+/**
+ * Output the response end
+ */
 function realtimequiz_end_response() {
     echo '</realtimequiz>';
 }
 
+/**
+ * Send the given error messsage
+ * @param string $msg
+ */
 function realtimequiz_send_error($msg) {
     echo "<status>error</status><message><![CDATA[{$msg}]]></message>";
 }
 
+/**
+ * Send the question details
+ * @param int $quizid
+ * @param context $context
+ * @param bool $preview
+ * @throws coding_exception
+ * @throws dml_exception
+ */
 function realtimequiz_send_question($quizid, $context, $preview = false) {
     global $DB;
 
@@ -91,6 +115,12 @@ function realtimequiz_send_question($quizid, $context, $preview = false) {
     }
 }
 
+/**
+ * Send the result details
+ * @param int $quizid
+ * @throws coding_exception
+ * @throws dml_exception
+ */
 function realtimequiz_send_results($quizid) {
     global $DB;
 
@@ -151,6 +181,16 @@ function realtimequiz_send_results($quizid) {
     }
 }
 
+/**
+ * Record the answer given
+ * @param int $quizid
+ * @param int $questionnum
+ * @param int $userid
+ * @param int $answerid
+ * @param context $context
+ * @throws coding_exception
+ * @throws dml_exception
+ */
 function realtimequiz_record_answer($quizid, $questionnum, $userid, $answerid, $context) {
     global $DB;
 
@@ -183,6 +223,12 @@ function realtimequiz_record_answer($quizid, $questionnum, $userid, $answerid, $
     }
 }
 
+/**
+ * Count the number of students connected
+ * @param int $quizid
+ * @throws coding_exception
+ * @throws dml_exception
+ */
 function realtimequiz_number_students($quizid) {
     global $CFG, $DB, $USER;
     if ($realtimequiz = $DB->get_record("realtimequiz", array('id' => $quizid))) {
@@ -218,20 +264,35 @@ function realtimequiz_number_students($quizid) {
     }
 }
 
+/**
+ * Send 'quiz running' status.
+ */
 function realtimequiz_send_running() {
     echo '<status>quizrunning</status>';
 }
 
+/**
+ * Send 'quiz not running' status.
+ */
 function realtimequiz_send_not_running() {
     echo '<status>quiznotrunning</status>';
 }
 
+/**
+ * Send 'waiting for question to start' status.
+ * @throws dml_exception
+ */
 function realtimequiz_send_await_question() {
     $waittime = get_config('realtimequiz', 'awaittime');
     echo '<status>waitforquestion</status>';
     echo "<waittime>{$waittime}</waittime>";
 }
 
+/**
+ * Send 'waiting for results' status.
+ * @param int $timeleft
+ * @throws dml_exception
+ */
 function realtimequiz_send_await_results($timeleft) {
     $waittime = (int)get_config('realtimequiz', 'awaittime');
     // We need to randomise the waittime a little, otherwise all clients will
@@ -243,6 +304,11 @@ function realtimequiz_send_await_results($timeleft) {
     echo "<waittime>{$waittime}</waittime>";
 }
 
+/**
+ * Send the final results details.
+ * @param int $quizid
+ * @throws dml_exception
+ */
 function realtimequiz_send_final_results($quizid) {
     global $DB;
 
@@ -252,7 +318,13 @@ function realtimequiz_send_final_results($quizid) {
     echo '<classresult>'.intval($quiz->classresult / $questionnum).'</classresult>';
 }
 
-// Check if the current status should change due to a timeout.
+/**
+ * Check if the current status should change due to a timeout.
+ * @param int $quizid
+ * @param int $status
+ * @return int|mixed
+ * @throws dml_exception
+ */
 function realtimequiz_update_status($quizid, $status) {
     global $DB;
 
@@ -294,11 +366,22 @@ function realtimequiz_update_status($quizid, $status) {
     return $status;
 }
 
+/**
+ * Is the quiz currently running?
+ * @param int $status
+ * @return bool
+ */
 function realtimequiz_is_running($status) {
     return ($status > REALTIMEQUIZ_STATUS_NOTRUNNING && $status < REALTIMEQUIZ_STATUS_FINALRESULTS);
 }
 
-// Check the question requested matches the current question.
+/**
+ * Check the question requested matches the current question.
+ * @param int $quizid
+ * @param int $questionnumber
+ * @return bool
+ * @throws dml_exception
+ */
 function realtimequiz_current_question($quizid, $questionnumber) {
     global $DB;
 
@@ -313,6 +396,14 @@ function realtimequiz_current_question($quizid, $questionnumber) {
     return true;
 }
 
+/**
+ * Go to the requested question.
+ * @param context $context
+ * @param int $quizid
+ * @param int $questionnum
+ * @throws coding_exception
+ * @throws dml_exception
+ */
 function realtimequiz_goto_question($context, $quizid, $questionnum) {
     global $DB;
 
@@ -325,7 +416,7 @@ function realtimequiz_goto_question($context, $quizid, $questionnum) {
         if ($questionid) {
             $quiz->currentquestion = $questionid;
             $quiz->status = REALTIMEQUIZ_STATUS_PREVIEWQUESTION;
-            $quiz->nextendtime = time() + 2;    // Give everyone a chance to get the question before starting
+            $quiz->nextendtime = time() + 2;    // Give everyone a chance to get the question before starting.
             $DB->update_record('realtimequiz', $quiz); // FIXME - not update all fields?
             realtimequiz_send_question($quizid, $context, true);
         } else { // Assume we have run out of questions.

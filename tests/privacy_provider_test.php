@@ -27,6 +27,9 @@ use mod_realtimequiz\privacy\provider;
 
 defined('MOODLE_INTERNAL') || die();
 
+/**
+ * Class mod_realtimequiz_privacy_provider_testcase
+ */
 class mod_realtimequiz_privacy_provider_testcase extends \core_privacy\tests\provider_testcase {
     /** @var stdClass The student object. */
     protected $student;

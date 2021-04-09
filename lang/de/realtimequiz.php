@@ -14,6 +14,14 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+/**
+ * German language strings
+ *
+ * @copyright Joachim Vogelgesang
+ * @package mod_realtimequiz
+ * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ **/
+
 // Translation: Joachim Vogelgesang.
 
 $string['modulename'] = 'Echtzeit Test';

@@ -14,14 +14,15 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-defined('MOODLE_INTERNAL') || die();
-
 /**
  * Library of functions and constants for module realtimequiz
  *
- * @author : Davosmith
- * @package realtimequiz
+ * @copyright Davo Smith <moodle@davosmith.co.uk>
+ * @package mod_realtimequiz
+ * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  **/
+
+defined('MOODLE_INTERNAL') || die();
 
 /**
  * Given an object containing all the necessary data,
@@ -112,9 +113,12 @@ function realtimequiz_delete_instance($id) {
  * $return->time = the time they did it
  * $return->info = a short text description
  *
+ * @param object $course
+ * @param object $user
+ * @param object $mod
+ * @param object $realtimequiz
  * @return null
- * @todo Finish documenting this function
- **/
+ */
 function realtimequiz_user_outline($course, $user, $mod, $realtimequiz) {
     return null;
 }
@@ -123,9 +127,12 @@ function realtimequiz_user_outline($course, $user, $mod, $realtimequiz) {
  * Print a detailed representation of what a user has done with
  * a given particular instance of this module, for user activity reports.
  *
+ * @param object $course
+ * @param object $user
+ * @param object $mod
+ * @param object $realtimequiz
  * @return boolean
- * @todo Finish documenting this function
- **/
+ */
 function realtimequiz_user_complete($course, $user, $mod, $realtimequiz) {
     return true;
 }
@@ -135,10 +142,11 @@ function realtimequiz_user_complete($course, $user, $mod, $realtimequiz) {
  * that has occurred in realtimequiz activities and print it out.
  * Return true if there was output, or false is there was none.
  *
- * @uses $CFG
+ * @param object $course
+ * @param bool $isteacher
+ * @param int $timestart
  * @return boolean
- * @todo Finish documenting this function
- **/
+ */
 function realtimequiz_print_recent_activity($course, $isteacher, $timestart) {
     return false;  // True if anything was printed, otherwise false.
 }
@@ -148,9 +156,7 @@ function realtimequiz_print_recent_activity($course, $isteacher, $timestart) {
  * This function searches for things that need to be done, such
  * as sending out mail, toggling flags etc ...
  *
- * @uses $CFG
  * @return boolean
- * @todo Finish documenting this function
  **/
 function realtimequiz_cron() {
     return true;
@@ -193,8 +199,8 @@ function realtimequiz_get_participants($realtimequizid) {
  * as reference.
  *
  * @param int $realtimequizid ID of an instance of this module
+ * @param int $scaleid
  * @return mixed
- * @todo Finish documenting this function
  **/
 function realtimequiz_scale_used($realtimequizid, $scaleid) {
     $return = false;
@@ -202,6 +208,11 @@ function realtimequiz_scale_used($realtimequizid, $scaleid) {
     return $return;
 }
 
+/**
+ * Is the given scale used?
+ * @param int $scaleid
+ * @return false
+ */
 function realtimequiz_scale_used_anywhere($scaleid) {
     return false;
 }
@@ -209,6 +220,14 @@ function realtimequiz_scale_used_anywhere($scaleid) {
 // Any other realtimequiz functions go here.  Each of them must have a name that
 // starts with realtimequiz_ .
 
+/**
+ * Output the tabs.
+ * @param string $currenttab
+ * @param int $cmid
+ * @param context $context
+ * @throws coding_exception
+ * @throws moodle_exception
+ */
 function realtimequiz_view_tabs($currenttab, $cmid, $context) {
     $tabs = array();
     $row = array();
@@ -250,6 +269,19 @@ function realtimequiz_view_tabs($currenttab, $cmid, $context) {
     print_tabs($tabs, $currenttab, $inactive, $activated);
 }
 
+/**
+ * Serve the requested file
+ * @param object $course
+ * @param object $cm
+ * @param context $context
+ * @param string $filearea
+ * @param array $args
+ * @param bool $forcedownload
+ * @param array $options
+ * @return false
+ * @throws coding_exception
+ * @throws dml_exception
+ */
 function realtimequiz_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload, array $options = array()) {
     global $DB;
 
@@ -285,6 +317,11 @@ function realtimequiz_pluginfile($course, $cm, $context, $filearea, $args, $forc
     return false;
 }
 
+/**
+ * Features supported by this plugin
+ * @param string $feature
+ * @return bool|null
+ */
 function realtimequiz_supports($feature) {
 
     if (!defined('FEATURE_PLAGIARISM')) {

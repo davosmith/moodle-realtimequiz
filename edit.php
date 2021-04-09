@@ -17,8 +17,9 @@
 /**
  * This allows you to edit questions for a realtimequiz
  *
- * @author: Davosmith
+ * @copyright Davo Smith <moodle@davosmith.co.uk>
  * @package mod_realtimequiz
+ * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  **/
 
 require_once('../../config.php');
@@ -75,6 +76,14 @@ if ($CFG->version > 2014051200) { // Moodle 2.7+.
 }
 
 // Some useful functions.
+/**
+ * List all questions
+ * @param int $quizid
+ * @param object $cm
+ * @throws coding_exception
+ * @throws dml_exception
+ * @throws moodle_exception
+ */
 function realtimequiz_list_questions($quizid, $cm) {
     global $DB, $OUTPUT;
 
@@ -125,6 +134,15 @@ function realtimequiz_list_questions($quizid, $cm) {
     echo $OUTPUT->single_button($url, get_string('addquestion', 'realtimequiz'), 'GET');
 }
 
+/**
+ * Output the 'confirm delete question' HTML.
+ * @param int $quizid
+ * @param int $questionid
+ * @param context $context
+ * @throws coding_exception
+ * @throws dml_exception
+ * @throws moodle_exception
+ */
 function realtimequiz_confirm_deletequestion($quizid, $questionid, $context) {
     global $DB;
 
@@ -237,7 +255,7 @@ switch ($action) {
         realtimequiz_list_questions($quizid, $cm);
         break;
 
-    case 'deletequestion': // Deleting a question - ask 'Are you sure?'
+    case 'deletequestion': // Deleting a question - ask 'Are you sure?'.
         realtimequiz_confirm_deletequestion($quizid, $questionid, $context);
         break;
 

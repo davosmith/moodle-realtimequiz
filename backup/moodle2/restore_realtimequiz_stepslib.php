@@ -15,7 +15,8 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * @package moodlecore
+ * Restore a realtimequiz.
+ * @package mod_realtimequiz
  * @subpackage backup-moodle2
  * @copyright 2010 onwards Eloy Lafuente (stronk7) {@link http://stronk7.com}
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
@@ -32,6 +33,11 @@ defined('MOODLE_INTERNAL') || die();
  */
 class restore_realtimequiz_activity_structure_step extends restore_activity_structure_step {
 
+    /**
+     * Define the restore structure
+     * @return mixed
+     * @throws base_step_exception
+     */
     protected function define_structure() {
 
         $paths = array();
@@ -51,6 +57,12 @@ class restore_realtimequiz_activity_structure_step extends restore_activity_stru
         return $this->prepare_activity_structure($paths);
     }
 
+    /**
+     * Create a realtimequiz record.
+     * @param object|array $data
+     * @throws base_step_exception
+     * @throws dml_exception
+     */
     protected function process_realtimequiz($data) {
         global $DB;
 
@@ -64,6 +76,13 @@ class restore_realtimequiz_activity_structure_step extends restore_activity_stru
         $this->apply_activity_instance($newitemid);
     }
 
+    /**
+     * Create a question record.
+     * @param object|array $data
+     * @throws base_step_exception
+     * @throws dml_exception
+     * @throws restore_step_exception
+     */
     protected function process_realtimequiz_question($data) {
         global $DB;
 
@@ -76,6 +95,12 @@ class restore_realtimequiz_activity_structure_step extends restore_activity_stru
         $this->set_mapping('realtimequiz_question', $oldid, $newitemid, true);
     }
 
+    /**
+     * Create an answer record.
+     * @param object|array $data
+     * @throws dml_exception
+     * @throws restore_step_exception
+     */
     protected function process_realtimequiz_answer($data) {
         global $DB;
 
@@ -88,6 +113,12 @@ class restore_realtimequiz_activity_structure_step extends restore_activity_stru
         $this->set_mapping('realtimequiz_answer', $oldid, $newitemid);
     }
 
+    /**
+     * Create a session record
+     * @param object|array $data
+     * @throws dml_exception
+     * @throws restore_step_exception
+     */
     protected function process_realtimequiz_session($data) {
         global $DB;
 
@@ -101,6 +132,11 @@ class restore_realtimequiz_activity_structure_step extends restore_activity_stru
         $this->set_mapping('realtimequiz_session', $oldid, $newitemid, true);
     }
 
+    /**
+     * Create a submission record.
+     * @param object|array $data
+     * @throws dml_exception
+     */
     protected function process_realtimequiz_submission($data) {
         global $DB;
 
@@ -116,6 +152,9 @@ class restore_realtimequiz_activity_structure_step extends restore_activity_stru
         }
     }
 
+    /**
+     * Extra steps after we've finished the restore.
+     */
     protected function after_execute() {
         // Add question files.
         $this->add_related_files('mod_realtimequiz', 'question', 'realtimequiz_question');
