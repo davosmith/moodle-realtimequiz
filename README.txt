@@ -13,6 +13,7 @@ The teacher can, at a later date, go back through the results and, for each ques
 Changes:
 --------
 
+2021-05-15 - M3.11 compatibility fix (add 'completion info' to the top of each page)
 2021-04-09 - Minor internal documentation fixes and switch from Travis to Github actions, M3.11 compatibility fix
 2018-11-26 - Minor fixes to work with Moodle 3.6
 2018-10-15 - Show number of students connected on start page - thanks to Alain Corbière for this feature

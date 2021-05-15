@@ -132,6 +132,15 @@ $PAGE->set_heading($course->fullname);
 echo $OUTPUT->header();
 echo $OUTPUT->heading(format_string($realtimequiz->name));
 
+if (class_exists('\core_completion\activity_custom_completion')) {
+    // Render the activity information.
+    $modinfo = get_fast_modinfo($course);
+    $cminfo = $modinfo->get_cm($cm->id);
+    $completiondetails = \core_completion\cm_completion_details::get_instance($cminfo, $USER->id);
+    $activitydates = \core\activity_dates::get_dates_for_module($cminfo, $USER->id);
+    echo $OUTPUT->activity_information($cminfo, $completiondetails, $activitydates);
+}
+
 realtimequiz_view_tabs('responses', $cm->id, $context);
 
 $select = "quizid = ? AND id IN (SELECT sessionid FROM {realtimequiz_submitted})";
