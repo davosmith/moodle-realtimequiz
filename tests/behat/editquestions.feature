@@ -20,7 +20,7 @@ Feature: Teacher can create a realtime quiz and edit the questions
       | Realtime quiz         | Test realtime quiz                |
       | Introduction          | Test the realtime quiz is working |
       | Default question time | 20                                |
-    And I follow "Test realtime quiz"
+    And I am on the "Test realtime quiz" "realtimequiz activity" page
     # Create a question.
     When I press "Add question"
     And I set the following fields to these values:

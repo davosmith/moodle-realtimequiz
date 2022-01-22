@@ -22,8 +22,6 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-defined('MOODLE_INTERNAL') || die();
-
 /** Quiz not running */
 define('REALTIMEQUIZ_STATUS_NOTRUNNING', 0);
 /** Quiz ready to start */

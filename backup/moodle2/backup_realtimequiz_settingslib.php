@@ -23,6 +23,7 @@
  */
 
 defined('MOODLE_INTERNAL') || die();
+global $CFG; // Only present as, without it, codechecker complains both with and without MOODLE_INTERNAL check.
 
 // This activity has not particular settings but the inherited from the generic
 // backup_activity_task so here there isn't any class definition, like the ones

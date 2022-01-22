@@ -24,8 +24,6 @@
 
 namespace mod_realtimequiz\event;
 
-defined('MOODLE_INTERNAL') || die();
-
 /**
  * The mod_realtimequiz edit page viewed event class.
  *

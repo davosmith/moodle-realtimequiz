@@ -18,7 +18,7 @@ Feature: Students can attempt a quiz under the control of a teacher
       | Realtime quiz         | Test realtime quiz                |
       | Introduction          | Test the realtime quiz is working |
       | Default question time | 15                                |
-    And I follow "Test realtime quiz"
+    And I am on the "Test realtime quiz" "realtimequiz activity" page
     And I press "Add question"
     And I set the following fields to these values:
       | Question text | Which UK city is known as the Steel City? |
@@ -54,16 +54,14 @@ Feature: Students can attempt a quiz under the control of a teacher
     When I log out
     And I log in as "student1"
     And I am on "Course 1" course homepage
-    And I follow "Test realtime quiz"
+    And I am on the "Test realtime quiz" "realtimequiz activity" page
     And I press "Join"
     Then I should see "Which UK city is known as the Steel City?"
-    When I press "A"
+    When I click on "A" "button" in the "#questionarea" "css_element"
     Then I should see "Answer sent - waiting"
     # Question 1 results.
     When I log out
-    And I log in as "teacher1"
-    And I am on "Course 1" course homepage
-    And I follow "Test realtime quiz"
+    And I am on the "Test realtime quiz" "realtimequiz activity" page logged in as "teacher1"
     And I press "Reconnect to quiz"
     And I wait "10" seconds
     # Question 1 results.
@@ -79,18 +77,14 @@ Feature: Students can attempt a quiz under the control of a teacher
     And I wait "2" seconds
     Then I should see "How many trees are there in Sheffield?"
     And I log out
-    And I log in as "student1"
-    And I am on "Course 1" course homepage
-    And I follow "Test realtime quiz"
+    And I am on the "Test realtime quiz" "realtimequiz activity" page logged in as "student1"
     And I press "Join"
     Then I should see "How many trees are there in Sheffield?"
-    When I press "B"
+    When I click on "B" "button" in the "#questionarea" "css_element"
     Then I should see "Answer sent - waiting"
     # Question 2 results.
     When I log out
-    And I log in as "teacher1"
-    And I am on "Course 1" course homepage
-    And I follow "Test realtime quiz"
+    And I am on the "Test realtime quiz" "realtimequiz activity" page logged in as "teacher1"
     And I press "Reconnect to quiz"
     And I wait "10" seconds
     Then I should see "200" in the "li.realtimequiz-answer-pos-1" "css_element"
@@ -105,18 +99,14 @@ Feature: Students can attempt a quiz under the control of a teacher
     And I wait "2" seconds
     Then I should see "What is your favourite colour?"
     And I log out
-    And I log in as "student1"
-    And I am on "Course 1" course homepage
-    And I follow "Test realtime quiz"
+    And I am on the "Test realtime quiz" "realtimequiz activity" page logged in as "student1"
     And I press "Join"
     Then I should see "What is your favourite colour?"
-    When I press "C"
+    When I click on "C" "button" in the "#questionarea" "css_element"
     Then I should see "Answer sent - waiting"
     # Question 3 results.
     When I log out
-    And I log in as "teacher1"
-    And I am on "Course 1" course homepage
-    And I follow "Test realtime quiz"
+    And I am on the "Test realtime quiz" "realtimequiz activity" page logged in as "teacher1"
     And I press "Reconnect to quiz"
     And I wait "10" seconds
     Then I should see "Red" in the "li.realtimequiz-answer-pos-1" "css_element"

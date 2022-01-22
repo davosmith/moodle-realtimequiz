@@ -19,7 +19,7 @@ Feature: The teacher waits for a sufficient number of students
       | Realtime quiz         | Test realtime quiz                |
       | Introduction          | Test the realtime quiz is working |
       | Default question time | 25                                |
-    And I follow "Test realtime quiz"
+    And I am on the "Test realtime quiz" "realtimequiz activity" page
     And I press "Add question"
     And I set the following fields to these values:
       | Question text | Which UK city is known as the Steel City? |
@@ -35,13 +35,9 @@ Feature: The teacher waits for a sufficient number of students
     And I press "Start quiz"
     And I should see "0 students connected"
     And I log out
-    And I log in as "student1"
-    And I am on "Course 1" course homepage
-    And I follow "Test realtime quiz"
+    And I am on the "Test realtime quiz" "realtimequiz activity" page logged in as "student1"
     And I press "Join"
     And I log out
-    And I log in as "teacher1"
-    And I am on "Course 1" course homepage
-    And I follow "Test realtime quiz"
+    And I am on the "Test realtime quiz" "realtimequiz activity" page logged in as "teacher1"
     And I press "Reconnect to quiz"
     Then I should see "1 student connected"

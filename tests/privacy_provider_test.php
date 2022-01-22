@@ -22,22 +22,22 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-use core_privacy\local\metadata\collection;
-use mod_realtimequiz\privacy\provider;
+namespace mod_realtimequiz;
 
-defined('MOODLE_INTERNAL') || die();
+use \core_privacy\local\metadata\collection;
+use \mod_realtimequiz\privacy\provider;
 
 /**
  * Class mod_realtimequiz_privacy_provider_testcase
  */
-class mod_realtimequiz_privacy_provider_testcase extends \core_privacy\tests\provider_testcase {
-    /** @var stdClass The student object. */
+class privacy_provider_test extends \core_privacy\tests\provider_testcase {
+    /** @var \stdClass The student object. */
     protected $student;
 
-    /** @var stdClass[] The quiz objects. */
+    /** @var \stdClass[] The quiz objects. */
     protected $quizzes = [];
 
-    /** @var stdClass The course object. */
+    /** @var \stdClass The course object. */
     protected $course;
 
     /**
@@ -51,7 +51,7 @@ class mod_realtimequiz_privacy_provider_testcase extends \core_privacy\tests\pro
         $this->course = $gen->create_course();
 
         // Create 2 quizzes.
-        /** @var mod_realtimequiz_generator $plugingen */
+        /** @var \mod_realtimequiz_generator $plugingen */
         $plugingen = $gen->get_plugin_generator('mod_realtimequiz');
         $params = [
             'course' => $this->course->id,
@@ -169,7 +169,7 @@ class mod_realtimequiz_privacy_provider_testcase extends \core_privacy\tests\pro
             get_coursemodule_from_instance('realtimequiz', $this->quizzes[1]->id),
         ];
         $expectedctxs = [
-            context_module::instance($cms[0]->id),
+            \context_module::instance($cms[0]->id),
         ];
         $expectedctxids = [];
         foreach ($expectedctxs as $ctx) {
@@ -194,8 +194,8 @@ class mod_realtimequiz_privacy_provider_testcase extends \core_privacy\tests\pro
             get_coursemodule_from_instance('realtimequiz', $this->quizzes[1]->id),
         ];
         $ctxs = [
-            context_module::instance($cms[0]->id),
-            context_module::instance($cms[1]->id),
+            \context_module::instance($cms[0]->id),
+            \context_module::instance($cms[1]->id),
         ];
 
         // Export all of the data for the context.
@@ -246,14 +246,14 @@ class mod_realtimequiz_privacy_provider_testcase extends \core_privacy\tests\pro
 
         // Delete data from the first quiz.
         $cm = get_coursemodule_from_instance('realtimequiz', $this->quizzes[0]->id);
-        $cmcontext = context_module::instance($cm->id);
+        $cmcontext = \context_module::instance($cm->id);
         provider::delete_data_for_all_users_in_context($cmcontext);
         // After deletion, there should be 2 submitted responses.
         $this->assertEquals(2, $DB->count_records('realtimequiz_submitted', []));
 
         // Delete data from the second quiz.
         $cm = get_coursemodule_from_instance('realtimequiz', $this->quizzes[1]->id);
-        $cmcontext = context_module::instance($cm->id);
+        $cmcontext = \context_module::instance($cm->id);
         provider::delete_data_for_all_users_in_context($cmcontext);
         // After deletion, there should be 0 submitted responses.
         $this->assertEquals(0, $DB->count_records('realtimequiz_submitted', []));
@@ -272,7 +272,7 @@ class mod_realtimequiz_privacy_provider_testcase extends \core_privacy\tests\pro
         ];
         $ctxs = [];
         foreach ($cms as $cm) {
-            $ctxs[] = context_module::instance($cm->id);
+            $ctxs[] = \context_module::instance($cm->id);
         }
 
         // Create a second student who will submit some responses to the first quiz and second quiz.
@@ -346,8 +346,8 @@ class mod_realtimequiz_privacy_provider_testcase extends \core_privacy\tests\pro
             get_coursemodule_from_instance('realtimequiz', $this->quizzes[1]->id),
         ];
         $ctxs = [
-            context_module::instance($cms[0]->id),
-            context_module::instance($cms[1]->id),
+            \context_module::instance($cms[0]->id),
+            \context_module::instance($cms[1]->id),
         ];
 
         $userlist = new \core_privacy\local\request\userlist($ctxs[0], 'mod_realtimequiz');
@@ -368,8 +368,8 @@ class mod_realtimequiz_privacy_provider_testcase extends \core_privacy\tests\pro
             get_coursemodule_from_instance('realtimequiz', $this->quizzes[1]->id),
         ];
         $ctxs = [
-            context_module::instance($cms[0]->id),
-            context_module::instance($cms[1]->id),
+            \context_module::instance($cms[0]->id),
+            \context_module::instance($cms[1]->id),
         ];
 
         // Delete all data for student.
