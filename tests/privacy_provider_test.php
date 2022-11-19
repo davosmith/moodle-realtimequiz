@@ -29,7 +29,7 @@ use \mod_realtimequiz\privacy\provider;
 
 /**
  * Class mod_realtimequiz_privacy_provider_testcase
- * @covers provider
+ * @covers \mod_realtimequiz\privacy\provider
  */
 class privacy_provider_test extends \core_privacy\tests\provider_testcase {
     /** @var \stdClass The student object. */
