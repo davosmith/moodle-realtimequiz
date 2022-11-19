@@ -28,4 +28,4 @@ $plugin->version = 2022111900;  // The current module version (Date: YYYYMMDDXX)
 $plugin->requires = 2017111306;  // Moodle 3.4.6 (or above).
 $plugin->component = 'mod_realtimequiz';
 $plugin->maturity = MATURITY_STABLE;
-$plugin->release = '3.4+ (Build: 2022111900)';
+$plugin->release = '3.4.1.0';
