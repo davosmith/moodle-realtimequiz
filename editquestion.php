@@ -163,7 +163,9 @@ $PAGE->set_heading($heading.$question->questionnum);
 $PAGE->set_title(get_string('pluginname', 'mod_realtimequiz'));
 
 echo $OUTPUT->header();
-echo $OUTPUT->heading($heading.$question->questionnum);
+if ($CFG->branch < 400) {
+    echo $OUTPUT->heading($heading.$question->questionnum);
+}
 
 $form->display();
 

@@ -356,3 +356,27 @@ function realtimequiz_supports($feature) {
             return null;
     }
 }
+
+/**
+ * Adds module specific settings to the settings block
+ *
+ * @param settings_navigation $settings The settings navigation object
+ * @param navigation_node $checklistnode The node to add module settings to
+ */
+function realtimequiz_extend_settings_navigation(settings_navigation $settings, navigation_node $checklistnode) {
+    global $CFG;
+    if ($CFG->branch < 400) {
+        return;
+    }
+    $cm = $settings->get_page()->cm;
+    if (has_capability('mod/realtimequiz:editquestions', $cm->context)) {
+        $checklistnode->add(get_string('edit', 'mod_realtimequiz'),
+                            new moodle_url('/mod/realtimequiz/edit.php', array('id' => $cm->id)),
+                            navigation_node::TYPE_SETTING, null, 'edit');
+    }
+    if (has_capability('mod/realtimequiz:seeresponses', $cm->context)) {
+        $checklistnode->add(get_string('responses', 'mod_realtimequiz'),
+                            new moodle_url('/mod/realtimequiz/responses.php', array('id' => $cm->id)),
+                            navigation_node::TYPE_SETTING, null, 'responses');
+    }
+}

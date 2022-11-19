@@ -30,7 +30,7 @@ Feature: The teacher waits for a sufficient number of students
 
   @javascript
   Scenario: The teacher waits for at least one student before sending the first question
-    When I follow "View quiz"
+    When I am on the "Test realtime quiz" "realtimequiz activity" page
     And I set the field "sessionname" to "Test session"
     And I press "Start quiz"
     And I should see "0 students connected"

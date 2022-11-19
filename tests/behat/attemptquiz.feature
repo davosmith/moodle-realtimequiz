@@ -44,7 +44,7 @@ Feature: Students can attempt a quiz under the control of a teacher
 
   @javascript
   Scenario: Teacher starts quiz, then students attempt it
-    When I follow "View quiz"
+    When I am on the "Test realtime quiz" "realtimequiz activity" page
     And I set the field "sessionname" to "Test session"
     And I press "Start quiz"
     # Question 1.
