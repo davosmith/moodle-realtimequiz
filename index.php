@@ -70,10 +70,10 @@ $strtopic = get_string("topic");
 
 $table = new html_table();
 
-if ($course->format == "weeks") {
+if ($course->format === "weeks") {
     $table->head = array($strweek, $strname);
     $table->align = array("center", "left");
-} else if ($course->format == "topics") {
+} else if ($course->format === "topics") {
     $table->head = array($strtopic, $strname);
     $table->align = array("center", "left");
 } else {
@@ -91,7 +91,7 @@ foreach ($realtimequizs as $realtimequiz) {
         $link = '<a href="'.$url.'">'.$realtimequiz->name.'</a>';
     }
 
-    if ($course->format == 'weeks' or $course->format == 'topics') {
+    if ($course->format === 'weeks' || $course->format === 'topics') {
         $table->data[] = array($realtimequiz->section, $link);
     } else {
         $table->data[] = array($link);
