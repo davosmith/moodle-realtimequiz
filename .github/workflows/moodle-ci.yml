@@ -8,7 +8,7 @@ jobs:
 
     services:
       postgres:
-        image: postgres:12
+        image: postgres:13
         env:
           POSTGRES_USER: 'postgres'
           POSTGRES_HOST_AUTH_METHOD: 'trust'
@@ -32,6 +32,9 @@ jobs:
         include:
           - php: '8.0'
             moodle-branch: 'master'
+            database: 'mariadb'
+          - php: '8.0'
+            moodle-branch: 'MOODLE_401_STABLE'
             database: 'pgsql'
           - php: '8.0'
             moodle-branch: 'MOODLE_400_STABLE'
@@ -48,7 +51,7 @@ jobs:
 
     steps:
       - name: Check out repository code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           path: plugin
 
@@ -115,7 +118,7 @@ jobs:
 
       - name: PHPUnit tests
         if: ${{ always() }}
-        run: moodle-plugin-ci phpunit
+        run: moodle-plugin-ci phpunit --fail-on-warning
 
       - name: Behat features
         if: ${{ always() }}
