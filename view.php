@@ -139,7 +139,7 @@ echo $OUTPUT->box_start('generalbox boxwidthwide boxaligncenter realtimequizbox'
         realtimequiz_set_text('joinquiz', "<?php print_string('joinquiz', 'realtimequiz') ?>");
         realtimequiz_set_text('joininstruct', "<?php print_string('joininstruct', 'realtimequiz') ?>");
         realtimequiz_set_text('waitstudent', "<?php print_string('waitstudent', 'realtimequiz') ?>");
-        realtimequiz_set_text('clicknext', "<?php print_string('clicknext', 'realtimequiz') ?>");
+        realtimequiz_set_text('clicknext', "<?php addslashes(get_string('clicknext', 'realtimequiz')) ?>");
         realtimequiz_set_text('waitfirst', "<?php print_string('waitfirst', 'realtimequiz') ?>");
         realtimequiz_set_text('question', "<?php print_string('question', 'realtimequiz') ?>");
         realtimequiz_set_text('invalidanswer', "<?php print_string('invalidanswer', 'realtimequiz') ?>");
