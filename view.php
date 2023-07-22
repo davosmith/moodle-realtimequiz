@@ -136,50 +136,68 @@ echo $OUTPUT->box_start('generalbox boxwidthwide boxaligncenter realtimequizbox'
 
         //Pass all the text strings into the javascript (to allow for translation)
         // Used by view_student.js
-        realtimequiz_set_text('joinquiz', "<?php print_string('joinquiz', 'realtimequiz') ?>");
-        realtimequiz_set_text('joininstruct', "<?php print_string('joininstruct', 'realtimequiz') ?>");
-        realtimequiz_set_text('waitstudent', "<?php print_string('waitstudent', 'realtimequiz') ?>");
-        realtimequiz_set_text('clicknext', "<?php print_string('clicknext', 'realtimequiz') ?>");
-        realtimequiz_set_text('waitfirst', "<?php print_string('waitfirst', 'realtimequiz') ?>");
-        realtimequiz_set_text('question', "<?php print_string('question', 'realtimequiz') ?>");
-        realtimequiz_set_text('invalidanswer', "<?php print_string('invalidanswer', 'realtimequiz') ?>");
-        realtimequiz_set_text('finalresults', "<?php print_string('finalresults', 'realtimequiz') ?>");
-        realtimequiz_set_text('quizfinished', "<?php print_string('quizfinished', 'realtimequiz') ?>");
-        realtimequiz_set_text('classresult', "<?php print_string('classresult', 'realtimequiz') ?>");
-        realtimequiz_set_text('classresultcorrect', "<?php print_string('classresultcorrect', 'realtimequiz') ?>");
-        realtimequiz_set_text('questionfinished', "<?php print_string('questionfinished', 'realtimequiz') ?>");
-        realtimequiz_set_text('httprequestfail', "<?php print_string('httprequestfail', 'realtimequiz') ?>");
-        realtimequiz_set_text('noquestion', "<?php print_string('noquestion', 'realtimequiz') ?>");
-        realtimequiz_set_text('tryagain', "<?php print_string('tryagain', 'realtimequiz') ?>");
-        realtimequiz_set_text('resultthisquestion', "<?php print_string('resultthisquestion', 'realtimequiz') ?>");
-        realtimequiz_set_text('resultoverall', "<?php print_string('resultoverall', 'realtimequiz') ?>");
-        realtimequiz_set_text('resultcorrect', "<?php print_string('resultcorrect', 'realtimequiz') ?>");
-        realtimequiz_set_text('answersent', "<?php print_string('answersent', 'realtimequiz') ?>");
-        realtimequiz_set_text('quiznotrunning', "<?php print_string('quiznotrunning', 'realtimequiz') ?>");
-        realtimequiz_set_text('servererror', "<?php print_string('servererror', 'realtimequiz') ?>");
-        realtimequiz_set_text('badresponse', "<?php print_string('badresponse', 'realtimequiz') ?>");
-        realtimequiz_set_text('httperror', "<?php print_string('httperror', 'realtimequiz') ?>");
-        realtimequiz_set_text('yourresult', "<?php print_string('yourresult', 'realtimequiz') ?>");
+        realtimequiz_set_text('joinquiz', "<?php echo addslashes(get_string('joinquiz', 'realtimequiz')); ?>");
+        realtimequiz_set_text('joininstruct', "<?php echo addslashes(get_string('joininstruct', 'realtimequiz')); ?>");
+        realtimequiz_set_text('waitstudent', "<?php echo addslashes(get_string('waitstudent', 'realtimequiz')); ?>");
+        realtimequiz_set_text('clicknext', "<?php echo addslashes(get_string('clicknext', 'realtimequiz')); ?>");
+        realtimequiz_set_text('waitfirst', "<?php echo addslashes(get_string('waitfirst', 'realtimequiz')); ?>");
+        realtimequiz_set_text('question', "<?php echo addslashes(get_string('question', 'realtimequiz')); ?>");
+        realtimequiz_set_text('invalidanswer', "<?php echo addslashes(get_string('invalidanswer',
+                                                                                 'realtimequiz')); ?>");
+        realtimequiz_set_text('finalresults', "<?php echo addslashes(get_string('finalresults', 'realtimequiz')); ?>");
+        realtimequiz_set_text('quizfinished', "<?php echo addslashes(get_string('quizfinished', 'realtimequiz')); ?>");
+        realtimequiz_set_text('classresult', "<?php echo addslashes(get_string('classresult', 'realtimequiz')); ?>");
+        realtimequiz_set_text('classresultcorrect', "<?php echo addslashes(get_string('classresultcorrect',
+                                                                                      'realtimequiz')); ?>");
+        realtimequiz_set_text('questionfinished', "<?php echo addslashes(get_string('questionfinished',
+                                                                                    'realtimequiz')); ?>");
+        realtimequiz_set_text('httprequestfail', "<?php echo addslashes(get_string('httprequestfail',
+                                                                                   'realtimequiz')); ?>");
+        realtimequiz_set_text('noquestion', "<?php echo addslashes(get_string('noquestion', 'realtimequiz')); ?>");
+        realtimequiz_set_text('tryagain', "<?php echo addslashes(get_string('tryagain', 'realtimequiz')); ?>");
+        realtimequiz_set_text('resultthisquestion', "<?php echo addslashes(get_string('resultthisquestion',
+                                                                                      'realtimequiz')); ?>");
+        realtimequiz_set_text('resultoverall', "<?php echo addslashes(get_string('resultoverall',
+                                                                                 'realtimequiz')); ?>");
+        realtimequiz_set_text('resultcorrect', "<?php echo addslashes(get_string('resultcorrect',
+                                                                                 'realtimequiz')); ?>");
+        realtimequiz_set_text('answersent', "<?php echo addslashes(get_string('answersent', 'realtimequiz')); ?>");
+        realtimequiz_set_text('quiznotrunning', "<?php echo addslashes(get_string('quiznotrunning',
+                                                                                  'realtimequiz')); ?>");
+        realtimequiz_set_text('servererror', "<?php echo addslashes(get_string('servererror', 'realtimequiz')); ?>");
+        realtimequiz_set_text('badresponse', "<?php echo addslashes(get_string('badresponse', 'realtimequiz')); ?>");
+        realtimequiz_set_text('httperror', "<?php echo addslashes(get_string('httperror', 'realtimequiz')); ?>");
+        realtimequiz_set_text('yourresult', "<?php echo addslashes(get_string('yourresult', 'realtimequiz')); ?>");
 
-        realtimequiz_set_text('timeleft', "<?php print_string('timeleft', 'realtimequiz') ?>");
-        realtimequiz_set_text('displaynext', "<?php print_string('displaynext', 'realtimequiz') ?>");
-        realtimequiz_set_text('sendinganswer', "<?php print_string('sendinganswer', 'realtimequiz') ?>");
-        realtimequiz_set_text('tick', "<?php print_string('tick', 'realtimequiz') ?>");
-        realtimequiz_set_text('cross', "<?php print_string('cross', 'realtimequiz') ?>");
+        realtimequiz_set_text('timeleft', "<?php echo addslashes(get_string('timeleft', 'realtimequiz')); ?>");
+        realtimequiz_set_text('displaynext', "<?php echo addslashes(get_string('displaynext', 'realtimequiz')); ?>");
+        realtimequiz_set_text('sendinganswer', "<?php echo addslashes(get_string('sendinganswer',
+                                                                                 'realtimequiz')); ?>");
+        realtimequiz_set_text('tick', "<?php echo addslashes(get_string('tick', 'realtimequiz')); ?>");
+        realtimequiz_set_text('cross', "<?php echo addslashes(get_string('cross', 'realtimequiz')); ?>");
 
         // Used by view_teacher.js
-        realtimequiz_set_text('joinquizasstudent', "<?php print_string('joinquizasstudent', 'realtimequiz') ?>");
-        realtimequiz_set_text('next', "<?php print_string('next', 'realtimequiz') ?>");
-        realtimequiz_set_text('startquiz', "<?php print_string('startquiz', 'realtimequiz') ?>");
-        realtimequiz_set_text('startnewquiz', "<?php print_string('startnewquiz', 'realtimequiz') ?>");
-        realtimequiz_set_text('startnewquizconfirm', "<?php print_string('startnewquizconfirm', 'realtimequiz') ?>");
-        realtimequiz_set_text('studentconnected', "<?php print_string('studentconnected', 'realtimequiz') ?>");
-        realtimequiz_set_text('studentsconnected', "<?php print_string('studentsconnected', 'realtimequiz') ?>");
-        realtimequiz_set_text('teacherstartinstruct', "<?php print_string('teacherstartinstruct', 'realtimequiz') ?>");
-        realtimequiz_set_text('teacherstartnewinstruct', "<?php print_string('teacherstartnewinstruct', 'realtimequiz') ?>");
-        realtimequiz_set_text('teacherjoinquizinstruct', "<?php print_string('teacherjoinquizinstruct', 'realtimequiz') ?>");
-        realtimequiz_set_text('reconnectquiz', "<?php print_string('reconnectquiz', 'realtimequiz') ?>");
-        realtimequiz_set_text('reconnectinstruct', "<?php print_string('reconnectinstruct', 'realtimequiz') ?>");
+        realtimequiz_set_text('joinquizasstudent', "<?php echo addslashes(get_string('joinquizasstudent',
+                                                                                     'realtimequiz')); ?>");
+        realtimequiz_set_text('next', "<?php echo addslashes(get_string('next', 'realtimequiz')); ?>");
+        realtimequiz_set_text('startquiz', "<?php echo addslashes(get_string('startquiz', 'realtimequiz')); ?>");
+        realtimequiz_set_text('startnewquiz', "<?php echo addslashes(get_string('startnewquiz', 'realtimequiz')); ?>");
+        realtimequiz_set_text('startnewquizconfirm', "<?php echo addslashes(get_string('startnewquizconfirm',
+                                                                                       'realtimequiz')); ?>");
+        realtimequiz_set_text('studentconnected', "<?php echo addslashes(get_string('studentconnected',
+                                                                                    'realtimequiz')); ?>");
+        realtimequiz_set_text('studentsconnected', "<?php echo addslashes(get_string('studentsconnected',
+                                                                                     'realtimequiz')); ?>");
+        realtimequiz_set_text('teacherstartinstruct', "<?php echo addslashes(get_string('teacherstartinstruct',
+                                                                                        'realtimequiz')); ?>");
+        realtimequiz_set_text('teacherstartnewinstruct', "<?php echo addslashes(get_string('teacherstartnewinstruct',
+                                                                                           'realtimequiz')); ?>");
+        realtimequiz_set_text('teacherjoinquizinstruct', "<?php echo addslashes(get_string('teacherjoinquizinstruct',
+                                                                                           'realtimequiz')); ?>");
+        realtimequiz_set_text('reconnectquiz', "<?php echo addslashes(get_string('reconnectquiz',
+                                                                                 'realtimequiz')); ?>");
+        realtimequiz_set_text('reconnectinstruct', "<?php echo addslashes(get_string('reconnectinstruct',
+                                                                                     'realtimequiz')); ?>");
     </script>
 
 <?php
