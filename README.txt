@@ -13,6 +13,7 @@ The teacher can, at a later date, go back through the results and, for each ques
 Changes:
 --------
 
+2023-10-02 - 3.4.4.0 - update GitHub actions ready for 4.3 release
 2023-04-14 - 3.4.3.0 - Minor M4.2 compatibility fixes (remove legacy log functions in events)
 2022-11-19 - 3.4.2.0 - Minor M4.1 compatibility fixes, fix layout in M4.0+
 2022-01-22 - Minor M4.0 compatibility fixes
