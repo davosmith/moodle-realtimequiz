@@ -40,10 +40,10 @@ $page = optional_param('page', 0, PARAM_INT);
 $perpage = optional_param('perpage', REALTIMEQUIZ_DEFAULT_PERPAGE, PARAM_INT);
 
 $cm = get_coursemodule_from_id('realtimequiz', $id, 0, false, MUST_EXIST);
-$course = $DB->get_record('course', array('id' => $cm->course), '*', MUST_EXIST);
-$realtimequiz = $DB->get_record('realtimequiz', array('id' => $cm->instance), '*', MUST_EXIST);
+$course = $DB->get_record('course', ['id' => $cm->course], '*', MUST_EXIST);
+$realtimequiz = $DB->get_record('realtimequiz', ['id' => $cm->instance], '*', MUST_EXIST);
 
-$url = new moodle_url('/mod/realtimequiz/responses.php', array('id' => $cm->id));
+$url = new moodle_url('/mod/realtimequiz/responses.php', ['id' => $cm->id]);
 if ($showsession) {
     $url->param('showsession', $showsession);
 }
@@ -74,10 +74,10 @@ if ($questionid != 0) {
     if ($allquestions) {
         $questionid = 0;
     } else if ($nextquestion) {
-        $question = $DB->get_record('realtimequiz_question', array('id' => $questionid));
-        $newquestion = $DB->get_record('realtimequiz_question', array(
-            'quizid' => $question->quizid, 'questionnum' => ($question->questionnum + 1)
-        ));
+        $question = $DB->get_record('realtimequiz_question', ['id' => $questionid]);
+        $newquestion = $DB->get_record('realtimequiz_question', [
+            'quizid' => $question->quizid, 'questionnum' => ($question->questionnum + 1),
+        ]);
 
         if ($newquestion) {
             $questionid = $newquestion->id;
@@ -85,10 +85,10 @@ if ($questionid != 0) {
             $questionid = 0;
         }
     } else if ($prevquestion) {
-        $question = $DB->get_record('realtimequiz_question', array('id' => $questionid));
-        $newquestion = $DB->get_record('realtimequiz_question', array(
-            'quizid' => $question->quizid, 'questionnum' => ($question->questionnum - 1)
-        ));
+        $question = $DB->get_record('realtimequiz_question', ['id' => $questionid]);
+        $newquestion = $DB->get_record('realtimequiz_question', [
+            'quizid' => $question->quizid, 'questionnum' => ($question->questionnum - 1),
+        ]);
 
         if ($newquestion) {
             $questionid = $newquestion->id;
@@ -98,7 +98,7 @@ if ($questionid != 0) {
     }
 
     if ($questionid == 0) {
-        $redir = new moodle_url('/mod/realtimequiz/responses.php', array('id' => $cm->id, 'showsession' => $showsession));
+        $redir = new moodle_url('/mod/realtimequiz/responses.php', ['id' => $cm->id, 'showsession' => $showsession]);
         if ($showusers) {
             $redir->param('showusers', 1);
         }
@@ -108,12 +108,12 @@ if ($questionid != 0) {
 
 // Log that the responses were viewed.
 if ($CFG->version > 2014051200) { // Moodle 2.7+.
-    $params = array(
+    $params = [
         'context' => $context,
-        'other' => array(
-            'quizid' => $realtimequiz->id
-        )
-    );
+        'other' => [
+            'quizid' => $realtimequiz->id,
+        ],
+    ];
     $event = \mod_realtimequiz\event\responses_viewed::create($params);
     $event->add_record_snapshot('course', $course);
     $event->add_record_snapshot('realtimequiz', $realtimequiz);
@@ -147,7 +147,7 @@ if ($CFG->branch < 400) {
 }
 
 $select = "quizid = ? AND id IN (SELECT sessionid FROM {realtimequiz_submitted})";
-$params = array($realtimequiz->id);
+$params = [$realtimequiz->id];
 $sessions = $DB->get_records_select('realtimequiz_session', $select, $params, 'timestamp');
 if (empty($sessions)) {
     echo $OUTPUT->box_start('generalbox boxwidthwide boxaligncenter realtimequizbox');
@@ -206,8 +206,8 @@ if ($questionid == 0) { // Show all of the questions.
         $blankcolspan = '';
     }
 
-    $questions = $DB->get_records('realtimequiz_question', array('quizid' => $realtimequiz->id), 'questionnum');
-    $linkurl = new moodle_url('/mod/realtimequiz/responses.php', array('id' => $cm->id, 'showsession' => $showsession));
+    $questions = $DB->get_records('realtimequiz_question', ['quizid' => $realtimequiz->id], 'questionnum');
+    $linkurl = new moodle_url('/mod/realtimequiz/responses.php', ['id' => $cm->id, 'showsession' => $showsession]);
 
     if ($showusers) {
         $linkurl->param('showusers', 1);
@@ -243,7 +243,7 @@ if ($questionid == 0) { // Show all of the questions.
         }
 
         $url = new moodle_url($PAGE->url);
-        $url->remove_params(array('page'));
+        $url->remove_params(['page']);
         echo $OUTPUT->paging_bar(count($users), $page, $perpage, $url, 'page');
         $users = array_slice($users, $page * $perpage, $perpage, true);
 
@@ -253,10 +253,10 @@ if ($questionid == 0) { // Show all of the questions.
         }
 
         $strtotals = get_string('totals', 'realtimequiz');
-        list($usql, $uparams) = $DB->get_in_or_equal(array_keys($users), SQL_PARAMS_NAMED);
+        [$usql, $uparams] = $DB->get_in_or_equal(array_keys($users), SQL_PARAMS_NAMED);
 
         $nousersurl = new moodle_url($PAGE->url);
-        $nousersurl->remove_params(array('showusers'));
+        $nousersurl->remove_params(['showusers']);
         $userlink = html_writer::link($nousersurl, get_string('hideusers', 'realtimequiz'));
     } else {
         $usersurl = new moodle_url($PAGE->url);
@@ -270,7 +270,7 @@ if ($questionid == 0) { // Show all of the questions.
     if (!empty($questions)) {
         foreach ($questions as $question) {
             echo '<tr class="realtimequiz_report_question"><td width="30%">'.$question->questionnum.'</td>';
-            $answers = $DB->get_records('realtimequiz_answer', array('questionid' => $question->id), 'id');
+            $answers = $DB->get_records('realtimequiz_answer', ['questionid' => $question->id], 'id');
             if (!empty($answers)) {
                 $iscorrectanswer = false;
                 foreach ($answers as $answer) {
@@ -294,17 +294,17 @@ if ($questionid == 0) { // Show all of the questions.
                     $questiontext = get_string('question', 'mod_realtimequiz').$question->questionnum;
                 }
                 echo '</tr><tr class="realtimequiz_report_answer"><td><a href="'.
-                    $linkurl->out(true, array('questionid' => $question->id)).'">'.format_string($questiontext).'</a></td>';
+                    $linkurl->out(true, ['questionid' => $question->id]).'">'.format_string($questiontext).'</a></td>';
 
                 $total = 0;
                 $gotanswerright = 0;
                 foreach ($answers as $answer) {
                     if ($showsession == 0) {
-                        $count = $DB->count_records('realtimequiz_submitted', array('answerid' => $answer->id));
+                        $count = $DB->count_records('realtimequiz_submitted', ['answerid' => $answer->id]);
                     } else {
-                        $count = $DB->count_records('realtimequiz_submitted', array(
-                            'answerid' => $answer->id, 'sessionid' => $showsession
-                        ));
+                        $count = $DB->count_records('realtimequiz_submitted', [
+                            'answerid' => $answer->id, 'sessionid' => $showsession,
+                        ]);
                     }
 
                     $total += $count;
@@ -341,7 +341,7 @@ if ($questionid == 0) { // Show all of the questions.
 
             if ($showusers) {
                 $select = "questionid = :questionid AND userid $usql";
-                $params = array('questionid' => $question->id);
+                $params = ['questionid' => $question->id];
                 $params = array_merge($params, $uparams);
                 if ($showsession) {
                     $select .= ' AND sessionid = :sessionid';
@@ -431,7 +431,7 @@ if ($questionid == 0) { // Show all of the questions.
 } else { // Show a single question.
     echo $OUTPUT->box_start('generalbox boxwidthwide boxaligncenter realtimequizplainbox');
 
-    $question = $DB->get_record('realtimequiz_question', array('id' => $questionid));
+    $question = $DB->get_record('realtimequiz_question', ['id' => $questionid]);
 
     echo '<h2>'.get_string('question', 'realtimequiz').$question->questionnum.'</h2>';
     $questiontext = file_rewrite_pluginfile_urls($question->questiontext, 'pluginfile.php', $context->id,
@@ -440,7 +440,7 @@ if ($questionid == 0) { // Show all of the questions.
     echo '<p>'.$questiontext.'</p><br />';
     echo '<table border="1" class="realtimequiz_report_answer"><tr class="realtimequiz_report_question">'.
         '<td width="30%">&nbsp;</td>';
-    $answers = $DB->get_records('realtimequiz_answer', array('questionid' => $questionid), 'id');
+    $answers = $DB->get_records('realtimequiz_answer', ['questionid' => $questionid], 'id');
     if (!empty($answers)) {
         foreach ($answers as $answer) {
             if ($answer->correct == 1) {
@@ -453,11 +453,11 @@ if ($questionid == 0) { // Show all of the questions.
     echo '</tr>';
 
     if ($showsession == 0) {
-        $submitted = $DB->get_records('realtimequiz_submitted', array('questionid' => $questionid), 'userid');
+        $submitted = $DB->get_records('realtimequiz_submitted', ['questionid' => $questionid], 'userid');
     } else {
-        $submitted = $DB->get_records('realtimequiz_submitted', array(
-            'questionid' => $questionid, 'sessionid' => $showsession
-        ), 'userid');
+        $submitted = $DB->get_records('realtimequiz_submitted', [
+            'questionid' => $questionid, 'sessionid' => $showsession,
+        ],                            'userid');
     }
 
     if (empty($submitted)) {
@@ -465,7 +465,7 @@ if ($questionid == 0) { // Show all of the questions.
     } else {
 
         foreach ($submitted as $submission) {
-            $user = $DB->get_record('user', array('id' => $submission->userid));
+            $user = $DB->get_record('user', ['id' => $submission->userid]);
             $fullname = fullname($user, has_capability('moodle/site:viewfullnames', $context));
             echo '<tr><td>'.$fullname.'</td>';
             $iscorrectanswer = false;

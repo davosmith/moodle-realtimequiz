@@ -28,20 +28,20 @@ require_once($CFG->dirroot.'/mod/realtimequiz/lib.php');
 require_once($CFG->dirroot.'/mod/realtimequiz/locallib.php');
 
 $id = optional_param('id', 0, PARAM_INT); // Course Module ID, or ...
-$a = optional_param('a', 0, PARAM_INT);  // Realtimequiz ID.
+$q = optional_param('q', 0, PARAM_INT);  // Realtimequiz ID.
 
 if ($id) {
     $cm = get_coursemodule_from_id('realtimequiz', $id, 0, false, MUST_EXIST);
-    $course = $DB->get_record('course', array('id' => $cm->course), '*', MUST_EXIST);
-    $realtimequiz = $DB->get_record('realtimequiz', array('id' => $cm->instance), '*', MUST_EXIST);
+    $course = $DB->get_record('course', ['id' => $cm->course], '*', MUST_EXIST);
+    $realtimequiz = $DB->get_record('realtimequiz', ['id' => $cm->instance], '*', MUST_EXIST);
 } else {
-    $realtimequiz = $DB->get_record('realtimequiz', array('id' => $bid), '*', MUST_EXIST);
+    $realtimequiz = $DB->get_record('realtimequiz', ['id' => $q], '*', MUST_EXIST);
     $cm = get_coursemodule_from_instance('realtimequiz', $realtimequiz->id, 0, false, MUST_EXIST);
-    $course = $DB->get_record('course', array('id' => $cm->course), '*', MUST_EXIST);
+    $course = $DB->get_record('course', ['id' => $cm->course], '*', MUST_EXIST);
     $id = $cm->id;
 }
 
-$PAGE->set_url(new moodle_url('/mod/realtimequiz/view.php', array('id' => $cm->id)));
+$PAGE->set_url(new moodle_url('/mod/realtimequiz/view.php', ['id' => $cm->id]));
 
 require_login($course->id, false, $cm);
 $PAGE->set_pagelayout('incourse');
@@ -52,7 +52,7 @@ if ($CFG->version < 2011120100) {
     $context = context_module::instance($cm->id);
 }
 
-$questioncount = $DB->count_records('realtimequiz_question', array('quizid' => $realtimequiz->id));
+$questioncount = $DB->count_records('realtimequiz_question', ['quizid' => $realtimequiz->id]);
 if ($questioncount == 0 && has_capability('mod/realtimequiz:editquestions', $context)) {
     redirect('edit.php?id='.$id);
 }
@@ -60,10 +60,10 @@ if ($questioncount == 0 && has_capability('mod/realtimequiz:editquestions', $con
 require_capability('mod/realtimequiz:attempt', $context);
 
 if ($CFG->version > 2014051200) { // Moodle 2.7+.
-    $params = array(
+    $params = [
         'context' => $context,
-        'objectid' => $realtimequiz->id
-    );
+        'objectid' => $realtimequiz->id,
+    ];
     $event = \mod_realtimequiz\event\course_module_viewed::create($params);
     $event->add_record_snapshot('realtimequiz', $realtimequiz);
     $event->trigger();

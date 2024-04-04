@@ -1,5 +1,6 @@
 @mod @mod_realtimequiz
 Feature: Teacher can create a realtime quiz and edit the questions
+
   Background:
     Given the following "courses" exist:
       | fullname | shortname | category |
@@ -10,25 +11,24 @@ Feature: Teacher can create a realtime quiz and edit the questions
     And the following "course enrolments" exist:
       | user     | course | role           |
       | teacher1 | C1     | editingteacher |
+    And the following "activities" exist:
+      | activity     | course | name               | idnumber | intro                             | questiontime |
+      | realtimequiz | C1     | Test realtime quiz | RTQ01    | Test the realtime quiz is working | 20           |
 
   @javascript
   Scenario: Create a quiz and edit the questions
     Given I log in as "teacher1"
     And I am on "Course 1" course homepage
     And I turn editing mode on
-    And I add a "Realtime quiz" to section "1" and I fill the form with:
-      | Realtime quiz         | Test realtime quiz                |
-      | Introduction          | Test the realtime quiz is working |
-      | Default question time | 20                                |
     And I am on the "Test realtime quiz" "realtimequiz activity" page
     # Create a question.
     When I press "Add question"
     And I set the following fields to these values:
-      | Question text | Where was Moodle created?            |
-      | Question time | 0                                    |
-      | answertext[1] | France                               |
-      | answertext[2] | Australia                            |
-      | answertext[3] | Italy                                |
+      | Question text | Where was Moodle created? |
+      | Question time | 0                         |
+      | answertext[1] | France                    |
+      | answertext[2] | Australia                 |
+      | answertext[3] | Italy                     |
     And I set the field "id_answercorrect_2" to "1"
     And I press "Save question"
     Then I should see "Where was Moodle created?"

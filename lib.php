@@ -82,24 +82,24 @@ function realtimequiz_update_instance($realtimequiz) {
 function realtimequiz_delete_instance($id) {
     global $DB;
 
-    if (!$realtimequiz = $DB->get_record('realtimequiz', array('id' => $id))) {
+    if (!$realtimequiz = $DB->get_record('realtimequiz', ['id' => $id])) {
         return false;
     }
 
     $result = true;
 
-    $questions = $DB->get_records('realtimequiz_question', array('quizid' => $id));
+    $questions = $DB->get_records('realtimequiz_question', ['quizid' => $id]);
     foreach ($questions as $question) { // Get each question.
-        $answers = $DB->get_records('realtimequiz_answer', array('questionid' => $question->id));
+        $answers = $DB->get_records('realtimequiz_answer', ['questionid' => $question->id]);
         foreach ($answers as $answer) { // Get each answer for that question
             // Delete each submission for that answer.
-            $DB->delete_records('realtimequiz_submitted', array('answerid' => $answer->id));
+            $DB->delete_records('realtimequiz_submitted', ['answerid' => $answer->id]);
         }
-        $DB->delete_records('realtimequiz_answer', array('questionid' => $question->id)); // Delete each answer.
+        $DB->delete_records('realtimequiz_answer', ['questionid' => $question->id]); // Delete each answer.
     }
-    $DB->delete_records('realtimequiz_question', array('quizid' => $id)); // Delete each question.
-    $DB->delete_records('realtimequiz_session', array('quizid' => $id)); // Delete each session.
-    $DB->delete_records('realtimequiz', array('id' => $realtimequiz->id));
+    $DB->delete_records('realtimequiz_question', ['quizid' => $id]); // Delete each question.
+    $DB->delete_records('realtimequiz_session', ['quizid' => $id]); // Delete each session.
+    $DB->delete_records('realtimequiz', ['id' => $realtimequiz->id]);
 
     return $result;
 }
@@ -227,21 +227,21 @@ function realtimequiz_scale_used_anywhere($scaleid) {
  * @throws moodle_exception
  */
 function realtimequiz_view_tabs($currenttab, $cmid, $context) {
-    $tabs = array();
-    $row = array();
-    $inactive = array();
-    $activated = array();
+    $tabs = [];
+    $row = [];
+    $inactive = [];
+    $activated = [];
 
     if (has_capability('mod/realtimequiz:attempt', $context)) {
-        $row[] = new tabobject('view', new moodle_url('/mod/realtimequiz/view.php', array('id' => $cmid)),
+        $row[] = new tabobject('view', new moodle_url('/mod/realtimequiz/view.php', ['id' => $cmid]),
                                get_string('view', 'realtimequiz'));
     }
     if (has_capability('mod/realtimequiz:editquestions', $context)) {
-        $row[] = new tabobject('edit', new moodle_url('/mod/realtimequiz/edit.php', array('id' => $cmid)),
+        $row[] = new tabobject('edit', new moodle_url('/mod/realtimequiz/edit.php', ['id' => $cmid]),
                                get_string('edit', 'realtimequiz'));
     }
     if (has_capability('mod/realtimequiz:seeresponses', $context)) {
-        $row[] = new tabobject('responses', new moodle_url('/mod/realtimequiz/responses.php', array('id' => $cmid)),
+        $row[] = new tabobject('responses', new moodle_url('/mod/realtimequiz/responses.php', ['id' => $cmid]),
                                get_string('responses', 'realtimequiz'));
     }
 
@@ -280,7 +280,7 @@ function realtimequiz_view_tabs($currenttab, $cmid, $context) {
  * @throws coding_exception
  * @throws dml_exception
  */
-function realtimequiz_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload, array $options = array()) {
+function realtimequiz_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload, array $options = []) {
     global $DB;
 
     if ($context->contextlevel != CONTEXT_MODULE) {
@@ -295,11 +295,11 @@ function realtimequiz_pluginfile($course, $cm, $context, $filearea, $args, $forc
 
     $questionid = (int)array_shift($args);
 
-    if (!$quiz = $DB->get_record('realtimequiz', array('id' => $cm->instance))) {
+    if (!$quiz = $DB->get_record('realtimequiz', ['id' => $cm->instance])) {
         return false;
     }
 
-    if (!$question = $DB->get_record('realtimequiz_question', array('id' => $questionid, 'quizid' => $cm->instance))) {
+    if (!$question = $DB->get_record('realtimequiz_question', ['id' => $questionid, 'quizid' => $cm->instance])) {
         return false;
     }
 
@@ -371,12 +371,12 @@ function realtimequiz_extend_settings_navigation(settings_navigation $settings, 
     $cm = $settings->get_page()->cm;
     if (has_capability('mod/realtimequiz:editquestions', $cm->context)) {
         $checklistnode->add(get_string('edit', 'mod_realtimequiz'),
-                            new moodle_url('/mod/realtimequiz/edit.php', array('id' => $cm->id)),
+                            new moodle_url('/mod/realtimequiz/edit.php', ['id' => $cm->id]),
                             navigation_node::TYPE_SETTING, null, 'edit');
     }
     if (has_capability('mod/realtimequiz:seeresponses', $cm->context)) {
         $checklistnode->add(get_string('responses', 'mod_realtimequiz'),
-                            new moodle_url('/mod/realtimequiz/responses.php', array('id' => $cm->id)),
+                            new moodle_url('/mod/realtimequiz/responses.php', ['id' => $cm->id]),
                             navigation_node::TYPE_SETTING, null, 'responses');
     }
 }

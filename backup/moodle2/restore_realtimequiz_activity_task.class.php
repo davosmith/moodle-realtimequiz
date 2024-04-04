@@ -51,10 +51,10 @@ class restore_realtimequiz_activity_task extends restore_activity_task {
      * processed by the link decoder
      */
     public static function define_decode_contents() {
-        $contents = array();
+        $contents = [];
 
-        $contents[] = new restore_decode_content('realtimequiz', array('intro'));
-        $contents[] = new restore_decode_content('realtimequiz_question', array('questiontext'));
+        $contents[] = new restore_decode_content('realtimequiz', ['intro']);
+        $contents[] = new restore_decode_content('realtimequiz_question', ['questiontext']);
 
         return $contents;
     }
@@ -64,7 +64,7 @@ class restore_realtimequiz_activity_task extends restore_activity_task {
      * to the activity to be executed by the link decoder
      */
     public static function define_decode_rules() {
-        $rules = array();
+        $rules = [];
 
         // List of realtimequizs in course.
         $rules[] = new restore_decode_rule('REALTIMEQUIZINDEX', '/mod/realtimequiz/index.php?id=$1', 'course');
@@ -82,7 +82,7 @@ class restore_realtimequiz_activity_task extends restore_activity_task {
      * @return restore_log_rule[]
      */
     public static function define_restore_log_rules() {
-        $rules = array();
+        $rules = [];
 
         return $rules;
     }
@@ -99,7 +99,7 @@ class restore_realtimequiz_activity_task extends restore_activity_task {
      * @return restore_log_rule[]
      */
     public static function define_restore_log_rules_for_course() {
-        $rules = array();
+        $rules = [];
 
         return $rules;
     }

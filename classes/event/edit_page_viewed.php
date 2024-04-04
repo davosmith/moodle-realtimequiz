@@ -63,7 +63,7 @@ class edit_page_viewed extends \core\event\base {
      * @return string
      */
     public function get_description() {
-        return "The user with id '$this->userid' viewed the edit page for the realtime quiz with " .
+        return "The user with id '$this->userid' viewed the edit page for the realtime quiz with ".
             "course module id '$this->contextinstanceid'.";
     }
 
@@ -73,14 +73,14 @@ class edit_page_viewed extends \core\event\base {
      * @return \moodle_url
      */
     public function get_url() {
-        return new \moodle_url('/mod/realtimequiz/edit.php', array('id' => $this->contextinstanceid));
+        return new \moodle_url('/mod/realtimequiz/edit.php', ['id' => $this->contextinstanceid]);
     }
 
     /**
      * Custom validation.
      *
-     * @throws \coding_exception
      * @return void
+     * @throws \coding_exception
      */
     protected function validate_data() {
         parent::validate_data();

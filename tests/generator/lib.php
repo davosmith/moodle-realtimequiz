@@ -36,9 +36,9 @@ class mod_realtimequiz_generator extends testing_module_generator {
     public function create_instance($record = null, array $options = null) {
         $record = (object)(array)$record;
 
-        $defaultsettings = array(
+        $defaultsettings = [
             'questiontime' => 30,
-        );
+        ];
 
         foreach ($defaultsettings as $name => $value) {
             if (!isset($record->{$name})) {

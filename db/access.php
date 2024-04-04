@@ -24,66 +24,66 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$capabilities = array(
+$capabilities = [
 
     // Can start a quiz and move on to the next question
     // NB: must have 'attempt' as well to be able to see the questions.
-    'mod/realtimequiz:control' => array(
+    'mod/realtimequiz:control' => [
 
         'captype' => 'write',
         'contextlevel' => CONTEXT_MODULE,
-        'legacy' => array(
+        'legacy' => [
             'teacher' => CAP_ALLOW,
             'editingteacher' => CAP_ALLOW,
-            'manager' => CAP_ALLOW
-        )
-    ),
+            'manager' => CAP_ALLOW,
+        ],
+    ],
 
     // Can try to answer the quiz.
-    'mod/realtimequiz:attempt' => array(
+    'mod/realtimequiz:attempt' => [
 
         'captype' => 'write',
         'contextlevel' => CONTEXT_MODULE,
-        'legacy' => array(
+        'legacy' => [
             'student' => CAP_ALLOW,
             'teacher' => CAP_ALLOW,
             'editingteacher' => CAP_ALLOW,
-            'manager' => CAP_ALLOW
-        )
-    ),
+            'manager' => CAP_ALLOW,
+        ],
+    ],
 
     // Can see who gave what answer.
-    'mod/realtimequiz:seeresponses' => array(
+    'mod/realtimequiz:seeresponses' => [
 
         'captype' => 'read',
         'contextlevel' => CONTEXT_MODULE,
-        'legacy' => array(
+        'legacy' => [
             'teacher' => CAP_ALLOW,
             'editingteacher' => CAP_ALLOW,
-            'manager' => CAP_ALLOW
-        )
-    ),
+            'manager' => CAP_ALLOW,
+        ],
+    ],
 
     // Can add / delete / update questions.
-    'mod/realtimequiz:editquestions' => array(
+    'mod/realtimequiz:editquestions' => [
 
         'captype' => 'write',
         'contextlevel' => CONTEXT_MODULE,
-        'legacy' => array(
+        'legacy' => [
             'editingteacher' => CAP_ALLOW,
-            'manager' => CAP_ALLOW
-        )
-    ),
+            'manager' => CAP_ALLOW,
+        ],
+    ],
 
     // Can add an instance of this module to a course.
-    'mod/realtimequiz:addinstance' => array(
+    'mod/realtimequiz:addinstance' => [
         'captype' => 'write',
         'contextlevel' => CONTEXT_COURSE,
-        'legacy' => array(
+        'legacy' => [
             'editingteacher' => CAP_ALLOW,
             'coursecreator' => CAP_ALLOW,
-            'manager' => CAP_ALLOW
-        )
-    )
-);
+            'manager' => CAP_ALLOW,
+        ],
+    ],
+];
 

@@ -38,15 +38,15 @@ use core_privacy\local\request\writer;
  * @package mod_realtimequiz
  */
 class provider implements \core_privacy\local\metadata\provider,
-                          \core_privacy\local\request\plugin\provider,
-                          \core_privacy\local\request\core_userlist_provider {
+    \core_privacy\local\request\plugin\provider,
+    \core_privacy\local\request\core_userlist_provider {
 
     /**
      * Get details of user data stored by this plugin
      * @param collection $collection
      * @return collection
      */
-    public static function get_metadata(collection $collection) : collection {
+    public static function get_metadata(collection $collection): collection {
         $collection->add_database_table(
             'realtimequiz_submitted',
             [
@@ -82,7 +82,7 @@ class provider implements \core_privacy\local\metadata\provider,
      * @return contextlist
      * @throws \dml_exception
      */
-    public static function get_contexts_for_userid(int $userid) : contextlist {
+    public static function get_contexts_for_userid(int $userid): contextlist {
         $contextlist = new contextlist();
         $modid = self::get_modid();
         if (!$modid) {
@@ -125,7 +125,7 @@ class provider implements \core_privacy\local\metadata\provider,
         }
 
         $user = $contextlist->get_user();
-        list($contextsql, $contextparams) = $DB->get_in_or_equal($contextlist->get_contextids(), SQL_PARAMS_NAMED);
+        [$contextsql, $contextparams] = $DB->get_in_or_equal($contextlist->get_contextids(), SQL_PARAMS_NAMED);
 
         $sql = "SELECT cm.id AS cmid,
                        sess.name AS sessionname,
@@ -239,7 +239,7 @@ class provider implements \core_privacy\local\metadata\provider,
             }
             $questionids = $DB->get_fieldset_select('realtimequiz_question', 'id', 'quizid = ?', [$cm->instance]);
             if ($questionids) {
-                list($qsql, $params) = $DB->get_in_or_equal($questionids, SQL_PARAMS_NAMED);
+                [$qsql, $params] = $DB->get_in_or_equal($questionids, SQL_PARAMS_NAMED);
                 $params['userid'] = $userid;
                 $DB->delete_records_select('realtimequiz_submitted', "questionid $qsql AND userid = :userid", $params);
             }
@@ -249,7 +249,7 @@ class provider implements \core_privacy\local\metadata\provider,
     /**
      * Get the list of users who have data within a context.
      *
-     * @param   userlist    $userlist   The userlist containing the list of users who have data in this context/plugin combination.
+     * @param userlist $userlist The userlist containing the list of users who have data in this context/plugin combination.
      */
     public static function get_users_in_context(userlist $userlist) {
         $context = $userlist->get_context();
@@ -263,7 +263,7 @@ class provider implements \core_privacy\local\metadata\provider,
         $params = [
             'modid' => $modid,
             'contextlevel' => CONTEXT_MODULE,
-            'contextid'    => $context->id,
+            'contextid' => $context->id,
         ];
 
         // Quiz responses.
@@ -283,7 +283,7 @@ class provider implements \core_privacy\local\metadata\provider,
     /**
      * Delete multiple users within a single context.
      *
-     * @param   approved_userlist       $userlist The approved context and user information to delete information for.
+     * @param approved_userlist $userlist The approved context and user information to delete information for.
      */
     public static function delete_data_for_users(approved_userlist $userlist) {
         global $DB;
@@ -298,7 +298,7 @@ class provider implements \core_privacy\local\metadata\provider,
 
         // Prepare SQL to gather all completed IDs.
         $userids = $userlist->get_userids();
-        list($insql, $inparams) = $DB->get_in_or_equal($userids, SQL_PARAMS_NAMED);
+        [$insql, $inparams] = $DB->get_in_or_equal($userids, SQL_PARAMS_NAMED);
 
         // Delete quiz responses.
         $DB->delete_records_select(

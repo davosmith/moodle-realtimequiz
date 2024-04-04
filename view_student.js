@@ -7,19 +7,19 @@
 
 // Set up the variables used throughout the javascript
 var realtimequiz = {};
-realtimequiz.givenanswer=false;
-realtimequiz.timeleft=-1;
-realtimequiz.timer=null;
-realtimequiz.questionnumber=-1;
-realtimequiz.answernumber=-1;
-realtimequiz.questionxml=null;
+realtimequiz.givenanswer = false;
+realtimequiz.timeleft = -1;
+realtimequiz.timer = null;
+realtimequiz.questionnumber = -1;
+realtimequiz.answernumber = -1;
+realtimequiz.questionxml = null;
 realtimequiz.controlquiz = false;
 realtimequiz.lastrequest = '';
-realtimequiz.sesskey=-1;
-realtimequiz.coursepage='';
-realtimequiz.siteroot='';
-realtimequiz.myscore=0;
-realtimequiz.myanswer=-1;
+realtimequiz.sesskey = -1;
+realtimequiz.coursepage = '';
+realtimequiz.siteroot = '';
+realtimequiz.myscore = 0;
+realtimequiz.myanswer = -1;
 realtimequiz.resendtimer = null;
 realtimequiz.resenddelay = 2000; // How long to wait before resending request
 realtimequiz.alreadyrunning = false;
@@ -97,8 +97,8 @@ function realtimequiz_set_running(running) {
  * Set up the basic layout of the student view
  **************************************************/
 function realtimequiz_init_student_view() {
-    var msg="<center><input type='button' onclick='realtimequiz_join_quiz();' value='"+realtimequiz.text['joinquiz']+"' />";
-    msg += "<p id='status'>"+realtimequiz.text['joininstruct']+"</p></center>";
+    var msg = "<center><input type='button' onclick='realtimequiz_join_quiz();' value='" + realtimequiz.text['joinquiz'] + "' />";
+    msg += "<p id='status'>" + realtimequiz.text['joininstruct'] + "</p></center>";
     document.getElementById('questionarea').innerHTML = msg;
 }
 
@@ -107,13 +107,13 @@ function realtimequiz_init_question_view() {
         return;
     }
     if (realtimequiz.controlquiz) {
-        document.getElementById("questionarea").innerHTML = "<h1><span id='questionnumber'>"+realtimequiz.text['waitstudent']+"</span></h1><div id='numberstudents'></div><div id='questionimage'></div><div id='questiontext'>"+realtimequiz.text['clicknext']+"</div><ul id='answers'></ul><p><span id='status'></span> <span id='timeleft'></span></p>";
+        document.getElementById("questionarea").innerHTML = "<h1><span id='questionnumber'>" + realtimequiz.text['waitstudent'] + "</span></h1><div id='numberstudents'></div><div id='questionimage'></div><div id='questiontext'>" + realtimequiz.text['clicknext'] + "</div><ul id='answers'></ul><p><span id='status'></span> <span id='timeleft'></span></p>";
         document.getElementById("questionarea").innerHTML += "<div id='questioncontrols'></div><br style='clear: both;' />";
         realtimequiz_update_next_button(true);
         // To trigger the periodic sending to get the number of students
         realtimequiz_get_question();
     } else {
-        document.getElementById("questionarea").innerHTML = "<h1><span id='questionnumber'>"+realtimequiz.text['waitfirst']+"</span></h1><div id='questionimage'></div><div id='questiontext'></div><ul id='answers'></ul><p><span id='status'></span> <span id='timeleft'></span></p><br style='clear: both;' />";
+        document.getElementById("questionarea").innerHTML = "<h1><span id='questionnumber'>" + realtimequiz.text['waitfirst'] + "</span></h1><div id='questionimage'></div><div id='questiontext'></div><ul id='answers'></ul><p><span id='status'></span> <span id='timeleft'></span></p><br style='clear: both;' />";
         realtimequiz_get_question();
         realtimequiz.myscore = 0;
     }
@@ -138,7 +138,7 @@ function realtimequiz_set_question_text(text) {
 
 function realtimequiz_set_question_image(url, width, height) {
     if (url) {
-        document.getElementById('questionimage').innerHTML = '<image style="border: 1px solid black; float: right;" src="'+url+'" height="'+height+'px" width="'+width+'px" />';
+        document.getElementById('questionimage').innerHTML = '<image style="border: 1px solid black; float: right;" src="' + url + '" height="' + height + 'px" width="' + width + 'px" />';
     } else {
         document.getElementById('questionimage').innerHTML = '';
     }
@@ -155,13 +155,13 @@ function realtimequiz_set_answer(id, text, position) {
     }
 
     var letter = String.fromCharCode(65 + realtimequiz.answernumber);        //ASCII 'A'
-    var newanswer = '<li id="answer'+id+'" class="realtimequiz-answer-pos-'+position+'"><input ';
+    var newanswer = '<li id="answer' + id + '" class="realtimequiz-answer-pos-' + position + '"><input ';
     if (realtimequiz.controlquiz) {
         newanswer += 'disabled=disabled ';
     }
-    newanswer += 'type="button" OnClick="realtimequiz_select_choice('+id+');"';
-    newanswer += ' value="&nbsp;&nbsp;'+letter+'&nbsp;&nbsp;" />&nbsp;&nbsp;';
-    newanswer += text + '<span class="result"><img src="'+realtimequiz.image['blank']+'" height="16" /></span><br /></li>';
+    newanswer += 'type="button" OnClick="realtimequiz_select_choice(' + id + ');"';
+    newanswer += ' value="&nbsp;&nbsp;' + letter + '&nbsp;&nbsp;" />&nbsp;&nbsp;';
+    newanswer += text + '<span class="result"><img src="' + realtimequiz.image['blank'] + '" height="16" /></span><br /></li>';
 
     document.getElementById('answers').innerHTML += newanswer;
     realtimequiz.answernumber += 1;
@@ -191,8 +191,8 @@ function realtimequiz_set_question() {
 
     var answers = realtimequiz.questionxml.getElementsByTagName('answer');
     realtimequiz_clear_answers();
-    for (var i=0; i<answers.length; i++) {
-        realtimequiz_set_answer(parseInt(answers[i].getAttribute('id')), node_text(answers[i]), i+1);
+    for (var i = 0; i < answers.length; i++) {
+        realtimequiz_set_answer(parseInt(answers[i].getAttribute('id')), node_text(answers[i]), i + 1);
     }
     realtimequiz.givenanswer = false;
     realtimequiz.myanswer = -1;
@@ -200,24 +200,24 @@ function realtimequiz_set_question() {
 }
 
 function realtimequiz_disable_answer(answerel) {
-    answerel.innerHTML = answerel.innerHTML.replace(/<input /i,'<input disabled=disabled ');
+    answerel.innerHTML = answerel.innerHTML.replace(/<input /i, '<input disabled=disabled ');
 }
 
 function realtimequiz_set_result(answerid, correct, count, nocorrect) {
-    var anscontainer = document.getElementById('answer'+answerid);
+    var anscontainer = document.getElementById('answer' + answerid);
     if (anscontainer) {
         var ansimage = anscontainer.getElementsByTagName('span');
-        for (var i=0; i<ansimage.length; i++) {
+        for (var i = 0; i < ansimage.length; i++) {
             if (ansimage[i].className == 'result') {
                 var result;
                 if (nocorrect) {
-                    result = '&nbsp;&nbsp'+count;
+                    result = '&nbsp;&nbsp' + count;
                 } else {
                     result = "&nbsp;&nbsp;<img src='";
                     if (correct) {
-                        result += realtimequiz.image['tick'] + "' alt='"+realtimequiz.text['tick']+"'";
+                        result += realtimequiz.image['tick'] + "' alt='" + realtimequiz.text['tick'] + "'";
                     } else {
-                        result += realtimequiz.image['cross'] + "' cross.gif' alt='"+realtimequiz.text['cross']+"'";
+                        result += realtimequiz.image['cross'] + "' cross.gif' alt='" + realtimequiz.text['cross'] + "'";
                     }
                     result += " height='16' />&nbsp;&nbsp; " + count;
                 }
@@ -231,15 +231,15 @@ function realtimequiz_set_result(answerid, correct, count, nocorrect) {
 function realtimequiz_show_final_results(quizresponse) {
     if (realtimequiz.controlquiz || realtimequiz.markedquestions > 0) {
         var classresult = node_text(quizresponse.getElementsByTagName('classresult').item(0));
-        var msg = '<h1>'+realtimequiz.text['finalresults']+'</h1>';
-        msg += '<p>'+realtimequiz.text['classresult']+classresult+'%'+realtimequiz.text['resultcorrect'];
+        var msg = '<h1>' + realtimequiz.text['finalresults'] + '</h1>';
+        msg += '<p>' + realtimequiz.text['classresult'] + classresult + '%' + realtimequiz.text['resultcorrect'];
         if (!realtimequiz.controlquiz) {
-            msg += '<br><strong>'+realtimequiz.text['yourresult']+parseInt((realtimequiz.myscore * 100)/realtimequiz.questionnumber);
-            msg += '%'+realtimequiz.text['resultcorrect']+'</strong>';
+            msg += '<br><strong>' + realtimequiz.text['yourresult'] + parseInt((realtimequiz.myscore * 100) / realtimequiz.questionnumber);
+            msg += '%' + realtimequiz.text['resultcorrect'] + '</strong>';
         }
         msg += '</p>';
     } else {
-        var msg = '<h1>'+realtimequiz.text['quizfinished']+'</h1>';
+        var msg = '<h1>' + realtimequiz.text['quizfinished'] + '</h1>';
     }
     document.getElementById('questionarea').innerHTML = msg;
 }
@@ -250,11 +250,11 @@ function realtimequiz_show_final_results(quizresponse) {
 function realtimequiz_select_choice(choice) {
     if (!realtimequiz.givenanswer) {
         realtimequiz_set_status(realtimequiz.text['sendinganswer']);
-        realtimequiz.givenanswer=true;
+        realtimequiz.givenanswer = true;
         realtimequiz.myanswer = choice;
         var answers = document.getElementById('answers').getElementsByTagName('li');
-        var chosenid = 'answer'+choice;
-        for (var ans=0; ans<answers.length; ans++) {
+        var chosenid = 'answer' + choice;
+        for (var ans = 0; ans < answers.length; ans++) {
             if (chosenid != answers[ans].id) {
                 realtimequiz_disable_answer(answers[ans]);
             }
@@ -273,8 +273,8 @@ function realtimequiz_start_timer(counttime, preview) {
     } else {
         realtimequiz_set_status(realtimequiz.text['timeleft']);
     }
-    realtimequiz.timeleft=counttime+1;
-    realtimequiz.timer=setInterval("realtimequiz_timer_tick("+preview+")", 1000);
+    realtimequiz.timeleft = counttime + 1;
+    realtimequiz.timer = setInterval("realtimequiz_timer_tick(" + preview + ")", 1000);
     realtimequiz_timer_tick();
 }
 
@@ -289,7 +289,7 @@ function realtimequiz_timer_tick(preview) {
     realtimequiz.timeleft--;
     if (realtimequiz.timeleft <= 0) {
         realtimequiz_stop_timer();
-        realtimequiz.timeleft=0;
+        realtimequiz.timeleft = 0;
         if (preview) {
             realtimequiz_set_question();
         } else {
@@ -297,7 +297,7 @@ function realtimequiz_timer_tick(preview) {
             document.getElementById('timeleft').innerHTML = "";
             if (!realtimequiz.givenanswer) {
                 var answers = document.getElementById('answers').getElementsByTagName('li');
-                for (var ans=0; ans<answers.length; ans++) {
+                for (var ans = 0; ans < answers.length; ans++) {
                     realtimequiz_disable_answer(answers[ans]);
                 }
             }
@@ -345,12 +345,10 @@ function realtimequiz_create_request(parameters) {
     } else if (window.ActiveXObject) { // IE
         try {
             httpRequest = new ActiveXObject("Msxml2.XMLHTTP");
-        }
-        catch (e) {
+        } catch (e) {
             try {
                 httpRequest = new ActiveXObject("Microsoft.XMLHTTP");
-            }
-            catch (e) {
+            } catch (e) {
             }
         }
     }
@@ -359,12 +357,12 @@ function realtimequiz_create_request(parameters) {
         alert(realtimequiz.text['httprequestfail']);
         return false;
     }
-    httpRequest.onreadystatechange = function() {
+    httpRequest.onreadystatechange = function () {
         realtimequiz_process_contents(httpRequest);
     };
-    httpRequest.open('POST', realtimequiz.siteroot+'/mod/realtimequiz/quizdata.php', true);
+    httpRequest.open('POST', realtimequiz.siteroot + '/mod/realtimequiz/quizdata.php', true);
     httpRequest.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-    httpRequest.send(parameters+'&sesskey='+realtimequiz.sesskey);
+    httpRequest.send(parameters + '&sesskey=' + realtimequiz.sesskey);
 
     // Resend the request if nothing back from the server within 2 seconds
     realtimequiz_delayed_request("realtimequiz_resend_request()", realtimequiz.resenddelay);
@@ -399,19 +397,19 @@ function node_text(node) { // Cross-browser - extract text from XML node
 
 // Various requests that can be sent to the server
 function realtimequiz_get_question() {
-    realtimequiz_create_request('requesttype=getquestion&quizid='+realtimequiz.quizid);
+    realtimequiz_create_request('requesttype=getquestion&quizid=' + realtimequiz.quizid);
 }
 
 function realtimequiz_get_results() {
-    realtimequiz_create_request('requesttype=getresults&quizid='+realtimequiz.quizid+'&question='+realtimequiz.questionnumber);
+    realtimequiz_create_request('requesttype=getresults&quizid=' + realtimequiz.quizid + '&question=' + realtimequiz.questionnumber);
 }
 
 function realtimequiz_post_answer(ans) {
-    realtimequiz_create_request('requesttype=postanswer&quizid='+realtimequiz.quizid+'&question='+realtimequiz.questionnumber+'&userid='+realtimequiz.userid+'&answer='+ans);
+    realtimequiz_create_request('requesttype=postanswer&quizid=' + realtimequiz.quizid + '&question=' + realtimequiz.questionnumber + '&userid=' + realtimequiz.userid + '&answer=' + ans);
 }
 
 function realtimequiz_join_quiz() {
-    realtimequiz_create_request('requesttype=quizrunning&quizid='+realtimequiz.quizid+'');
+    realtimequiz_create_request('requesttype=quizrunning&quizid=' + realtimequiz.quizid + '');
 }
 
 // Process the server's response
@@ -444,10 +442,10 @@ function realtimequiz_process_contents(httpRequest) {
                 var quizstatus = node_text(quizresponse.getElementsByTagName('status').item(0));
                 if (quizstatus == 'showquestion') {
                     if (document.getElementById("numberstudents"))
-                        document.getElementById("numberstudents").style.display = 'none' ;
+                        document.getElementById("numberstudents").style.display = 'none';
                     realtimequiz.questionxml = quizresponse.getElementsByTagName('question').item(0);
                     if (!realtimequiz.questionxml) {
-                        alert(realtimequiz.text['noquestion']+httpRequest.responseHTML);
+                        alert(realtimequiz.text['noquestion'] + httpRequest.responseHTML);
                         if (confirm(realtimequiz.text['tryagain'])) {
                             realtimequiz_resend_request();
                         } else {
@@ -474,7 +472,7 @@ function realtimequiz_process_contents(httpRequest) {
                         var results = quizresponse.getElementsByTagName('result');
                         var nocorrect = quizresponse.getElementsByTagName('nocorrect');
                         nocorrect = (nocorrect.length != 0);
-                        for (var i=0; i<results.length; i++) {
+                        for (var i = 0; i < results.length; i++) {
                             var iscorrect = (results[i].getAttribute('correct') == 'true');
                             var answerid = parseInt(results[i].getAttribute('id'));
                             realtimequiz_set_result(answerid, iscorrect, parseInt(node_text(results[i])), nocorrect);
@@ -487,14 +485,14 @@ function realtimequiz_process_contents(httpRequest) {
                             realtimequiz_set_status('');
                         } else {
                             var statistics = quizresponse.getElementsByTagName('statistics').item(0);
-                            var status = realtimequiz.text['resultthisquestion']+'<strong>';
+                            var status = realtimequiz.text['resultthisquestion'] + '<strong>';
                             status += node_text(statistics.getElementsByTagName('questionresult').item(0));
-                            status += '%</strong>'+realtimequiz.text['resultoverall'];
+                            status += '%</strong>' + realtimequiz.text['resultoverall'];
                             status += node_text(statistics.getElementsByTagName('classresult').item(0));
-                            status += '%'+realtimequiz.text['resultcorrect'];
+                            status += '%' + realtimequiz.text['resultcorrect'];
                             if (!realtimequiz.controlquiz) {
-                                status += '<strong> '+realtimequiz.text['yourresult']+parseInt((realtimequiz.myscore * 100) / realtimequiz.questionnumber);
-                                status += '%'+realtimequiz.text['resultcorrect']+'</strong>';
+                                status += '<strong> ' + realtimequiz.text['yourresult'] + parseInt((realtimequiz.myscore * 100) / realtimequiz.questionnumber);
+                                status += '%' + realtimequiz.text['resultcorrect'] + '</strong>';
                             }
                             realtimequiz_set_status(status);
                             realtimequiz.markedquestions++;
@@ -504,7 +502,7 @@ function realtimequiz_process_contents(httpRequest) {
                     if (realtimequiz.controlquiz) {
                         realtimequiz_update_next_button(true);  // Teacher controls when to display the next question
                     } else {
-                        realtimequiz_delayed_request("realtimequiz_get_question()",900); // Wait for next question to be displayed
+                        realtimequiz_delayed_request("realtimequiz_get_question()", 900); // Wait for next question to be displayed
                     }
 
                 } else if (quizstatus == 'answerreceived') {
@@ -521,12 +519,12 @@ function realtimequiz_process_contents(httpRequest) {
                     } else {
                         waittime = 600;
                     }
-                    var number_of_students = quizresponse.getElementsByTagName('numberstudents').item(0) ;
+                    var number_of_students = quizresponse.getElementsByTagName('numberstudents').item(0);
                     if (number_of_students && document.getElementById("numberstudents")) {
                         if (node_text(number_of_students) == '1') {
-                            document.getElementById("numberstudents").innerHTML = node_text(number_of_students)+' '+realtimequiz.text['studentconnected'] ;
+                            document.getElementById("numberstudents").innerHTML = node_text(number_of_students) + ' ' + realtimequiz.text['studentconnected'];
                         } else {
-                            document.getElementById("numberstudents").innerHTML = node_text(number_of_students)+' '+realtimequiz.text['studentsconnected'] ;
+                            document.getElementById("numberstudents").innerHTML = node_text(number_of_students) + ' ' + realtimequiz.text['studentsconnected'];
                         }
                     }
                     realtimequiz_delayed_request("realtimequiz_get_question()", waittime);
@@ -552,10 +550,10 @@ function realtimequiz_process_contents(httpRequest) {
 
                 } else if (quizstatus == 'error') {
                     var errmsg = node_text(quizresponse.getElementsByTagName('message').item(0));
-                    alert(realtimequiz.text['servererror']+errmsg);
+                    alert(realtimequiz.text['servererror'] + errmsg);
 
                 } else {
-                    alert(realtimequiz.text['badresponse']+httpRequest.responseText);
+                    alert(realtimequiz.text['badresponse'] + httpRequest.responseText);
                     if (confirm(realtimequiz.text['tryagain'])) {
                         realtimequiz_resend_request();
                     } else {

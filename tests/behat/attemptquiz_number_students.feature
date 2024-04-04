@@ -13,12 +13,11 @@ Feature: The teacher waits for a sufficient number of students
       | user     | course | role           |
       | teacher1 | C1     | editingteacher |
       | student1 | C1     | student        |
+    And the following "activities" exist:
+      | activity     | course | name               | idnumber | intro                             | questiontime |
+      | realtimequiz | C1     | Test realtime quiz | RTQ01    | Test the realtime quiz is working | 25           |
     And I log in as "teacher1"
     And I am on "Course 1" course homepage with editing mode on
-    And I add a "Realtime quiz" to section "1" and I fill the form with:
-      | Realtime quiz         | Test realtime quiz                |
-      | Introduction          | Test the realtime quiz is working |
-      | Default question time | 25                                |
     And I am on the "Test realtime quiz" "realtimequiz activity" page
     And I press "Add question"
     And I set the following fields to these values:

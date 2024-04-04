@@ -28,16 +28,16 @@ require_once($CFG->dirroot.'/mod/realtimequiz/lib.php');
 
 
 $id = required_param('id', PARAM_INT);   // Course.
-$course = $DB->get_record('course', array('id' => $id), '*', MUST_EXIST);
+$course = $DB->get_record('course', ['id' => $id], '*', MUST_EXIST);
 
-$PAGE->set_url(new moodle_url('/mod/realtimequiz/index.php', array('id' => $course->id)));
+$PAGE->set_url(new moodle_url('/mod/realtimequiz/index.php', ['id' => $course->id]));
 require_course_login($course);
 $PAGE->set_pagelayout('incourse');
 
 if ($CFG->version > 2014051200) { // Moodle 2.7+.
-    $params = array(
-        'context' => context_course::instance($course->id)
-    );
+    $params = [
+        'context' => context_course::instance($course->id),
+    ];
     $event = \mod_realtimequiz\event\course_module_instance_list_viewed::create($params);
     $event->add_record_snapshot('course', $course);
     $event->trigger();
@@ -71,18 +71,18 @@ $strtopic = get_string("topic");
 $table = new html_table();
 
 if ($course->format === "weeks") {
-    $table->head = array($strweek, $strname);
-    $table->align = array("center", "left");
+    $table->head = [$strweek, $strname];
+    $table->align = ["center", "left"];
 } else if ($course->format === "topics") {
-    $table->head = array($strtopic, $strname);
-    $table->align = array("center", "left");
+    $table->head = [$strtopic, $strname];
+    $table->align = ["center", "left"];
 } else {
-    $table->head = array($strname);
-    $table->align = array("left", "left");
+    $table->head = [$strname];
+    $table->align = ["left", "left"];
 }
 
 foreach ($realtimequizs as $realtimequiz) {
-    $url = new moodle_url('/mod/realtimequiz/view.php', array('id' => $realtimequiz->coursemodule));
+    $url = new moodle_url('/mod/realtimequiz/view.php', ['id' => $realtimequiz->coursemodule]);
     if (!$realtimequiz->visible) {
         // Show dimmed if the mod is hidden.
         $link = '<a class="dimmed" href="'.$url.'">'.$realtimequiz->name.'</a>';
@@ -92,9 +92,9 @@ foreach ($realtimequizs as $realtimequiz) {
     }
 
     if ($course->format === 'weeks' || $course->format === 'topics') {
-        $table->data[] = array($realtimequiz->section, $link);
+        $table->data[] = [$realtimequiz->section, $link];
     } else {
-        $table->data[] = array($link);
+        $table->data[] = [$link];
     }
 }
 

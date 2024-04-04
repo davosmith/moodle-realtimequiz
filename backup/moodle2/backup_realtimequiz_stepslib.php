@@ -44,29 +44,29 @@ class backup_realtimequiz_activity_structure_step extends backup_activity_struct
 
         // Define each element separated.
 
-        $realtimequiz = new backup_nested_element('realtimequiz', array('id'), array(
-            'name', 'intro', 'introformat', 'timecreated', 'timemodified', 'questiontime'
-        ));
+        $realtimequiz = new backup_nested_element('realtimequiz', ['id'], [
+            'name', 'intro', 'introformat', 'timecreated', 'timemodified', 'questiontime',
+        ]);
 
         $sessions = new backup_nested_element('sessions');
-        $session = new backup_nested_element('session', array('id'), array(
-            'name', 'timestamp'
-        ));
+        $session = new backup_nested_element('session', ['id'], [
+            'name', 'timestamp',
+        ]);
 
         $questions = new backup_nested_element('questions');
-        $question = new backup_nested_element('question', array('id'), array(
-            'questionnum', 'questiontext', 'questiontextformat', 'questiontime'
-        ));
+        $question = new backup_nested_element('question', ['id'], [
+            'questionnum', 'questiontext', 'questiontextformat', 'questiontime',
+        ]);
 
         $answers = new backup_nested_element('answers');
-        $answer = new backup_nested_element('answer', array('id'), array(
-            'answertext', 'correct'
-        ));
+        $answer = new backup_nested_element('answer', ['id'], [
+            'answertext', 'correct',
+        ]);
 
         $submissions = new backup_nested_element('submissions');
-        $submission = new backup_nested_element('submission', array('id'), array(
-            'sessionid', 'userid', 'answerid'
-        ));
+        $submission = new backup_nested_element('submission', ['id'], [
+            'sessionid', 'userid', 'answerid',
+        ]);
 
         // Build the tree.
         if ($userinfo) {
@@ -88,13 +88,13 @@ class backup_realtimequiz_activity_structure_step extends backup_activity_struct
 
         // Define sources.
 
-        $realtimequiz->set_source_table('realtimequiz', array('id' => backup::VAR_ACTIVITYID));
-        $question->set_source_table('realtimequiz_question', array('quizid' => backup::VAR_PARENTID));
-        $answer->set_source_table('realtimequiz_answer', array('questionid' => backup::VAR_PARENTID));
+        $realtimequiz->set_source_table('realtimequiz', ['id' => backup::VAR_ACTIVITYID]);
+        $question->set_source_table('realtimequiz_question', ['quizid' => backup::VAR_PARENTID]);
+        $answer->set_source_table('realtimequiz_answer', ['questionid' => backup::VAR_PARENTID]);
 
         if ($userinfo) {
-            $session->set_source_table('realtimequiz_session', array('quizid' => backup::VAR_PARENTID));
-            $submission->set_source_table('realtimequiz_submitted', array('questionid' => backup::VAR_PARENTID));
+            $session->set_source_table('realtimequiz_session', ['quizid' => backup::VAR_PARENTID]);
+            $submission->set_source_table('realtimequiz_submitted', ['questionid' => backup::VAR_PARENTID]);
         }
 
         // Define id annotations.

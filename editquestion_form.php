@@ -49,7 +49,8 @@ class realtimequiz_editquestion_form extends moodleform {
 
         $mform->addElement('header', 'general', get_string('general', 'form'));
 
-        $mform->addElement('editor', 'questiontext_editor', get_string('questiontext', 'mod_realtimequiz'), null, $editoroptions);
+        $mform->addElement('editor', 'questiontext_editor', get_string('questiontext', 'mod_realtimequiz'), null,
+                           $editoroptions);
         $mform->addRule('questiontext_editor', null, 'required', null, 'client');
 
         $mform->addElement('text', 'questiontime', get_string('editquestiontime', 'mod_realtimequiz'), 0);
@@ -57,25 +58,25 @@ class realtimequiz_editquestion_form extends moodleform {
 
         // Answers.
         for ($i = 1; $i <= $numanswers; $i++) {
-            $ansgroup = array(
+            $ansgroup = [
                 $mform->createElement('radio', 'answercorrect', '', '', $i,
-                                      array('class' => 'realtimequiz_answerradio')),
-                $mform->createElement('text', "answertext[$i]", '', array('size' => 30)),
-            );
-            $mform->addGroup($ansgroup, 'answer', get_string('answer', 'realtimequiz').$i, array(' '), false);
+                                      ['class' => 'realtimequiz_answerradio']),
+                $mform->createElement('text', "answertext[$i]", '', ['size' => 30]),
+            ];
+            $mform->addGroup($ansgroup, 'answer', get_string('answer', 'realtimequiz').$i, [' '], false);
             $mform->setType("answertext[$i]", PARAM_RAW);
         }
         $mform->addElement('radio', 'answercorrect', get_string('nocorrect', 'realtimequiz'), '', 0,
-                           array('class' => 'realtimequiz_answerradio'));
+                           ['class' => 'realtimequiz_answerradio']);
         $mform->addElement('submit', 'addanswers', get_string('addanswers', 'realtimequiz'));
 
         // Action buttons.
-        $actiongrp = array(
+        $actiongrp = [
             $mform->createElement('submit', 'save', get_string('updatequestion', 'realtimequiz')),
             $mform->createElement('submit', 'saveadd', get_string('saveadd', 'realtimequiz')),
             $mform->createElement('cancel'),
-        );
-        $mform->addGroup($actiongrp, 'buttonar', '', array(' '), false);
+        ];
+        $mform->addGroup($actiongrp, 'buttonar', '', [' '], false);
         $mform->closeHeaderBefore('buttonar');
     }
 

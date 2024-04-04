@@ -34,11 +34,11 @@ if ($addanswers) {
     $numanswers += 3;
 }
 
-$quiz = $DB->get_record('realtimequiz', array('id' => $quizid), '*', MUST_EXIST);
+$quiz = $DB->get_record('realtimequiz', ['id' => $quizid], '*', MUST_EXIST);
 $cm = get_coursemodule_from_instance('realtimequiz', $quiz->id, 0, false, MUST_EXIST);
-$course = $DB->get_record('course', array('id' => $cm->course), '*', MUST_EXIST);
+$course = $DB->get_record('course', ['id' => $cm->course], '*', MUST_EXIST);
 
-$url = new moodle_url('/mod/realtimequiz/editquestion.php', array('quizid' => $quizid));
+$url = new moodle_url('/mod/realtimequiz/editquestion.php', ['quizid' => $quizid]);
 if ($questionid) {
     $url->param('questionid', $questionid);
 }
@@ -50,12 +50,12 @@ $context = context_module::instance($cm->id);
 require_capability('mod/realtimequiz:editquestions', $context);
 
 if ($questionid) {
-    $question = $DB->get_record('realtimequiz_question', array('id' => $questionid, 'quizid' => $quizid), '*', MUST_EXIST);
+    $question = $DB->get_record('realtimequiz_question', ['id' => $questionid, 'quizid' => $quizid], '*', MUST_EXIST);
     $question->questionid = $question->id;
-    $question->answers = $DB->get_records('realtimequiz_answer', array('questionid' => $question->id), 'id');
+    $question->answers = $DB->get_records('realtimequiz_answer', ['questionid' => $question->id], 'id');
     $question->answercorrect = 0;
-    $question->answertext = array();
-    $question->answerid = array();
+    $question->answertext = [];
+    $question->answerid = [];
     $i = 1;
     foreach ($question->answers as $answer) {
         if ($answer->correct) {
@@ -70,43 +70,43 @@ if ($questionid) {
     $question = new stdClass();
     $question->id = 0;
     $question->quizid = $quiz->id;
-    $question->questionnum = $DB->count_records('realtimequiz_question', array('quizid' => $quiz->id)) + 1;
+    $question->questionnum = $DB->count_records('realtimequiz_question', ['quizid' => $quiz->id]) + 1;
     $question->questiontext = '';
     $question->questiontextformat = FORMAT_HTML;
     $question->questiontime = 0;
-    $question->answers = array();
+    $question->answers = [];
     $question->answercorrect = 1;
     $heading = get_string('addingquestion', 'mod_realtimequiz');
 }
 
 $maxbytes = get_max_upload_file_size($CFG->maxbytes, $course->maxbytes);
-$editoroptions = array(
+$editoroptions = [
     'subdirs' => false, 'maxbytes' => $maxbytes, 'maxfiles' => -1,
     'changeformat' => 0, 'context' => $context, 'noclean' => 0,
-    'trusttext' => true
-);
+    'trusttext' => true,
+];
 
 $numanswers = max(count($question->answers), $numanswers);
-$form = new realtimequiz_editquestion_form(null, array('editoroptions' => $editoroptions, 'numanswers' => $numanswers));
+$form = new realtimequiz_editquestion_form(null, ['editoroptions' => $editoroptions, 'numanswers' => $numanswers]);
 
 $question = file_prepare_standard_editor($question, 'questiontext', $editoroptions, $context,
                                          'mod_realtimequiz', 'question', $question->id);
 $form->set_data($question);
 
-$return = new moodle_url('/mod/realtimequiz/edit.php', array('quizid' => $quiz->id));
+$return = new moodle_url('/mod/realtimequiz/edit.php', ['quizid' => $quiz->id]);
 if ($form->is_cancelled()) {
     redirect($return);
 }
 
 if ($data = $form->get_data()) {
     if (isset($data->save) || isset($data->saveadd)) {
-        $updquestion = (object)array(
+        $updquestion = (object)[
             'quizid' => $quizid,
             'questionnum' => $question->questionnum,
             'questiontext' => 'toupdate',
             'questiontextformat' => FORMAT_HTML,
             'questiontime' => $data->questiontime,
-        );
+        ];
 
         if (!empty($question->id)) {
             $updquestion->id = $question->id;
@@ -134,7 +134,7 @@ if ($data = $form->get_data()) {
                 $changed = $changed || $updanswer->correct != $oldanswer->correct;
                 if ($changed) {
                     if ($updanswer->answertext === "") {
-                        $DB->delete_records('realtimequiz_answer', array('id' => $updanswer->id));
+                        $DB->delete_records('realtimequiz_answer', ['id' => $updanswer->id]);
                     } else {
                         $DB->update_record('realtimequiz_answer', $updanswer);
                     }
@@ -146,18 +146,18 @@ if ($data = $form->get_data()) {
         }
 
         if (isset($data->saveadd)) {
-            redirect(new moodle_url('/mod/realtimequiz/editquestion.php', array('quizid' => $quizid)));
+            redirect(new moodle_url('/mod/realtimequiz/editquestion.php', ['quizid' => $quizid]));
         }
 
         redirect($return);
     }
 }
 
-$jsmodule = array(
+$jsmodule = [
     'name' => 'mod_realtimequiz',
     'fullpath' => new moodle_url('/mod/realtimequiz/editquestions.js'),
-);
-$PAGE->requires->js_init_call('M.mod_realtimequiz.init_editpage', array(), false, $jsmodule);
+];
+$PAGE->requires->js_init_call('M.mod_realtimequiz.init_editpage', [], false, $jsmodule);
 
 $PAGE->set_heading($heading.$question->questionnum);
 $PAGE->set_title(get_string('pluginname', 'mod_realtimequiz'));
