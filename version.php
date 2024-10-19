@@ -24,8 +24,9 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version = 2024040400;  // The current module version (Date: YYYYMMDDXX).
+$plugin->version = 2024101900;  // The current module version (Date: YYYYMMDDXX).
 $plugin->requires = 2017111306;  // Moodle 3.4.6 (or above).
 $plugin->component = 'mod_realtimequiz';
 $plugin->maturity = MATURITY_STABLE;
-$plugin->release = '3.4.4.1';
+$plugin->release = '3.4.4.2';
+$plugin->supported = [34, 405];

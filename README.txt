@@ -13,6 +13,7 @@ The teacher can, at a later date, go back through the results and, for each ques
 Changes:
 --------
 
+2024-10-19 - 3.4.4.2 - Minor M4.5 compatibility fixes
 2024-04-04 - 3.4.4.1 - Minor M4.4 compatibility fixes
 2023-10-02 - 3.4.4.0 - update GitHub actions ready for 4.3 release
 2023-04-14 - 3.4.3.0 - Minor M4.2 compatibility fixes (remove legacy log functions in events)
