@@ -51,15 +51,6 @@ jobs:
           - php: '8.0'
             moodle-branch: 'MOODLE_400_STABLE'
             database: 'pgsql'
-          - php: '7.4'
-            moodle-branch: 'MOODLE_311_STABLE'
-            database: 'mariadb'
-          - php: '7.3'
-            moodle-branch: 'MOODLE_310_STABLE'
-            database: 'pgsql'
-          - php: '7.2'
-            moodle-branch: 'MOODLE_39_STABLE'
-            database: 'mariadb'
 
     steps:
       - name: Check out repository code
@@ -135,7 +126,7 @@ jobs:
       - name: Behat features
         if: ${{ !cancelled() }}
         run: moodle-plugin-ci behat --profile chrome
-     
+
       - name: Upload Behat Faildump
         if: ${{ failure() && steps.behat.outcome == 'failure' }}
         uses: actions/upload-artifact@v4
@@ -144,8 +135,7 @@ jobs:
           path: ${{ github.workspace }}/moodledata/behat_dump
           retention-days: 7
           if-no-files-found: ignore
-  
+
       - name: Mark cancelled jobs as failed.
         if: ${{ cancelled() }}
         run: exit 1
-        

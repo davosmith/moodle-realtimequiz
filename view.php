@@ -46,30 +46,22 @@ $PAGE->set_url(new moodle_url('/mod/realtimequiz/view.php', ['id' => $cm->id]));
 require_login($course->id, false, $cm);
 $PAGE->set_pagelayout('incourse');
 
-if ($CFG->version < 2011120100) {
-    $context = get_context_instance(CONTEXT_MODULE, $cm->id);
-} else {
-    $context = context_module::instance($cm->id);
-}
+$context = context_module::instance($cm->id);
 
 $questioncount = $DB->count_records('realtimequiz_question', ['quizid' => $realtimequiz->id]);
-if ($questioncount == 0 && has_capability('mod/realtimequiz:editquestions', $context)) {
+if ($questioncount === 0 && has_capability('mod/realtimequiz:editquestions', $context)) {
     redirect('edit.php?id='.$id);
 }
 
 require_capability('mod/realtimequiz:attempt', $context);
 
-if ($CFG->version > 2014051200) { // Moodle 2.7+.
-    $params = [
-        'context' => $context,
-        'objectid' => $realtimequiz->id,
-    ];
-    $event = \mod_realtimequiz\event\course_module_viewed::create($params);
-    $event->add_record_snapshot('realtimequiz', $realtimequiz);
-    $event->trigger();
-} else {
-    add_to_log($course->id, 'realtimequiz', 'view all', "index.php?id=$course->id", "");
-}
+$params = [
+    'context' => $context,
+    'objectid' => $realtimequiz->id,
+];
+$event = \mod_realtimequiz\event\course_module_viewed::create($params);
+$event->add_record_snapshot('realtimequiz', $realtimequiz);
+$event->trigger();
 
 $quizstatus = realtimequiz_update_status($realtimequiz->id, $realtimequiz->status);
 
@@ -82,40 +74,15 @@ $PAGE->set_title(strip_tags($course->shortname.': '.$strrealtimequiz.': '.format
 $PAGE->set_heading($course->fullname);
 echo $OUTPUT->header();
 
-if ($CFG->branch < 400) {
-    echo $OUTPUT->heading(format_string($realtimequiz->name));
-
-    if (class_exists('\core_completion\activity_custom_completion')) {
-        // Render the activity information.
-        $modinfo = get_fast_modinfo($course);
-        $cminfo = $modinfo->get_cm($cm->id);
-        $completiondetails = \core_completion\cm_completion_details::get_instance($cminfo, $USER->id);
-        $activitydates = \core\activity_dates::get_dates_for_module($cminfo, $USER->id);
-        echo $OUTPUT->activity_information($cminfo, $completiondetails, $activitydates);
-    }
-
-    realtimequiz_view_tabs('view', $cm->id, $context);
-
-    echo format_text($realtimequiz->intro, $realtimequiz->introformat);
-}
-
 // Print the main part of the page.
 
-if ($CFG->version < 2013111800) {
-    $tickimg = $OUTPUT->pix_url('i/tick_green_big');
-    $crossimg = $OUTPUT->pix_url('i/cross_red_big');
-    $spacer = $OUTPUT->pix_url('spacer');
-} else if ($CFG->branch < 33) {
-    $tickimg = $OUTPUT->pix_url('i/grade_correct');
-    $crossimg = $OUTPUT->pix_url('i/grade_incorrect');
-    $spacer = $OUTPUT->pix_url('spacer');
-} else {
-    $tickimg = $OUTPUT->image_url('i/grade_correct');
-    $crossimg = $OUTPUT->image_url('i/grade_incorrect');
-    $spacer = $OUTPUT->image_url('spacer');
-}
+$tickimg = $OUTPUT->image_url('i/grade_correct');
+$crossimg = $OUTPUT->image_url('i/grade_incorrect');
+$spacer = $OUTPUT->image_url('spacer');
 
 echo $OUTPUT->box_start('generalbox boxwidthwide boxaligncenter realtimequizbox');
+
+// @codingStandardsIgnoreStart - I know this is terrible, old code, but I've not the capacity to fix it now.
 ?>
     <div id="questionarea"></div>
     <!--    <div id="debugarea" style="border: 1px dashed black; width: 600px; height: 100px; overflow: scroll; "></div>
@@ -201,6 +168,7 @@ echo $OUTPUT->box_start('generalbox boxwidthwide boxaligncenter realtimequizbox'
     </script>
 
 <?php
+// @condingStandardsIgnoreEnd
 
 if (has_capability('mod/realtimequiz:control', $context)) {
     ?>

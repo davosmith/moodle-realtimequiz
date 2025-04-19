@@ -24,14 +24,14 @@
 
 namespace mod_realtimequiz;
 
-use \core_privacy\local\metadata\collection;
-use \mod_realtimequiz\privacy\provider;
+use core_privacy\local\metadata\collection;
+use mod_realtimequiz\privacy\provider;
 
 /**
  * Class mod_realtimequiz_privacy_provider_testcase
  * @covers \mod_realtimequiz\privacy\provider
  */
-class privacy_provider_test extends \core_privacy\tests\provider_testcase {
+final class privacy_provider_test extends \core_privacy\tests\provider_testcase {
     /** @var \stdClass The student object. */
     protected $student;
 
@@ -45,6 +45,7 @@ class privacy_provider_test extends \core_privacy\tests\provider_testcase {
      * {@inheritdoc}
      */
     protected function setUp(): void {
+        parent::setUp();
         $this->resetAfterTest();
 
         global $DB;
