@@ -22,9 +22,9 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  **/
 
-require_once(__DIR__."/../../config.php");
+require_once(__DIR__ . "/../../config.php");
 global $CFG, $PAGE, $OUTPUT, $DB;
-require_once($CFG->dirroot.'/mod/realtimequiz/lib.php');
+require_once($CFG->dirroot . '/mod/realtimequiz/lib.php');
 
 
 $id = required_param('id', PARAM_INT);   // Course.
@@ -51,7 +51,7 @@ $strrealtimequizzes = get_string("modulenameplural", "realtimequiz");
 $strrealtimequiz = get_string("modulename", "realtimequiz");
 
 $PAGE->navbar->add($strrealtimequizzes);
-$PAGE->set_title(strip_tags($course->shortname.': '.$strrealtimequizzes));
+$PAGE->set_title(strip_tags($course->shortname . ': ' . $strrealtimequizzes));
 echo $OUTPUT->header();
 
 // Get all the appropriate data.
@@ -85,10 +85,10 @@ foreach ($realtimequizs as $realtimequiz) {
     $url = new moodle_url('/mod/realtimequiz/view.php', ['id' => $realtimequiz->coursemodule]);
     if (!$realtimequiz->visible) {
         // Show dimmed if the mod is hidden.
-        $link = '<a class="dimmed" href="'.$url.'">'.$realtimequiz->name.'</a>';
+        $link = '<a class="dimmed" href="' . $url . '">' . $realtimequiz->name . '</a>';
     } else {
         // Show normal if the mod is visible.
-        $link = '<a href="'.$url.'">'.$realtimequiz->name.'</a>';
+        $link = '<a href="' . $url . '">' . $realtimequiz->name . '</a>';
     }
 
     if ($course->format === 'weeks' || $course->format === 'topics') {
@@ -103,4 +103,3 @@ echo html_writer::table($table);
 // Finish the page.
 
 echo $OUTPUT->footer();
-

@@ -26,9 +26,9 @@ define('AJAX_SCRIPT', true);
 
 require_once('../../config.php');
 global $CFG, $DB, $USER, $PAGE;
-require_once($CFG->dirroot.'/mod/realtimequiz/lib.php');
-require_once($CFG->dirroot.'/mod/realtimequiz/locallib.php');
-require_once($CFG->libdir.'/filelib.php');
+require_once($CFG->dirroot . '/mod/realtimequiz/lib.php');
+require_once($CFG->dirroot . '/mod/realtimequiz/locallib.php');
+require_once($CFG->libdir . '/filelib.php');
 
 require_login();
 require_sesskey();
@@ -71,10 +71,12 @@ if (!has_capability('mod/realtimequiz:attempt', $context)) {
 
 $status = $realtimequiz->status;
 if ($status === false) {
-    realtimequiz_send_error(get_string('badquizid', 'realtimequiz').$quizid);
+    realtimequiz_send_error(get_string('badquizid', 'realtimequiz') . $quizid);
 } else {
-    $status = realtimequiz_update_status($quizid,
-                                         $status); // Check if the current status should change due to a timeout.
+    $status = realtimequiz_update_status(
+        $quizid,
+        $status
+    ); // Check if the current status should change due to a timeout.
 
     if ($requesttype == 'quizrunning') {
         if (($status == REALTIMEQUIZ_STATUS_NOTRUNNING) || ($status == REALTIMEQUIZ_STATUS_FINALRESULTS)) {
@@ -103,11 +105,8 @@ if ($status === false) {
         } else {
             realtimequiz_send_error(get_string('notauthorised', 'realtimequiz'));
         }
-
     } else {
-
         switch ($status) {
-
             case REALTIMEQUIZ_STATUS_NOTRUNNING:   // Quiz is not running.
                 realtimequiz_send_not_running(); // We don't care what they asked for.
                 break;
@@ -129,13 +128,11 @@ if ($status === false) {
                 if ($requesttype == 'getquestion' || $requesttype == 'nextquestion' || $requesttype == 'teacherrejoin') {
                     // Student asked for a question - so send it.
                     realtimequiz_send_question($quizid, $context);
-
                 } else if ($requesttype == 'postanswer') {
                     $questionnum = required_param('question', PARAM_INT);
                     $userid = $USER->id;
                     $answerid = required_param('answer', PARAM_INT);
                     realtimequiz_record_answer($quizid, $questionnum, $userid, $answerid, $context);
-
                 } else if ($requesttype == 'getresults') {
                     $questionnum = required_param('question', PARAM_INT);
                     if (realtimequiz_current_question($quizid, $questionnum)) {
@@ -147,19 +144,16 @@ if ($status === false) {
                     } else {
                         realtimequiz_send_question($quizid, $context); // Asked for results for wrong question.
                     }
-
                 } else {
-                    realtimequiz_send_error(get_string('unknownrequest', 'realtimequiz').$requesttype.'\'');
+                    realtimequiz_send_error(get_string('unknownrequest', 'realtimequiz') . $requesttype . '\'');
                 }
                 break;
 
             case REALTIMEQUIZ_STATUS_SHOWRESULTS: // Results being displayed.
                 if ($requesttype == 'getquestion') { // Asking for the next question.
                     realtimequiz_send_await_question();
-
                 } else if ($requesttype == 'postanswer' || $requesttype == 'getresults' || $requesttype == 'teacherrejoin') {
                     realtimequiz_send_results($quizid);
-
                 } else if ($requesttype == 'nextquestion') {
                     $clientquestionnum = required_param('currentquestion', PARAM_INT);
                     $questionid = $DB->get_field('realtimequiz', 'currentquestion', ['id' => $quizid]);
@@ -170,9 +164,8 @@ if ($status === false) {
                         $questionnum++;
                         realtimequiz_goto_question($context, $quizid, $questionnum);
                     }
-
                 } else {
-                    realtimequiz_send_error(get_string('unknownrequest', 'realtimequiz').$requesttype.'\'');
+                    realtimequiz_send_error(get_string('unknownrequest', 'realtimequiz') . $requesttype . '\'');
                 }
                 break;
 
@@ -181,7 +174,7 @@ if ($status === false) {
                 break;
 
             default:
-                realtimequiz_send_error(get_string('incorrectstatus', 'realtimequiz').$status.'\'');
+                realtimequiz_send_error(get_string('incorrectstatus', 'realtimequiz') . $status . '\'');
                 break;
         }
     }

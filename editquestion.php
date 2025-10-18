@@ -22,9 +22,9 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-require_once(__DIR__.'/../../config.php');
+require_once(__DIR__ . '/../../config.php');
 global $DB, $CFG, $OUTPUT, $PAGE;
-require_once($CFG->dirroot.'/mod/realtimequiz/editquestion_form.php');
+require_once($CFG->dirroot . '/mod/realtimequiz/editquestion_form.php');
 
 $quizid = required_param('quizid', PARAM_INT);
 $questionid = optional_param('questionid', 0, PARAM_INT);
@@ -89,8 +89,15 @@ $editoroptions = [
 $numanswers = max(count($question->answers), $numanswers);
 $form = new realtimequiz_editquestion_form(null, ['editoroptions' => $editoroptions, 'numanswers' => $numanswers]);
 
-$question = file_prepare_standard_editor($question, 'questiontext', $editoroptions, $context,
-                                         'mod_realtimequiz', 'question', $question->id);
+$question = file_prepare_standard_editor(
+    $question,
+    'questiontext',
+    $editoroptions,
+    $context,
+    'mod_realtimequiz',
+    'question',
+    $question->id
+);
 $form->set_data($question);
 
 $return = new moodle_url('/mod/realtimequiz/edit.php', ['quizid' => $quiz->id]);
@@ -115,8 +122,15 @@ if ($data = $form->get_data()) {
         }
 
         // Save the attached files (now we know we have got a question id).
-        $data = file_postupdate_standard_editor($data, 'questiontext', $editoroptions, $context, 'mod_realtimequiz',
-                                                'question', $updquestion->id);
+        $data = file_postupdate_standard_editor(
+            $data,
+            'questiontext',
+            $editoroptions,
+            $context,
+            'mod_realtimequiz',
+            'question',
+            $updquestion->id
+        );
         $updquestion->questiontext = $data->questiontext;
         $updquestion->questiontextformat = $data->questiontextformat;
 
@@ -159,12 +173,12 @@ $jsmodule = [
 ];
 $PAGE->requires->js_init_call('M.mod_realtimequiz.init_editpage', [], false, $jsmodule);
 
-$PAGE->set_heading($heading.$question->questionnum);
+$PAGE->set_heading($heading . $question->questionnum);
 $PAGE->set_title(get_string('pluginname', 'mod_realtimequiz'));
 
 echo $OUTPUT->header();
 if ($CFG->branch < 400) {
-    echo $OUTPUT->heading($heading.$question->questionnum);
+    echo $OUTPUT->heading($heading . $question->questionnum);
 }
 
 $form->display();

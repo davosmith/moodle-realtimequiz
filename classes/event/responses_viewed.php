@@ -39,7 +39,6 @@ namespace mod_realtimequiz\event;
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class responses_viewed extends \core\event\base {
-
     /**
      * Init method.
      *
@@ -65,7 +64,7 @@ class responses_viewed extends \core\event\base {
      * @return string
      */
     public function get_description() {
-        return "The user with id '$this->userid' viewed the responses for the realtime quiz with ".
+        return "The user with id '$this->userid' viewed the responses for the realtime quiz with " .
             "course module id '$this->contextinstanceid'.";
     }
 

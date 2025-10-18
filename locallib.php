@@ -70,11 +70,11 @@ function realtimequiz_send_question($quizid, $context, $preview = false) {
     global $DB;
 
     if (!$quiz = $DB->get_record('realtimequiz', ['id' => $quizid])) {
-        realtimequiz_send_error(get_string('badquizid', 'realtimequiz').$quizid);
+        realtimequiz_send_error(get_string('badquizid', 'realtimequiz') . $quizid);
     } else {
         $questionid = $quiz->currentquestion;
         if (!$question = $DB->get_record('realtimequiz_question', ['id' => $questionid])) {
-            realtimequiz_send_error(get_string('badcurrentquestion', 'realtimequiz').$questionid);
+            realtimequiz_send_error(get_string('badcurrentquestion', 'realtimequiz') . $questionid);
         } else {
             $answers = $DB->get_records('realtimequiz_answer', ['questionid' => $questionid], 'id');
             $questioncount = $DB->count_records('realtimequiz_question', ['quizid' => $quizid]);
@@ -82,9 +82,14 @@ function realtimequiz_send_question($quizid, $context, $preview = false) {
             echo "<question><questionnumber>{$question->questionnum}</questionnumber>";
             echo "<questioncount>{$questioncount}</questioncount>";
             $questiontext = format_text($question->questiontext, $question->questiontextformat);
-            $questiontext = file_rewrite_pluginfile_urls($questiontext, 'pluginfile.php', $context->id,
-                                                         'mod_realtimequiz',
-                                                         'question', $questionid);
+            $questiontext = file_rewrite_pluginfile_urls(
+                $questiontext,
+                'pluginfile.php',
+                $context->id,
+                'mod_realtimequiz',
+                'question',
+                $questionid
+            );
             echo "<questiontext><![CDATA[{$questiontext}]]></questiontext>";
             if ($preview) {
                 $previewtime = $quiz->nextendtime - time();
@@ -124,11 +129,11 @@ function realtimequiz_send_results($quizid) {
     global $DB;
 
     if (!$quiz = $DB->get_record('realtimequiz', ['id' => $quizid])) {
-        realtimequiz_send_error(get_string('badquizid', 'realtimequiz').$quizid);
+        realtimequiz_send_error(get_string('badquizid', 'realtimequiz') . $quizid);
     } else {
         $questionid = $quiz->currentquestion;
         if (!$question = $DB->get_record('realtimequiz_question', ['id' => $questionid])) {
-            realtimequiz_send_error(get_string('badcurrentquestion', 'realtimequiz').$questionid);
+            realtimequiz_send_error(get_string('badcurrentquestion', 'realtimequiz') . $questionid);
         } else {
             // Do not worry about question number not matching request
             // client should sort out correct state, if they do not match
@@ -137,7 +142,7 @@ function realtimequiz_send_results($quizid) {
             $totalcorrect = 0;
             $answers = $DB->get_records('realtimequiz_answer', ['questionid' => $questionid], 'id');
             echo '<status>showresults</status>';
-            echo '<questionnum>'.$question->questionnum.'</questionnum>';
+            echo '<questionnum>' . $question->questionnum . '</questionnum>';
             echo '<results>';
             $numberofcorrectanswers = 0; // To detect questions that have no 'correct' answers.
             foreach ($answers as $answer) {
@@ -162,7 +167,7 @@ function realtimequiz_send_results($quizid) {
             }
             if ($newresult != $quiz->questionresult) {
                 $quiz->questionresult = $newresult;
-                $upd = new stdClass;
+                $upd = new stdClass();
                 $upd->id = $quiz->id;
                 $upd->questionresult = $quiz->questionresult;
                 $DB->update_record('realtimequiz', $upd);
@@ -173,8 +178,8 @@ function realtimequiz_send_results($quizid) {
                 echo '<nocorrect/>';
             }
             echo '<statistics>';
-            echo '<questionresult>'.$quiz->questionresult.'</questionresult>';
-            echo '<classresult>'.$classresult.'</classresult>';
+            echo '<questionresult>' . $quiz->questionresult . '</questionresult>';
+            echo '<classresult>' . $classresult . '</classresult>';
             echo '</statistics>';
         }
     }
@@ -197,7 +202,8 @@ function realtimequiz_record_answer($quizid, $questionnum, $userid, $answerid, $
     $question = $DB->get_record('realtimequiz_question', ['id' => $quiz->currentquestion]);
     $answer = $DB->get_record('realtimequiz_answer', ['id' => $answerid]);
 
-    if (($answer->questionid == $quiz->currentquestion)
+    if (
+        ($answer->questionid == $quiz->currentquestion)
         && ($question->questionnum == $questionnum)
     ) {
         $conditions = [
@@ -206,7 +212,7 @@ function realtimequiz_record_answer($quizid, $questionnum, $userid, $answerid, $
         if (!$DB->record_exists('realtimequiz_submitted', $conditions)) {
             // If we already have an answer from them, do not send error, as this is likely to be the
             // result of lost network packets & resends, just ignore silently.
-            $submitted = new stdClass;
+            $submitted = new stdClass();
             $submitted->questionid = $question->id;
             $submitted->sessionid = $quiz->currentsessionid;
             $submitted->userid = $userid;     // FIXME: make sure the userid is on the course.
@@ -214,9 +220,7 @@ function realtimequiz_record_answer($quizid, $questionnum, $userid, $answerid, $
             $DB->insert_record('realtimequiz_submitted', $submitted);
         }
         echo '<status>answerreceived</status>';
-
     } else {
-
         // Answer is not for the current question - so send the current question.
         realtimequiz_send_question($quizid, $context);
     }
@@ -314,7 +318,7 @@ function realtimequiz_send_final_results($quizid) {
     $quiz = $DB->get_record('realtimequiz', ['id' => $quizid]);
     $questionnum = $DB->get_field('realtimequiz_question', 'questionnum', ['id' => $quiz->currentquestion]);
     echo '<status>finalresults</status>';
-    echo '<classresult>'.intval($quiz->classresult / $questionnum).'</classresult>';
+    echo '<classresult>' . intval($quiz->classresult / $questionnum) . '</classresult>';
 }
 
 /**
@@ -341,7 +345,7 @@ function realtimequiz_update_status($quizid, $status) {
             } else {
                 $quiz->status = REALTIMEQUIZ_STATUS_SHOWRESULTS;
             }
-            $upd = new stdClass;
+            $upd = new stdClass();
             $upd->id = $quiz->id;
             $upd->status = $quiz->status;
             $upd->nextendtime = $quiz->nextendtime;
@@ -355,8 +359,10 @@ function realtimequiz_update_status($quizid, $status) {
             $status = REALTIMEQUIZ_STATUS_SHOWRESULTS;
             $DB->set_field('realtimequiz', 'status', $status, ['id' => $quizid]);
         }
-    } else if (($status != REALTIMEQUIZ_STATUS_NOTRUNNING) && ($status != REALTIMEQUIZ_STATUS_READYTOSTART)
-        && ($status != REALTIMEQUIZ_STATUS_SHOWRESULTS) && ($status != REALTIMEQUIZ_STATUS_FINALRESULTS)) {
+    } else if (
+        ($status != REALTIMEQUIZ_STATUS_NOTRUNNING) && ($status != REALTIMEQUIZ_STATUS_READYTOSTART)
+        && ($status != REALTIMEQUIZ_STATUS_SHOWRESULTS) && ($status != REALTIMEQUIZ_STATUS_FINALRESULTS)
+    ) {
         // Bad status = probably should set it back to 0.
         $status = REALTIMEQUIZ_STATUS_NOTRUNNING;
         $DB->set_field('realtimequiz', 'status', REALTIMEQUIZ_STATUS_NOTRUNNING, ['id' => $quizid]);
@@ -411,8 +417,11 @@ function realtimequiz_goto_question($context, $quizid, $questionnum) {
         // Update the question statistics.
         $quiz->classresult += $quiz->questionresult;
         $quiz->questionresult = 0;
-        $questionid = $DB->get_field('realtimequiz_question', 'id',
-                                     ['quizid' => $quizid, 'questionnum' => $questionnum]);
+        $questionid = $DB->get_field(
+            'realtimequiz_question',
+            'id',
+            ['quizid' => $quizid, 'questionnum' => $questionnum]
+        );
         if ($questionid) {
             $quiz->currentquestion = $questionid;
             $quiz->status = REALTIMEQUIZ_STATUS_PREVIEWQUESTION;

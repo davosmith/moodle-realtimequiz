@@ -24,11 +24,14 @@
 
 defined('MOODLE_INTERNAL') || die();
 global $CFG;
-require_once($CFG->dirroot.'/mod/realtimequiz/adminlib.php');
+require_once($CFG->dirroot . '/mod/realtimequiz/adminlib.php');
 
 if ($ADMIN->fulltree) {
-
-    $settings->add(new realtimequiz_awaittime_setting('realtimequiz/awaittime',
-                                                      new lang_string('awaittime', 'realtimequiz'),
-                                                      new lang_string('awaittimedesc', 'realtimequiz'), 2, PARAM_INT));
+    $settings->add(new realtimequiz_awaittime_setting(
+        'realtimequiz/awaittime',
+        new lang_string('awaittime', 'realtimequiz'),
+        new lang_string('awaittimedesc', 'realtimequiz'),
+        2,
+        PARAM_INT
+    ));
 }

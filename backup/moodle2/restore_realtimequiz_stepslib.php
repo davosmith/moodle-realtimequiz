@@ -30,7 +30,6 @@
  * Structure step to restore one realtimequiz activity
  */
 class restore_realtimequiz_activity_structure_step extends restore_activity_structure_step {
-
     /**
      * Define the restore structure
      * @return mixed
@@ -43,12 +42,16 @@ class restore_realtimequiz_activity_structure_step extends restore_activity_stru
 
         $paths[] = new restore_path_element('realtimequiz', '/activity/realtimequiz');
         $paths[] = new restore_path_element('realtimequiz_question', '/activity/realtimequiz/questions/question');
-        $paths[] = new restore_path_element('realtimequiz_answer',
-                                            '/activity/realtimequiz/questions/question/answers/answer');
+        $paths[] = new restore_path_element(
+            'realtimequiz_answer',
+            '/activity/realtimequiz/questions/question/answers/answer'
+        );
         if ($userinfo) {
             $paths[] = new restore_path_element('realtimequiz_session', '/activity/realtimequiz/sessions/session');
-            $paths[] = new restore_path_element('realtimequiz_submission',
-                                                '/activity/realtimequiz/questions/question/submissions/submission');
+            $paths[] = new restore_path_element(
+                'realtimequiz_submission',
+                '/activity/realtimequiz/questions/question/submissions/submission'
+            );
         }
 
         // Return the paths wrapped into standard activity structure.

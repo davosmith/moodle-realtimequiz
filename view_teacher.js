@@ -13,14 +13,14 @@ function realtimequiz_first_question() {
         sessionname = '&sessionname=' + encodeURIComponent(sessionname);
     }
     realtimequiz_create_request('requesttype=startquiz&quizid=' + realtimequiz.quizid + '&userid=' + realtimequiz.userid + sessionname);
-    //Userid needed to authenticate request
+    // Userid needed to authenticate request
 }
 
 function realtimequiz_next_question() {
     realtimequiz_update_next_button(false);
     realtimequiz_create_request('requesttype=nextquestion&quizid=' + realtimequiz.quizid + '&userid=' + realtimequiz.userid + '&currentquestion=' + realtimequiz.questionnumber);
     realtimequiz.clickednext = realtimequiz.questionnumber;
-    //Userid needed to authenticate request
+    // Userid needed to authenticate request
 }
 
 function realtimequiz_update_next_button(enabled) {
@@ -33,7 +33,6 @@ function realtimequiz_update_next_button(enabled) {
         } else {
             document.getElementById('questioncontrols').innerHTML = '<input type="button" onclick="realtimequiz_next_question()" value="' + realtimequiz.text['next'] + '" />';
         }
-
     } else {
         document.getElementById('questioncontrols').innerHTML = '<input type="button" onclick="realtimequiz_next_question()" value="' + realtimequiz.text['next'] + '" disabled="disabled" />';
     }
@@ -72,5 +71,3 @@ function realtimequiz_init_teacher_view() {
     msg += "<p id='status'>" + realtimequiz.text['teacherjoinquizinstruct'] + "</p></div>";
     document.getElementById('questionarea').innerHTML = msg;
 }
-
-

@@ -24,13 +24,12 @@
 
 defined('MOODLE_INTERNAL') || die();
 global $CFG;
-require_once($CFG->libdir.'/formslib.php');
+require_once($CFG->libdir . '/formslib.php');
 
 /**
  * Class realtimequiz_editquestion_form
  */
 class realtimequiz_editquestion_form extends moodleform {
-
     /**
      * Form definition
      * @throws coding_exception
@@ -49,8 +48,13 @@ class realtimequiz_editquestion_form extends moodleform {
 
         $mform->addElement('header', 'general', get_string('general', 'form'));
 
-        $mform->addElement('editor', 'questiontext_editor', get_string('questiontext', 'mod_realtimequiz'), null,
-                           $editoroptions);
+        $mform->addElement(
+            'editor',
+            'questiontext_editor',
+            get_string('questiontext', 'mod_realtimequiz'),
+            null,
+            $editoroptions
+        );
         $mform->addRule('questiontext_editor', null, 'required', null, 'client');
 
         $mform->addElement('text', 'questiontime', get_string('editquestiontime', 'mod_realtimequiz'), 0);
@@ -59,15 +63,27 @@ class realtimequiz_editquestion_form extends moodleform {
         // Answers.
         for ($i = 1; $i <= $numanswers; $i++) {
             $ansgroup = [
-                $mform->createElement('radio', 'answercorrect', '', '', $i,
-                                      ['class' => 'realtimequiz_answerradio']),
+                $mform->createElement(
+                    'radio',
+                    'answercorrect',
+                    '',
+                    '',
+                    $i,
+                    ['class' => 'realtimequiz_answerradio']
+                ),
                 $mform->createElement('text', "answertext[$i]", '', ['size' => 30]),
             ];
-            $mform->addGroup($ansgroup, 'answer', get_string('answer', 'realtimequiz').$i, [' '], false);
+            $mform->addGroup($ansgroup, 'answer', get_string('answer', 'realtimequiz') . $i, [' '], false);
             $mform->setType("answertext[$i]", PARAM_RAW);
         }
-        $mform->addElement('radio', 'answercorrect', get_string('nocorrect', 'realtimequiz'), '', 0,
-                           ['class' => 'realtimequiz_answerradio']);
+        $mform->addElement(
+            'radio',
+            'answercorrect',
+            get_string('nocorrect', 'realtimequiz'),
+            '',
+            0,
+            ['class' => 'realtimequiz_answerradio']
+        );
         $mform->addElement('submit', 'addanswers', get_string('addanswers', 'realtimequiz'));
 
         // Action buttons.
@@ -92,4 +108,3 @@ class realtimequiz_editquestion_form extends moodleform {
         $el->setValue($numanswers);
     }
 }
-

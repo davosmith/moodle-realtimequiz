@@ -24,13 +24,12 @@
 
 defined('MOODLE_INTERNAL') || die();
 global $CFG;
-require_once($CFG->dirroot.'/course/moodleform_mod.php');
+require_once($CFG->dirroot . '/course/moodleform_mod.php');
 
 /**
  * Class mod_realtimequiz_mod_form
  */
 class mod_realtimequiz_mod_form extends moodleform_mod {
-
     /**
      * Form definition
      * @throws coding_exception

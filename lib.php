@@ -233,16 +233,25 @@ function realtimequiz_view_tabs($currenttab, $cmid, $context) {
     $activated = [];
 
     if (has_capability('mod/realtimequiz:attempt', $context)) {
-        $row[] = new tabobject('view', new moodle_url('/mod/realtimequiz/view.php', ['id' => $cmid]),
-                               get_string('view', 'realtimequiz'));
+        $row[] = new tabobject(
+            'view',
+            new moodle_url('/mod/realtimequiz/view.php', ['id' => $cmid]),
+            get_string('view', 'realtimequiz')
+        );
     }
     if (has_capability('mod/realtimequiz:editquestions', $context)) {
-        $row[] = new tabobject('edit', new moodle_url('/mod/realtimequiz/edit.php', ['id' => $cmid]),
-                               get_string('edit', 'realtimequiz'));
+        $row[] = new tabobject(
+            'edit',
+            new moodle_url('/mod/realtimequiz/edit.php', ['id' => $cmid]),
+            get_string('edit', 'realtimequiz')
+        );
     }
     if (has_capability('mod/realtimequiz:seeresponses', $context)) {
-        $row[] = new tabobject('responses', new moodle_url('/mod/realtimequiz/responses.php', ['id' => $cmid]),
-                               get_string('responses', 'realtimequiz'));
+        $row[] = new tabobject(
+            'responses',
+            new moodle_url('/mod/realtimequiz/responses.php', ['id' => $cmid]),
+            get_string('responses', 'realtimequiz')
+        );
     }
 
     if ($currenttab == 'view' && count($row) == 1) {
@@ -370,13 +379,21 @@ function realtimequiz_extend_settings_navigation(settings_navigation $settings, 
     }
     $cm = $settings->get_page()->cm;
     if (has_capability('mod/realtimequiz:editquestions', $cm->context)) {
-        $checklistnode->add(get_string('edit', 'mod_realtimequiz'),
-                            new moodle_url('/mod/realtimequiz/edit.php', ['id' => $cm->id]),
-                            navigation_node::TYPE_SETTING, null, 'edit');
+        $checklistnode->add(
+            get_string('edit', 'mod_realtimequiz'),
+            new moodle_url('/mod/realtimequiz/edit.php', ['id' => $cm->id]),
+            navigation_node::TYPE_SETTING,
+            null,
+            'edit'
+        );
     }
     if (has_capability('mod/realtimequiz:seeresponses', $cm->context)) {
-        $checklistnode->add(get_string('responses', 'mod_realtimequiz'),
-                            new moodle_url('/mod/realtimequiz/responses.php', ['id' => $cm->id]),
-                            navigation_node::TYPE_SETTING, null, 'responses');
+        $checklistnode->add(
+            get_string('responses', 'mod_realtimequiz'),
+            new moodle_url('/mod/realtimequiz/responses.php', ['id' => $cm->id]),
+            navigation_node::TYPE_SETTING,
+            null,
+            'responses'
+        );
     }
 }

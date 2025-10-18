@@ -24,8 +24,8 @@
 
 require_once("../../config.php");
 global $CFG, $DB, $PAGE, $OUTPUT, $USER;
-require_once($CFG->dirroot.'/mod/realtimequiz/lib.php');
-require_once($CFG->dirroot.'/mod/realtimequiz/locallib.php');
+require_once($CFG->dirroot . '/mod/realtimequiz/lib.php');
+require_once($CFG->dirroot . '/mod/realtimequiz/locallib.php');
 
 $id = optional_param('id', 0, PARAM_INT); // Course Module ID, or ...
 $q = optional_param('q', 0, PARAM_INT);  // Realtimequiz ID.
@@ -50,7 +50,7 @@ $context = context_module::instance($cm->id);
 
 $questioncount = $DB->count_records('realtimequiz_question', ['quizid' => $realtimequiz->id]);
 if ($questioncount === 0 && has_capability('mod/realtimequiz:editquestions', $context)) {
-    redirect('edit.php?id='.$id);
+    redirect('edit.php?id=' . $id);
 }
 
 require_capability('mod/realtimequiz:attempt', $context);
@@ -70,7 +70,7 @@ $quizstatus = realtimequiz_update_status($realtimequiz->id, $realtimequiz->statu
 $strrealtimequizzes = get_string("modulenameplural", "realtimequiz");
 $strrealtimequiz = get_string("modulename", "realtimequiz");
 
-$PAGE->set_title(strip_tags($course->shortname.': '.$strrealtimequiz.': '.format_string($realtimequiz->name, true)));
+$PAGE->set_title(strip_tags($course->shortname . ': ' . $strrealtimequiz . ': ' . format_string($realtimequiz->name, true)));
 $PAGE->set_heading($course->fullname);
 echo $OUTPUT->header();
 

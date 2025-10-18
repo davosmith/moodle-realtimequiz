@@ -145,4 +145,3 @@ $string['view'] = 'View quiz';
 $string['waitfirst'] = 'Waiting for the first question to be sent';
 $string['waitstudent'] = 'Waiting for students to connect';
 $string['yourresult'] = 'Your result: ';
-

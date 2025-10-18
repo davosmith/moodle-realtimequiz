@@ -24,7 +24,7 @@
 
 require_once('../../config.php');
 global $CFG, $DB, $PAGE, $OUTPUT;
-require_once($CFG->dirroot.'/mod/realtimequiz/lib.php');
+require_once($CFG->dirroot . '/mod/realtimequiz/lib.php');
 
 $id = optional_param('id', false, PARAM_INT);
 $quizid = optional_param('quizid', false, PARAM_INT);
@@ -87,7 +87,7 @@ if ($CFG->version > 2014051200) { // Moodle 2.7+.
 function realtimequiz_list_questions($quizid, $cm) {
     global $DB, $OUTPUT;
 
-    echo '<h2>'.get_string('questionslist', 'realtimequiz').'</h2>';
+    echo '<h2>' . get_string('questionslist', 'realtimequiz') . '</h2>';
 
     $questions = $DB->get_records('realtimequiz_question', ['quizid' => $quizid], 'questionnum');
     $questioncount = count($questions);
@@ -100,8 +100,10 @@ function realtimequiz_list_questions($quizid, $cm) {
             $DB->update_record('realtimequiz_question', $question);
         }
 
-        $editurl = new moodle_url('/mod/realtimequiz/editquestion.php',
-                                  ['quizid' => $quizid, 'questionid' => $question->id]);
+        $editurl = new moodle_url(
+            '/mod/realtimequiz/editquestion.php',
+            ['quizid' => $quizid, 'questionid' => $question->id]
+        );
         $qtext = format_string($question->questiontext);
         echo "<li><span class='realtimequiz_editquestion'>";
         echo html_writer::link($editurl, $qtext);
@@ -149,21 +151,27 @@ function realtimequiz_confirm_deletequestion($quizid, $questionid, $context) {
 
     $question = $DB->get_record('realtimequiz_question', ['id' => $questionid, 'quizid' => $quizid], '*', MUST_EXIST);
 
-    echo '<center><h2>'.get_string('deletequestion', 'realtimequiz').'</h2>';
-    echo '<p>'.get_string('checkdelete', 'realtimequiz').'</p><p>';
+    echo '<center><h2>' . get_string('deletequestion', 'realtimequiz') . '</h2>';
+    echo '<p>' . get_string('checkdelete', 'realtimequiz') . '</p><p>';
     $questiontext = format_text($question->questiontext, $question->questiontextformat);
-    $questiontext = file_rewrite_pluginfile_urls($questiontext, 'pluginfile.php', $context->id, 'mod_realtimequiz',
-                                                 'question', $questionid);
+    $questiontext = file_rewrite_pluginfile_urls(
+        $questiontext,
+        'pluginfile.php',
+        $context->id,
+        'mod_realtimequiz',
+        'question',
+        $questionid
+    );
     echo $questiontext;
     echo '</p>';
 
     $url = new moodle_url('/mod/realtimequiz/edit.php', ['quizid' => $quizid]);
-    echo '<form method="post" action="'.$url.'">';
+    echo '<form method="post" action="' . $url . '">';
     echo '<input type="hidden" name="action" value="dodeletequestion" />';
-    echo '<input type="hidden" name="questionid" value="'.$questionid.'" />';
-    echo '<input type="hidden" name="sesskey" value="'.sesskey().'" />';
-    echo '<input type="submit" name="yes" value="'.get_string('yes').'" /> ';
-    echo '<input type="submit" name="no" value="'.get_string('no').'" />';
+    echo '<input type="hidden" name="questionid" value="' . $questionid . '" />';
+    echo '<input type="hidden" name="sesskey" value="' . sesskey() . '" />';
+    echo '<input type="submit" name="yes" value="' . get_string('yes') . '" /> ';
+    echo '<input type="submit" name="no" value="' . get_string('no') . '" />';
     echo '</form></center>';
 }
 
@@ -171,7 +179,7 @@ function realtimequiz_confirm_deletequestion($quizid, $questionid, $context) {
 $strrealtimequizzes = get_string("modulenameplural", "realtimequiz");
 $strrealtimequiz = get_string("modulename", "realtimequiz");
 
-$PAGE->set_title(strip_tags($course->shortname.': '.$strrealtimequiz.': '.format_string($quiz->name, true)));
+$PAGE->set_title(strip_tags($course->shortname . ': ' . $strrealtimequiz . ': ' . format_string($quiz->name, true)));
 $PAGE->set_heading($course->fullname);
 echo $OUTPUT->header();
 
@@ -193,7 +201,6 @@ if ($CFG->branch < 400) {
 echo $OUTPUT->box_start('generalbox boxwidthwide boxaligncenter realtimequizbox');
 
 if ($action == 'dodeletequestion') {
-
     require_sesskey();
 
     if (optional_param('yes', false, PARAM_BOOL)) {
@@ -216,9 +223,7 @@ if ($action == 'dodeletequestion') {
     }
 
     $action = 'listquestions';
-
 } else if ($action == 'moveup') {
-
     $thisquestion = $DB->get_record('realtimequiz_question', ['id' => $questionid]);
     if ($thisquestion) {
         $questionnum = $thisquestion->questionnum;
@@ -227,12 +232,12 @@ if ($action == 'dodeletequestion') {
                 'quizid' => $quizid, 'questionnum' => ($questionnum - 1),
             ]);
             if ($swapquestion) {
-                $upd = new stdClass;
+                $upd = new stdClass();
                 $upd->id = $thisquestion->id;
                 $upd->questionnum = $questionnum - 1;
                 $DB->update_record('realtimequiz_question', $upd);
 
-                $upd = new stdClass;
+                $upd = new stdClass();
                 $upd->id = $swapquestion->id;
                 $upd->questionnum = $questionnum;
                 $DB->update_record('realtimequiz_question', $upd);
@@ -241,20 +246,21 @@ if ($action == 'dodeletequestion') {
     }
 
     $action = 'listquestions';
-
 } else if ($action == 'movedown') {
     $thisquestion = $DB->get_record('realtimequiz_question', ['id' => $questionid]);
     if ($thisquestion) {
         $questionnum = $thisquestion->questionnum;
-        $swapquestion = $DB->get_record('realtimequiz_question',
-                                        ['quizid' => $quizid, 'questionnum' => ($questionnum + 1)]);
+        $swapquestion = $DB->get_record(
+            'realtimequiz_question',
+            ['quizid' => $quizid, 'questionnum' => ($questionnum + 1)]
+        );
         if ($swapquestion) {
-            $upd = new stdClass;
+            $upd = new stdClass();
             $upd->id = $thisquestion->id;
             $upd->questionnum = $questionnum + 1;
             $DB->update_record('realtimequiz_question', $upd);
 
-            $upd = new stdClass;
+            $upd = new stdClass();
             $upd->id = $swapquestion->id;
             $upd->questionnum = $questionnum;
             $DB->update_record('realtimequiz_question', $upd);
@@ -265,7 +271,6 @@ if ($action == 'dodeletequestion') {
 }
 
 switch ($action) {
-
     case 'listquestions': // Show all the currently available questions.
         realtimequiz_list_questions($quizid, $cm);
         break;
@@ -273,11 +278,9 @@ switch ($action) {
     case 'deletequestion': // Deleting a question - ask 'Are you sure?'.
         realtimequiz_confirm_deletequestion($quizid, $questionid, $context);
         break;
-
 }
 
 echo $OUTPUT->box_end();
 
 // Finish the page.
 echo $OUTPUT->footer();
-

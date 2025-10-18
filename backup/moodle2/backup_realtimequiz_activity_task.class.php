@@ -26,14 +26,13 @@
 defined('MOODLE_INTERNAL') || die();
 global $CFG;
 
-require_once($CFG->dirroot.'/mod/realtimequiz/backup/moodle2/backup_realtimequiz_stepslib.php');
-require_once($CFG->dirroot.'/mod/realtimequiz/backup/moodle2/backup_realtimequiz_settingslib.php');
+require_once($CFG->dirroot . '/mod/realtimequiz/backup/moodle2/backup_realtimequiz_stepslib.php');
+require_once($CFG->dirroot . '/mod/realtimequiz/backup/moodle2/backup_realtimequiz_settingslib.php');
 
 /**
  * Provides the steps to perform one complete backup of the Forum instance
  */
 class backup_realtimequiz_activity_task extends backup_activity_task {
-
     /**
      * No specific settings for this activity
      */
@@ -59,11 +58,11 @@ class backup_realtimequiz_activity_task extends backup_activity_task {
         $base = preg_quote($CFG->wwwroot, "/");
 
         // Link to the list of realtimequizzes.
-        $search = "/(".$base."\/mod\/realtimequiz\/index.php\?id\=)([0-9]+)/";
+        $search = "/(" . $base . "\/mod\/realtimequiz\/index.php\?id\=)([0-9]+)/";
         $content = preg_replace($search, '$@REALTIMEQUIZINDEX*$2@$', $content);
 
         // Link to realtimequiz view by moduleid.
-        $search = "/(".$base."\/mod\/realtimequiz\/view.php\?id\=)([0-9]+)/";
+        $search = "/(" . $base . "\/mod\/realtimequiz\/view.php\?id\=)([0-9]+)/";
         $content = preg_replace($search, '$@REALTIMEQUIZVIEWBYID*$2@$', $content);
 
         return $content;

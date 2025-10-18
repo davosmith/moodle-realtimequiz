@@ -319,21 +319,29 @@ final class privacy_provider_test extends \core_privacy\tests\provider_testcase 
         $this->assertEquals(6, $DB->count_records('realtimequiz_submitted', []));
 
         // Delete the data for the first student, for the first quiz.
-        $contextlist = new \core_privacy\local\request\approved_contextlist($this->student, 'realtimequiz',
-                                                                            [$ctxs[0]->id]);
+        $contextlist = new \core_privacy\local\request\approved_contextlist(
+            $this->student,
+            'realtimequiz',
+            [$ctxs[0]->id]
+        );
         provider::delete_data_for_user($contextlist);
 
         // After deletion, we should have 3 submitted responses.
         $this->assertEquals(3, $DB->count_records('realtimequiz_submitted', []));
         // Confirm the remaining responses are for the second student.
-        $this->assertEquals([$student->id],
-                            $DB->get_fieldset_select('realtimequiz_submitted', 'DISTINCT userid', "1=1"));
+        $this->assertEquals(
+            [$student->id],
+            $DB->get_fieldset_select('realtimequiz_submitted', 'DISTINCT userid', "1=1")
+        );
 
         // Delete the data for the second student, for all quizzes.
-        $contextlist = new \core_privacy\local\request\approved_contextlist($student, 'realtimequiz',
-                                                                            [
+        $contextlist = new \core_privacy\local\request\approved_contextlist(
+            $student,
+            'realtimequiz',
+            [
                                                                                 $ctxs[0]->id, $ctxs[1]->id,
-                                                                            ]);
+            ]
+        );
         provider::delete_data_for_user($contextlist);
 
         // After deletion, we should have 0 submitted responses.
@@ -378,8 +386,11 @@ final class privacy_provider_test extends \core_privacy\tests\provider_testcase 
         // Delete all data for student.
         $userlist = new \core_privacy\local\request\userlist($ctxs[0], 'mod_realtimequiz');
         provider::get_users_in_context($userlist);
-        $approvedlist = new \core_privacy\local\request\approved_userlist($ctxs[0], 'mod_realtimequiz',
-                                                                          [$this->student->id]);
+        $approvedlist = new \core_privacy\local\request\approved_userlist(
+            $ctxs[0],
+            'mod_realtimequiz',
+            [$this->student->id]
+        );
         provider::delete_data_for_users($approvedlist);
 
         // Check user list for checklist 0.

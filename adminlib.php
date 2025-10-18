@@ -30,7 +30,6 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class realtimequiz_awaittime_setting extends admin_setting_configtext {
-
     /**
      * Validate data.
      *

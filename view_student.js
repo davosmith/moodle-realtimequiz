@@ -154,7 +154,7 @@ function realtimequiz_set_answer(id, text, position) {
         alert(realtimequiz.text['invalidanswer'] + realtimequiz.answernumber + ' - ' + text);
     }
 
-    var letter = String.fromCharCode(65 + realtimequiz.answernumber);        //ASCII 'A'
+    var letter = String.fromCharCode(65 + realtimequiz.answernumber);        // ASCII 'A'
     var newanswer = '<li id="answer' + id + '" class="realtimequiz-answer-pos-' + position + '"><input ';
     if (realtimequiz.controlquiz) {
         newanswer += 'disabled=disabled ';
@@ -368,7 +368,8 @@ function realtimequiz_create_request(parameters) {
     realtimequiz_delayed_request("realtimequiz_resend_request()", realtimequiz.resenddelay);
 }
 
-function realtimequiz_resend_request() { // Only needed if something went wrong
+function realtimequiz_resend_request() {
+    // Only needed if something went wrong
     // Increase the resend delay, to reduce network saturation
     realtimequiz.resenddelay += 1000;
     if (realtimequiz.resenddelay > 15000) {
@@ -378,15 +379,17 @@ function realtimequiz_resend_request() { // Only needed if something went wrong
     realtimequiz_create_request(realtimequiz.lastrequest);
 }
 
-function realtimequiz_return_course() { // Go back to the course screen if something went wrong
+function realtimequiz_return_course() {
+    // Go back to the course screen if something went wrong
     if (realtimequiz.coursepage == '') {
         alert('realtimequiz.coursepage not set');
     } else {
-        //window.location = realtimequiz.coursepage;
+        // window.location = realtimequiz.coursepage;
     }
 }
 
-function node_text(node) { // Cross-browser - extract text from XML node
+function node_text(node) {
+    // Cross-browser - extract text from XML node
     var text = node.textContent;
     if (text != undefined) {
         return text;
@@ -415,7 +418,6 @@ function realtimequiz_join_quiz() {
 // Process the server's response
 function realtimequiz_process_contents(httpRequest) {
     if (httpRequest.readyState == 4) {
-
         // We've heard back from the server, so do not need to resend the request
         if (realtimequiz.resendtimer != null) {
             clearTimeout(realtimequiz.resendtimer);
@@ -433,16 +435,15 @@ function realtimequiz_process_contents(httpRequest) {
             var quizresponse = httpRequest.responseXML.getElementsByTagName('realtimequiz').item(0);
             if (quizresponse == null) {
                 realtimequiz_delayed_request("realtimequiz_resend_request()", 700);
-
             } else {
-
                 // Make sure the question view has been initialised, before displaying the question.
                 realtimequiz_init_question_view();
 
                 var quizstatus = node_text(quizresponse.getElementsByTagName('status').item(0));
                 if (quizstatus == 'showquestion') {
-                    if (document.getElementById("numberstudents"))
+                    if (document.getElementById("numberstudents")) {
                         document.getElementById("numberstudents").style.display = 'none';
+                    }
                     realtimequiz.questionxml = quizresponse.getElementsByTagName('question').item(0);
                     if (!realtimequiz.questionxml) {
                         alert(realtimequiz.text['noquestion'] + httpRequest.responseHTML);
@@ -460,14 +461,12 @@ function realtimequiz_process_contents(httpRequest) {
                         }
                     }
                     realtimequiz_update_next_button(false); // Just in case.
-
                 } else if (quizstatus == 'showresults') {
                     var questionnum = parseInt(node_text(quizresponse.getElementsByTagName('questionnum').item(0)));
                     if (questionnum != realtimequiz.questionnumber) {
                         // If you have just joined and missed the question
                         // or if the teacher's PC missed the question altogether (but managed to start it)
                         realtimequiz.questionnumber = questionnum;
-
                     } else {
                         var results = quizresponse.getElementsByTagName('result');
                         var nocorrect = quizresponse.getElementsByTagName('nocorrect');
@@ -504,14 +503,12 @@ function realtimequiz_process_contents(httpRequest) {
                     } else {
                         realtimequiz_delayed_request("realtimequiz_get_question()", 900); // Wait for next question to be displayed
                     }
-
                 } else if (quizstatus == 'answerreceived') {
                     if (realtimequiz.timeleft > 0) {
                         realtimequiz_set_status(realtimequiz.text['answersent']);
                     } else {
                         realtimequiz_get_results();
                     }
-
                 } else if (quizstatus == 'waitforquestion') {
                     var waittime = quizresponse.getElementsByTagName('waittime').item(0);
                     if (waittime) {
@@ -528,7 +525,6 @@ function realtimequiz_process_contents(httpRequest) {
                         }
                     }
                     realtimequiz_delayed_request("realtimequiz_get_question()", waittime);
-
                 } else if (quizstatus == 'waitforresults') {
                     var waittime = quizresponse.getElementsByTagName('waittime').item(0);
                     if (waittime) {
@@ -538,20 +534,15 @@ function realtimequiz_process_contents(httpRequest) {
                     }
 
                     realtimequiz_delayed_request("realtimequiz_get_results()", waittime);
-
                 } else if (quizstatus == 'quizrunning') {
                     realtimequiz_init_question_view();
-
                 } else if (quizstatus == 'quiznotrunning') {
                     realtimequiz_set_status(realtimequiz.text['quiznotrunning']);
-
                 } else if (quizstatus == 'finalresults') {
                     realtimequiz_show_final_results(quizresponse);
-
                 } else if (quizstatus == 'error') {
                     var errmsg = node_text(quizresponse.getElementsByTagName('message').item(0));
                     alert(realtimequiz.text['servererror'] + errmsg);
-
                 } else {
                     alert(realtimequiz.text['badresponse'] + httpRequest.responseText);
                     if (confirm(realtimequiz.text['tryagain'])) {
@@ -584,12 +575,11 @@ function realtimequiz_process_contents(httpRequest) {
         // Decided just to silently resend the request - if the connection dies altoghether, the user can navigate
         // to another page to stop the requests
 
-        //alert(realtimequiz.text['httperror']+httpRequest.status);
-        //if (confirm(realtimequiz.text['tryagain'])) {
+        // alert(realtimequiz.text['httperror']+httpRequest.status);
+        // if (confirm(realtimequiz.text['tryagain'])) {
         realtimequiz_delayed_request("realtimequiz_resend_request()", 700);
-        //} else {
-        //realtimequiz_return_course();
+        // } else {
+        // realtimequiz_return_course();
         // }
     }
 }
-
