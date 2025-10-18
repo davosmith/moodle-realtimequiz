@@ -275,7 +275,8 @@ if ($questionid == 0) { // Show all of the questions.
                 $iscorrectanswer = false;
                 foreach ($answers as $answer) {
                     if ($answer->correct == 1) {
-                        echo '<td width="10%" class="realtimequiz_report_question_correct"><b>' . s($answer->answertext) . '</b></td>';
+                        echo '<td width="10%" class="realtimequiz_report_question_correct"><b>' .
+                            s($answer->answertext) . '</b></td>';
                         $iscorrectanswer = true;
                     } else {
                         echo '<td width="10%">' . s($answer->answertext) . '</td>';
@@ -294,7 +295,8 @@ if ($questionid == 0) { // Show all of the questions.
                     $questiontext = get_string('question', 'mod_realtimequiz') . $question->questionnum;
                 }
                 echo '</tr><tr class="realtimequiz_report_answer"><td><a href="' .
-                    $linkurl->out(true, ['questionid' => $question->id]) . '">' . format_string($questiontext) . '</a></td>';
+                    $linkurl->out(true, ['questionid' => $question->id]) . '">' .
+                    format_string($questiontext) . '</a></td>';
 
                 $total = 0;
                 $gotanswerright = 0;
@@ -310,7 +312,8 @@ if ($questionid == 0) { // Show all of the questions.
                     $total += $count;
                     if ($iscorrectanswer) {
                         if ($answer->correct == 1) {
-                            echo '<td align="center" class="realtimequiz_report_answer_correct" ><b>' . $count . '</b>&nbsp;';
+                            echo '<td align="center" class="realtimequiz_report_answer_correct" ><b>' .
+                                $count . '</b>&nbsp;';
                             if (!$showusers) {
                                 echo $tickimg;
                             }
