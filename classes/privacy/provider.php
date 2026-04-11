@@ -38,8 +38,8 @@ use core_privacy\local\request\writer;
  * @package mod_realtimequiz
  */
 class provider implements
-    \core_privacy\local\request\core_userlist_provider,
     \core_privacy\local\metadata\provider,
+    \core_privacy\local\request\core_userlist_provider,
     \core_privacy\local\request\plugin\provider {
     /**
      * Get details of user data stored by this plugin
