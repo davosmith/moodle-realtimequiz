@@ -13,6 +13,7 @@ The teacher can, at a later date, go back through the results and, for each ques
 Changes:
 --------
 
+2026-04-24 - 4.0.0.3 - M5.2 compatibility fixes
 2025-10-18 - 4.0.0.2 - M5.1 compatibility fixes
 2025-04-19 - 4.0.0.1 - M5.0 compatibility fixes, drop support for M3.11 and below.
 2024-10-19 - 3.4.4.2 - Minor M4.5 compatibility fixes
