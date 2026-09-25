@@ -16,9 +16,7 @@ Feature: Students can attempt a quiz under the control of a teacher
     And the following "activities" exist:
       | activity     | course | name               | idnumber | intro                             | questiontime |
       | realtimequiz | C1     | Test realtime quiz | RTQ01    | Test the realtime quiz is working | 15           |
-    Given I log in as "teacher1"
-    And I am on "Course 1" course homepage with editing mode on
-    And I am on the "Test realtime quiz" "realtimequiz activity" page
+    And I am on the "Test realtime quiz" "realtimequiz activity" page logged in as "teacher1"
     And I press "Add question"
     And I set the following fields to these values:
       | Question text | Which UK city is known as the Steel City? |

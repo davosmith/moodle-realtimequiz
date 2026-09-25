@@ -17,10 +17,7 @@ Feature: Teacher can create a realtime quiz and edit the questions
 
   @javascript
   Scenario: Create a quiz and edit the questions
-    Given I log in as "teacher1"
-    And I am on "Course 1" course homepage
-    And I turn editing mode on
-    And I am on the "Test realtime quiz" "realtimequiz activity" page
+    Given I am on the "Test realtime quiz" "realtimequiz activity" page logged in as "teacher1"
     # Create a question.
     When I press "Add question"
     And I set the following fields to these values:
